@@ -1,8 +1,0 @@
-body { animation: 60s 5s color infinite reverse; font-family: "PT Sans"; margin: 0; background: url("./gloss.svg") no-repeat top slateblue; background-size: cover; }
-.header { position: fixed; right: 0; bottom: 0; font-size: 20px; font-weight: bold; background: white; letter-spacing: 1px; display: inline-block; transform: rotate(-90deg) translateX(200px); transform-origin: bottom right; padding: 5px 15px; color: black; }
-
-@keyframes color {
-  0% { background-color: slateblue; }
-  50% { background-color: purple; }
-  100% { background-color: slateblue; }
-}
