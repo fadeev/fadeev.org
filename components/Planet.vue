@@ -7,10 +7,10 @@
           <div class="orbit__small__satellite"></div>
         </div>
         <div class="orbit__container">
-          <div v-for="i in 3" :style="{'--satelite-rotate': i * 360 / 3 + 'deg'}" class="satellite__container">
+          <div v-for="i in 3" :key="i" :style="{'--satelite-rotate': i * 360 / 3 + 'deg'}" class="satellite__container">
             <div class="satellite"></div>
           </div>
-          <div v-for="i in 3" :style="{'--satelite-rotate': (i + .5) * 360 / 3 + 'deg'}" class="satellite__container satellite__container__small">
+          <div v-for="i in 3" :key="i" :style="{'--satelite-rotate': (i + .5) * 360 / 3 + 'deg'}" class="satellite__container satellite__container__small">
             <div class="satellite__small"></div>
           </div>
         </div>

@@ -10,7 +10,9 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
+      { rel: "stylesheet", type: "text/css", href: "https://meyerweb.com/eric/tools/css/reset/reset.css" },
+      { rel: "stylesheet", type: "text/css", href: "https://rsms.me/inter/inter.css" }
     ]
   }
 }

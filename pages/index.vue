@@ -40,9 +40,6 @@
 </template>
 
 <style lang="stylus">
-@import url("https://meyerweb.com/eric/tools/css/reset/reset.css")
-@import url('https://rsms.me/inter/inter.css');
-
 html
   font-family "Inter var", "Inter", --apple-system, sans-serif
 
