@@ -34,9 +34,10 @@
       .planet__animation
         planet
     .details.section
-      h2.details__h1 How to get in touch with you?
-      p.details__p The old-fashioned way: shoot me an email at #[a(href="mailto:denis@fadeev.org").link__underline denis@fadeev.org]
-      p.details__p You can also reach me on #[a(href="https://github.com/fadeev" target="_blank" rel="noopener noreferrer") #[icon-github.details__icon] GitHub], #[a(href="https://instagram.com/fadeev_org" target="_blank" rel="noopener noreferrer") #[icon-instagram.details__icon] Instagram] and #[a(href="https://t.me/dfadeev" target="_blank" rel="noopener noreferrer") #[icon-telegram.details__icon] Telegram].
+      .details__container
+        h2.details__h1 How to get in touch with you?
+        p.details__p The old-fashioned way: shoot me an email at #[a(href="mailto:denis@fadeev.org").link__underline denis@fadeev.org]
+        p.details__p You can also reach me on #[a(href="https://github.com/fadeev" target="_blank" rel="noopener noreferrer") #[icon-github.details__icon] GitHub], #[a(href="https://instagram.com/fadeev_org" target="_blank" rel="noopener noreferrer") #[icon-instagram.details__icon] Instagram], #[a(href="https://t.me/dfadeev" target="_blank" rel="noopener noreferrer") #[icon-telegram.details__icon] Telegram] and #[a(href="https://www.linkedin.com/in/denis-fadeev/" target="_blank" rel="noopener noreferrer") #[icon-linkedin.details__icon] LinkedIn].
 </template>
 
 <style lang="stylus">
@@ -218,6 +219,11 @@ strong
   padding-right 100px
   margin-bottom 200px
   color #222222
+  line-height 1.5
+
+  &__container
+    width 100%
+    max-width 550px
 
   &__h1
     font-size 1.5rem
@@ -302,6 +308,7 @@ import IconGithub from "@/components/IconGithub"
 import IconInstagram from "@/components/IconInstagram"
 import IconThings from "@/components/IconThings"
 import IconTelegram from "@/components/IconTelegram"
+import IconLinkedin from "@/components/IconLinkedin"
 import Planet from "@/components/Planet"
 
 export default {
@@ -311,6 +318,7 @@ export default {
     IconThings,
     IconInstagram,
     IconTelegram,
+    IconLinkedin,
     Planet
   },
 }
