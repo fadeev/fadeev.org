@@ -20,7 +20,7 @@
   "homepage": "https://github.com/fadeev/fadeev.org#readme",
   "dependencies": {
     "nuxt": "^2.11.0",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "pug-plain-loader": "^1.0.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2"
