@@ -2,7 +2,7 @@
   div
     .hero.section
       h1.hero__h1 #[strong Denis Fadeev] designs and&nbsp;develops software for&nbsp;the&nbsp;web
-      h2.hero__h2 Currently working at Ignite
+      h2.hero__h2 Currently working at #[icon-ignite.hero__icon] Ignite
     .appstore.section
       img(src="~/assets/appstore-screenshot.jpg" alt="Screenshot of App Store").appstore__screenshot
       .appstore__desc
@@ -77,11 +77,11 @@ strong
   margin-right auto
 
 .hero__icon
-  height 1em
+  height 1.25em
   width auto
+  opacity .75
   display inline-block
-  opacity .6
-  vertical-align -12%
+  vertical-align -25%
 
 .hero
   padding 280px 100px
@@ -303,7 +303,7 @@ strong
 </style>
 
 <script>
-import IconTendermint from "@/components/IconTendermint"
+import IconIgnite from "@/components/IconIgnite"
 import IconGithub from "@/components/IconGithub"
 import IconInstagram from "@/components/IconInstagram"
 import IconThings from "@/components/IconThings"
@@ -313,7 +313,7 @@ import Planet from "@/components/Planet"
 
 export default {
   components: {
-    IconTendermint,
+    IconIgnite,
     IconGithub,
     IconThings,
     IconInstagram,
