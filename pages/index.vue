@@ -2,7 +2,6 @@
   div
     .hero.section
       h1.hero__h1 #[strong Denis Fadeev] designs and&nbsp;develops software for&nbsp;the&nbsp;web
-      h2.hero__h2 Currently working at #[icon-ignite.hero__icon] Ignite
     .appstore.section
       img(src="~/assets/appstore-screenshot.jpg" alt="Screenshot of App Store").appstore__screenshot
       .appstore__desc
