@@ -1,43 +1,42 @@
 <template lang="pug">
-  div
-    .hero.section
-      h1.hero__h1 #[strong Denis Fadeev] designs and&nbsp;develops software for&nbsp;the&nbsp;web
-      h2.hero__h2 Currently working at #[icon-ignite.hero__icon] Ignite
-    .appstore.section
-      img(src="~/assets/appstore-screenshot.jpg" alt="Screenshot of App Store").appstore__screenshot
-      .appstore__desc
-        p Prototype of the App Store I built to see how well desktop-grade layouts and page transitions can be handled using the web platform.
-        a(href="https://github.com/fadeev/appstore" target="_blank" rel="noopener noreferrer").appstore__desc__github
-          icon-github.appstore__icon
-          span Source
-    .things__container
-      .things
-        .things__section
-          .things__left
-            div(style="flex-grow: 1;")
-              .things__h1
-                icon-things.things__icon
-                h2 Things
-              p.things__p A web app that replicates the look and feel of a popular desktop application.
-            a(href="https://github.com/fadeev/things" target="_blank" rel="noopener noreferrer").things__footer
-              icon-github.things__footer__icon
-              span Source
-        div(style="display: flex; justify-content: flex-end; align-self: flex-start")
-          img(src="~/assets/things-screenshot.png" alt="Screenshot of Things app").things__screenshot
-    .phone.section
-      div
-        img(src="~/assets/phone-screenshot.png" alt="Image of a phone").phone__screenshot
-      .phone__section
-        p.phone__p For a while I’ve worked at an enterprise software company. I’ve designed a user interface for an application that is used to design other applications. Around 50 screens worth of UI.
-        p.phone__p My relationship with the company has ended. The app development is an ongoing project for the company.
-    .planet.section
-      .planet__animation
-        planet
-    .details.section
-      .details__container
-        h2.details__h1 How to get in touch with you?
-        p.details__p The old-fashioned way: shoot me an email at #[a(href="mailto:denis@fadeev.org").link__underline denis@fadeev.org]
-        p.details__p You can also reach me on #[a(href="https://github.com/fadeev" target="_blank" rel="noopener noreferrer") #[icon-github.details__icon] GitHub], #[a(href="https://instagram.com/fadeev_org" target="_blank" rel="noopener noreferrer") #[icon-instagram.details__icon] Instagram], #[a(href="https://t.me/dfadeev" target="_blank" rel="noopener noreferrer") #[icon-telegram.details__icon] Telegram] and #[a(href="https://www.linkedin.com/in/denis-fadeev/" target="_blank" rel="noopener noreferrer") #[icon-linkedin.details__icon] LinkedIn].
+div
+  .hero.section
+    h1.hero__h1 #[strong Denis Fadeev] designs and&nbsp;develops software for&nbsp;the&nbsp;web
+  .appstore.section
+    img(src="~/assets/appstore-screenshot.jpg" alt="Screenshot of App Store").appstore__screenshot
+    .appstore__desc
+      p Prototype of the App Store I built to see how well desktop-grade layouts and page transitions can be handled using the web platform.
+      a(href="https://github.com/fadeev/appstore" target="_blank" rel="noopener noreferrer").appstore__desc__github
+        icon-github.appstore__icon
+        span Source
+  .things__container
+    .things
+      .things__section
+        .things__left
+          div(style="flex-grow: 1;")
+            .things__h1
+              icon-things.things__icon
+              h2 Things
+            p.things__p A web app that replicates the look and feel of a popular desktop application.
+          a(href="https://github.com/fadeev/things" target="_blank" rel="noopener noreferrer").things__footer
+            icon-github.things__footer__icon
+            span Source
+      div(style="display: flex; justify-content: flex-end; align-self: flex-start")
+        img(src="~/assets/things-screenshot.png" alt="Screenshot of Things app").things__screenshot
+  .phone.section
+    div
+      img(src="~/assets/phone-screenshot.png" alt="Image of a phone").phone__screenshot
+    .phone__section
+      p.phone__p For a while I’ve worked at an enterprise software company. I’ve designed a user interface for an application that is used to design other applications. Around 50 screens worth of UI.
+      p.phone__p My relationship with the company has ended. The app development is an ongoing project for the company.
+  .planet.section
+    .planet__animation
+      planet
+  .details.section
+    .details__container
+      h2.details__h1 How to get in touch with you?
+      p.details__p The old-fashioned way: shoot me an email at #[a(href="mailto:denis@fadeev.org").link__underline denis@fadeev.org]
+      p.details__p You can also reach me on #[a(href="https://github.com/fadeev" target="_blank" rel="noopener noreferrer") #[icon-github.details__icon] GitHub], #[a(href="https://instagram.com/fadeev_org" target="_blank" rel="noopener noreferrer") #[icon-instagram.details__icon] Instagram], #[a(href="https://t.me/dfadeev" target="_blank" rel="noopener noreferrer") #[icon-telegram.details__icon] Telegram] and #[a(href="https://www.linkedin.com/in/denis-fadeev/" target="_blank" rel="noopener noreferrer") #[icon-linkedin.details__icon] LinkedIn].
 </template>
 
 <style lang="stylus">
@@ -76,13 +75,6 @@ strong
   margin-left auto
   margin-right auto
 
-.hero__icon
-  height 1.25em
-  width auto
-  opacity .75
-  display inline-block
-  vertical-align -25%
-
 .hero
   padding 280px 100px
   position relative
@@ -93,9 +85,6 @@ strong
     max-width 26rem
     width 100%
     line-height 1.5
-  
-  &__h2
-    color #676767
 
 .appstore
   margin-bottom 130px
@@ -303,13 +292,13 @@ strong
 </style>
 
 <script>
-import IconIgnite from "@/components/IconIgnite"
-import IconGithub from "@/components/IconGithub"
-import IconInstagram from "@/components/IconInstagram"
-import IconThings from "@/components/IconThings"
-import IconTelegram from "@/components/IconTelegram"
-import IconLinkedin from "@/components/IconLinkedin"
-import Planet from "@/components/Planet"
+import IconIgnite from '@/components/IconIgnite'
+import IconGithub from '@/components/IconGithub'
+import IconInstagram from '@/components/IconInstagram'
+import IconThings from '@/components/IconThings'
+import IconTelegram from '@/components/IconTelegram'
+import IconLinkedin from '@/components/IconLinkedin'
+import Planet from '@/components/Planet'
 
 export default {
   components: {
@@ -319,7 +308,7 @@ export default {
     IconInstagram,
     IconTelegram,
     IconLinkedin,
-    Planet
+    Planet,
   },
 }
 </script>

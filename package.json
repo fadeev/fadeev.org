@@ -1,28 +1,16 @@
 {
-  "name": "fadeev.org",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "serve": "nuxt",
-    "build": "nuxt generate"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fadeev/fadeev.org.git"
+  "devDependencies": {
+    "nuxt": "3.0.0-rc.4"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/fadeev/fadeev.org/issues"
-  },
-  "homepage": "https://github.com/fadeev/fadeev.org#readme",
   "dependencies": {
-    "nuxt": "^2.11.0",
-    "pug": "^2.0.4",
-    "pug-plain-loader": "^1.0.0",
-    "stylus": "^0.54.7",
-    "stylus-loader": "^3.0.2"
+    "stylus": "^0.58.1",
+    "vite-plugin-pug": "^0.3.1"
   }
 }
