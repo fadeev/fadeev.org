@@ -1,0 +1,117 @@
+:root {
+  font-family: "Inter", sans-serif;
+}
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: "Inter var", sans-serif;
+  }
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: rgb(212, 212, 212);
+}
+
+.body {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 40rem;
+  padding-top: 2rem;
+}
+
+.profile__image {
+  max-width: 8rem;
+  border-radius: 1000px;
+  margin: 2rem auto 1rem;
+  display: block;
+}
+
+.subtitle {
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.description {
+  text-align: center;
+  color: #333;
+  max-width: 30rem;
+  margin: 0 auto 2rem;
+  line-height: 1.5;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #858585;
+  padding: 0.5rem 1rem;
+}
+
+.list__item {
+  border-bottom: 1px solid #efefef;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list__item__desc {
+  font-size: 0.75rem;
+  margin-bottom: 0.1rem;
+  font-style: italic;
+}
+
+.list__item:last-child {
+  border-bottom: none;
+}
+
+.list__item__link {
+  padding: 0.75rem 0 1rem;
+  display: block;
+  text-decoration: none;
+}
+
+.list__item__link:hover {
+  color: black;
+}
+
+.photo__grid {
+  background-color: black;
+  margin: 3rem auto;
+  padding: 6rem 1rem;
+}
+
+.photo__grid__container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.photo__grid__item {
+  height: 300px;
+  display: block;
+  padding: 1px;
+}
+
+@media screen and (max-width: 1000px) {
+  .photo__grid__item {
+    height: 200px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .photo__grid {
+    padding: 3rem 1rem;
+  }
+
+  .photo__grid__item {
+    height: 100px;
+  }
+}
