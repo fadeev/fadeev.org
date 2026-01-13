@@ -3,101 +3,135 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-    <title>Denis Fadeev</title>
+    <title>Fadeev</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        color: #1a1a1a;
+        line-height: 1.5;
+        padding: 80px 40px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e5e5e5;
+        margin-bottom: 24px;
+      }
+      h1 {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .subtitle {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 40px;
+      }
+      nav {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      nav a {
+        color: #666;
+        text-decoration: none;
+        font-size: 15px;
+      }
+      nav a:hover {
+        color: #1a1a1a;
+      }
+      .project {
+        display: grid;
+        grid-template-columns: 200px 320px;
+        gap: 32px;
+        margin-bottom: 32px;
+        align-items: start;
+      }
+      .project-info h2 {
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .project-info p {
+        color: #666;
+        font-size: 15px;
+      }
+      .card {
+        width: 320px;
+        height: 160px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .card img {
+        height: 48px;
+      }
+      .card-ignite {
+        background: rgb(61, 57, 252);
+      }
+      .card-ignite img {
+        filter: brightness(0) invert(1);
+      }
+      .card-zetachain {
+        background: rgb(0, 87, 65);
+      }
+      .card-zetachain img {
+        filter: brightness(0) invert(1);
+      }
+      .card-noble {
+        background: rgb(2, 4, 24);
+      }
+      .card-noble img {
+        filter: brightness(0) invert(1);
+      }
+    </style>
   </head>
-  <body><!--
-    <div class="body">
-      <img class="profile__image" src="img/profile.jpg" alt="Profile image" />
-      <p class="subtitle">Denis Fadeev</p>
-      <p class="description">
-        Head of Developer Experience at
-        <a href="https://zetachain.com" target="_blank">ZetaChain</a> •
-        Blockchain engineer • Created
-        <a href="https://github.com/ignite/cli" target="_blank">Ignite CLI</a>
-      </p>
-      <ul class="list">
-        <li class="list__item">
-          <a
-            class="list__item__link"
-            target="_blank"
-            href="https://twitter.com/fadeev"
-            >Twitter</a
-          >
-          <div class="list__item__desc">
-            tweeting about things I'm working on
-          </div>
-        </li>
-        <li class="list__item">
-          <a
-            class="list__item__link"
-            target="_blank"
-            href="https://github.com/fadeev"
-            >GitHub</a
-          >
-          <div class="list__item__desc">open-source work</div>
-        </li>
-        <li class="list__item">
-          <a
-            class="list__item__link"
-            target="_blank"
-            href="https://t.me/dfadeev"
-            >Telegram</a
-          >
-          <div class="list__item__desc"></div>
-        </li>
-        <li class="list__item">
-          <a
-            class="list__item__link"
-            target="_blank"
-            href="https://linkedin.com/in/denis-fadeev"
-            >LinkedIn</a
-          >
-          <div class="list__item__desc">my resume</div>
-        </li>
-        <li class="list__item">
-          <a
-            class="list__item__link"
-            target="_blank"
-            href="https://instagram.com/_fadeev_denis"
-            >Instagram</a
-          >
-          <div class="list__item__desc">places</div>
-        </li>
-        <li class="list__item">
-          <a class="list__item__link" href="mailto:denis@fadeev.org">Email</a>
-        </li>
-      </ul>
-    </div>
-    <div class="photo__grid">
-      <div class="photo__grid__container">
-        <a href="img/conf7.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf7.jpg" alt=""
-        /></a>
-        <a href="img/conf6.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf6.jpg" alt=""
-        /></a>
-        <a href="img/conf5.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf5.jpg" alt=""
-        /></a>
-        <a href="img/conf4.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf4.jpg" alt=""
-        /></a>
-        <a href="img/conf3.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf3.jpg" alt=""
-        /></a>
-        <a href="img/conf2.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf2.jpg" alt=""
-        /></a>
-        <a href="img/conf1.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf1.jpg" alt=""
-        /></a>
-        <a href="img/conf0.jpg" target="_blank"
-          ><img class="photo__grid__item" src="img/conf0.jpg" alt=""
-        /></a>
+  <body>
+    <div class="avatar"></div>
+    <h1>Denis Fadeev</h1>
+    <p class="subtitle">Developer</p>
+
+    <nav>
+      <a href="#about">About</a>
+      <a href="#connect">Connect</a>
+      <a href="#projects">Projects</a>
+    </nav>
+
+    <div class="project">
+      <div class="project-info">
+        <h2>ZetaChain</h2>
+        <p>2023 – present</p>
       </div>
-    </div> -->
+      <div class="card card-zetachain">
+        <img src="zetachain.svg" alt="ZetaChain" />
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-info">
+        <h2>Strangelove Ventures</h2>
+        <p>2022</p>
+      </div>
+      <div class="card card-noble">
+        <img src="noble.svg" alt="Noble" />
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-info">
+        <h2>Ignite</h2>
+        <p>2019 – 2023</p>
+      </div>
+      <div class="card card-ignite">
+        <img src="ignite.svg" alt="Ignite CLI" />
+      </div>
+    </div>
   </body>
 </html>
