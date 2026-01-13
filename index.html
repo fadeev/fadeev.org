@@ -20,8 +20,8 @@
         margin: 0 auto;
       }
       .avatar {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         background: #e5e5e5;
         margin-bottom: 24px;
@@ -38,15 +38,24 @@
       nav {
         display: flex;
         gap: 16px;
+        margin-top: 24px;
         margin-bottom: 48px;
       }
       nav a {
         color: #666;
         text-decoration: none;
-        font-size: 15px;
       }
       nav a:hover {
         color: #1a1a1a;
+      }
+      nav img {
+        width: 20px;
+        height: 20px;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+      }
+      nav a:hover img {
+        opacity: 1;
       }
       .project {
         margin-bottom: 32px;
@@ -77,14 +86,26 @@
     </style>
   </head>
   <body>
-    <div class="avatar"></div>
+    <img class="avatar" src="images/profile.jpeg" alt="Denis Fadeev" />
     <h1>Denis Fadeev</h1>
-    <p class="subtitle">Developer</p>
 
     <nav>
-      <a href="#about">About</a>
-      <a href="#connect">Connect</a>
-      <a href="#projects">Projects</a>
+      <a href="https://x.com/fadeev" target="_blank" aria-label="X">
+        <img src="icons/new-twitter-rectangle-stroke-rounded.svg" alt="X" />
+      </a>
+      <a href="https://github.com/fadeev" target="_blank" aria-label="GitHub">
+        <img
+          src="icons/github-01-stroke-rounded.svg"
+          alt="GitHub"
+          style="width: 19px; height: 19px"
+        />
+      </a>
+      <a href="mailto:denis@fadeev.org" aria-label="Email">
+        <img src="icons/mail-01-stroke-rounded.svg" alt="Email" />
+      </a>
+      <a href="https://t.me/dfadeev" target="_blank" aria-label="Telegram">
+        <img src="icons/telegram-stroke-rounded.svg" alt="Telegram" />
+      </a>
     </nav>
 
     <div class="project">
