@@ -16,7 +16,7 @@
         color: #1a1a1a;
         line-height: 1.5;
         padding: 80px 40px;
-        max-width: 800px;
+        max-width: 600px;
         margin: 0 auto;
       }
       .avatar {
@@ -49,47 +49,30 @@
         color: #1a1a1a;
       }
       .project {
-        display: grid;
-        grid-template-columns: 200px 320px;
-        gap: 32px;
         margin-bottom: 32px;
-        align-items: start;
       }
-      .project-info h2 {
+      a.project-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        color: inherit;
+      }
+      .project h2 {
         font-size: 15px;
         font-weight: 500;
       }
-      .project-info p {
+      .project .logo {
+        height: 15px;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .project-header:hover .logo {
+        opacity: 1;
+      }
+      .project p {
         color: #666;
         font-size: 15px;
-      }
-      .card {
-        width: 320px;
-        height: 160px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .card img {
-        height: 48px;
-      }
-      .card-ignite {
-        background: rgb(61, 57, 252);
-      }
-      .card-ignite img {
-        filter: brightness(0) invert(1);
-      }
-      .card-zetachain {
-        background: rgb(0, 87, 65);
-      }
-      .card-zetachain img {
-        filter: brightness(0) invert(1);
-      }
-      .card-noble {
-        background: rgb(2, 4, 24);
-      }
-      .card-noble img {
-        filter: brightness(0) invert(1);
       }
     </style>
   </head>
@@ -105,33 +88,27 @@
     </nav>
 
     <div class="project">
-      <div class="project-info">
+      <a href="https://zetachain.com" target="_blank" class="project-header">
         <h2>ZetaChain</h2>
-        <p>2023 – present</p>
-      </div>
-      <div class="card card-zetachain">
-        <img src="zetachain.svg" alt="ZetaChain" />
-      </div>
+        <img class="logo" src="logos/zetachain.svg" alt="ZetaChain" />
+      </a>
+      <p>2023 – present</p>
     </div>
 
     <div class="project">
-      <div class="project-info">
-        <h2>Strangelove Ventures</h2>
-        <p>2022</p>
-      </div>
-      <div class="card card-noble">
-        <img src="noble.svg" alt="Noble" />
-      </div>
+      <a href="https://noble.xyz/" target="_blank" class="project-header">
+        <h2>Noble</h2>
+        <img class="logo" src="logos/noble.svg" alt="Noble" />
+      </a>
+      <p>2022</p>
     </div>
 
     <div class="project">
-      <div class="project-info">
+      <a href="https://ignite.com" target="_blank" class="project-header">
         <h2>Ignite</h2>
-        <p>2019 – 2023</p>
-      </div>
-      <div class="card card-ignite">
-        <img src="ignite.svg" alt="Ignite CLI" />
-      </div>
+        <img class="logo" src="logos/ignite.svg" alt="Ignite" />
+      </a>
+      <p>2019 – 2023</p>
     </div>
   </body>
 </html>
