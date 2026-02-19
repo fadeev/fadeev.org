@@ -1,0 +1,8 @@
+<svg width="516" height="516" viewBox="0 0 516 516" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="516" height="516">
+<circle cx="258" cy="258" r="258" fill="white"/>
+<path d="M123.202 369.603L258 102.906L392.798 369.603H332.143L258 223.564L183.857 369.603H123.202Z" fill="black"/>
+<circle cx="258" cy="318.877" r="14.4944" fill="black"/>
+</mask>
+<circle cx="258" cy="258" r="258" fill="black" mask="url(#cutout)"/>
+</svg>
