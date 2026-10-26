@@ -1,147 +1,3178 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Denis Fadeev</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        color: #1a1a1a;
-        line-height: 1.5;
-        padding: 80px 40px;
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      .avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: #e5e5e5;
-        margin-bottom: 24px;
-      }
-      h1 {
-        font-size: 16px;
-        font-weight: 500;
-      }
-      .subtitle {
-        color: #999;
-        font-size: 15px;
-        margin-bottom: 40px;
-      }
-      nav {
-        display: flex;
-        gap: 16px;
-        margin-top: 24px;
-        margin-bottom: 48px;
-      }
-      nav a {
-        color: #666;
-        text-decoration: none;
-      }
-      nav a:hover {
-        color: #1a1a1a;
-      }
-      nav img {
-        width: 20px;
-        height: 20px;
-        opacity: 0.5;
-        transition: opacity 0.3s ease;
-      }
-      nav a:hover img {
-        opacity: 1;
-      }
-      .project {
-        margin-bottom: 32px;
-      }
-      a.project-header {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        text-decoration: none;
-        color: inherit;
-      }
-      .project h2 {
-        font-size: 15px;
-        font-weight: 500;
-      }
-      .project .logo {
-        height: 15px;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-      }
-      .project-header:hover .logo {
-        opacity: 1;
-      }
-      .project p {
-        color: #999;
-        font-size: 15px;
-      }
-    </style>
-  </head>
-  <body>
-    <img class="avatar" src="images/profile.jpeg" alt="Denis Fadeev" />
-    <h1>Denis Fadeev</h1>
-    <p class="subtitle">Building tools for blockchain developers</p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Denis Fadeev</title>
+<!-- Inter, the font of the wallet on Ignite's display -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #fff;
+    --text: #111;
+    --muted: #8c8c8c;
+    --side: 2rem; /* the least margin on either side */
+    /*
+     * Each mockup fills the window but for a peek at its photos below, a
+     * hint to keep scrolling.
+     */
+    --screen: 100vh;
+    --peek: clamp(4rem, 12vh, 7.5rem);
+    --pad: 1.5rem; /* above a mockup, and between its caption and the peek */
+    --mast-pad: clamp(1.5rem, 7vh, 4rem); /* above and below the name */
+    --mast: calc(2 * var(--mast-pad) + 1.8rem); /* the masthead, which shares the first window */
+    --dcap: 3.1rem; /* room for a mockup's two-line caption */
+    --cap: 2rem; /* room for a caption under each photo */
+    --gap: 1.5rem; /* between photos */
+    --near: 2.5rem; /* between a mockup and its photos */
+    --far: clamp(8rem, 22vh, 14rem); /* between one chapter and the next */
+    /*
+     * The column everything lines up to: the laptop's base, the display's
+     * body, the masthead, the photos and the talks. It leaves room for the
+     * laptop's terminals to hang out either side, and is no wider than lets
+     * the laptop fit its window under the masthead, or the display, which
+     * is taller for its width, fit a window of its own.
+     */
+    --col: min(
+      (100vw - 2 * var(--side)) * 486 / 583,
+      (var(--screen) - var(--peek) - 2 * var(--pad) - var(--mast) - var(--dcap)) * 486 / 294,
+      (var(--screen) - var(--peek) - 2 * var(--pad) - var(--dcap)) * 1654 / 1230
+    );
+  }
 
-    <nav>
-      <a href="https://x.com/fadeev" target="_blank" aria-label="X">
-        <img src="icons/new-twitter-rectangle-stroke-rounded.svg" alt="X" />
-      </a>
-      <a href="https://github.com/fadeev" target="_blank" aria-label="GitHub">
-        <img
-          src="icons/github-01-stroke-rounded.svg"
-          alt="GitHub"
-          style="width: 19px; height: 19px"
-        />
-      </a>
-      <a href="mailto:denis@fadeev.org" aria-label="Email">
-        <img src="icons/mail-01-stroke-rounded.svg" alt="Email" />
-      </a>
-      <a href="https://t.me/dfadeev" target="_blank" aria-label="Telegram">
-        <img src="icons/telegram-stroke-rounded.svg" alt="Telegram" />
-      </a>
-      <a href="https://youtube.com/playlist?list=PL3camC2cvS4d0akYFzSwuWZ_2v_1SM8SO&si=0e7lJHW7QiJhjr56" target="_blank" aria-label="YouTube">
-        <img src="icons/youtube-stroke-rounded.svg" alt="YouTube" />
-      </a>
-    </nav>
+  /* on phones, the window less the browser's toolbars when they're showing */
+  @supports (height: 100svh) {
+    :root {
+      --screen: 100svh;
+    }
+  }
 
-    <div class="project">
-      <a href="https://anuma.ai" target="_blank" class="project-header">
-        <h2>Anuma</h2>
-        <img class="logo" src="logos/anuma.svg" alt="Anuma" />
+  html {
+    background: var(--bg);
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead {
+    width: var(--col);
+    margin: 0 auto;
+    padding: var(--mast-pad) 0;
+  }
+
+  .masthead h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Chapters ---------- */
+
+  .chapters {
+    padding-bottom: 4rem;
+  }
+
+  /* one job: its mockup and caption, then a row of photos of its talks */
+  .chapter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .chapter + .chapter {
+    margin-top: var(--far);
+  }
+
+  figure {
+    position: relative;
+    margin: 0;
+  }
+
+  /* photo captions hang below, on one line in the room the row leaves */
+  figcaption strong {
+    display: block;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  figcaption {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    padding-top: 0.6rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--muted);
+  }
+
+  /*
+   * A mockup is as wide as the column, but for the windows hanging off it.
+   * The laptop's base is 486 of its ems, which are a 294th of its height;
+   * the display is drawn in points and scaled by --k.
+   */
+  .device {
+    --h: calc(var(--col) * 294 / 486);
+    padding-top: var(--pad);
+  }
+
+  /* under the laptop's base or the display's body */
+  .device figcaption {
+    position: static;
+    width: var(--col);
+    margin: 0 auto;
+    overflow: visible;
+    white-space: normal;
+  }
+
+  /* says the product opens, for touch screens, which have no pointer to say it */
+  .device[data-case] figcaption {
+    position: relative;
+  }
+
+  /* hung below the caption, so the products still stand on one line */
+  .case-link {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.15rem;
+    color: var(--muted);
+    transition: color 0.15s;
+  }
+
+  .device[data-case]:hover .case-link {
+    color: var(--text);
+  }
+
+  /* the same size as the Talks heading */
+  .device figcaption strong {
+    font-size: 16px;
+  }
+
+  /*
+   * A chapter's three photos sit in a row across the column, all cropped
+   * to the same shape so every chapter's row is the same size.
+   */
+  .photos {
+    box-sizing: border-box;
+    width: var(--col);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap);
+    padding: var(--near) 0 var(--cap);
+  }
+
+  .photo {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .photos.dragging {
+    scroll-snap-type: none;
+    cursor: grabbing;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .photos img,
+  .photos a {
+    -webkit-user-drag: none;
+  }
+
+  .photos.dragging .talk {
+    cursor: inherit;
+  }
+
+  .photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #f2f2f2;
+  }
+
+  /* a photo of a recorded talk, which plays it */
+  .talk {
+    position: relative;
+    display: block;
+    border-radius: 6px;
+  }
+
+  .talk:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
+  }
+
+  /* in a corner, where it keeps clear of the speaker */
+  .play {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: 0.4em 0.8em 0.4em 0.7em;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.8);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: var(--text);
+    font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .play::before {
+    content: "";
+    border-style: solid;
+    border-width: 0.42em 0 0.42em 0.7em;
+    border-color: transparent transparent transparent currentColor;
+  }
+
+  .talk:hover .play {
+    background: #fff;
+    transform: scale(1.06);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .play { transition: none; }
+  }
+
+  /* ---------- Display ---------- */
+
+  /*
+   * Ignite's windows sit on a display in the style of Apple's: a black
+   * body with an even bezel around a 1590 by 891 point screen, a camera at
+   * the top, and a wide aluminium stand with a round cable cut-out. It
+   * leaves 100 points either side, which the Terminal hangs into the way
+   * the laptop's do, and its 1654 point body is as wide as the column.
+   */
+  .device.windows.xdr {
+    --cw: 1854px;
+    --ch: 1230px;
+    --k: tan(atan2(var(--col), 1654px));
+  }
+
+  .xdr-body {
+    position: absolute;
+    top: 0;
+    left: 100px;
+    width: 1654px;
+    height: 962px;
+    box-sizing: border-box;
+    padding: 35px 32px;
+    border-radius: 18px;
+    background: #0c0c0c;
+    box-shadow:
+      inset 0 0 0 1.5px #2a2a2a,
+      0 30px 70px rgb(0 0 0 / 0.14);
+  }
+
+  .xdr-camera {
+    position: absolute;
+    top: 13px;
+    left: 821px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #3a3d46, #121316 60%);
+  }
+
+  .xdr-screen {
+    position: relative;
+    width: 1590px;
+    height: 891px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  /*
+   * The stand, as wide as a quarter of the display, comes out from behind
+   * it. The display sits low enough to hide the stand's cable cut-out.
+   */
+  .xdr-stand {
+    position: absolute;
+    top: 900px;
+    left: 725px;
+    width: 404px;
+    height: 306px;
+    background:
+      /* the display's faint shadow, below the 62px hidden behind it */
+      linear-gradient(transparent 62px, rgb(0 0 0 / 0.1) 62px, rgb(0 0 0 / 0.04) 92px, transparent 150px),
+      /* where the stand bends forward into the foot */
+      linear-gradient(transparent calc(100% - 26px), rgb(0 0 0 / 0.07) calc(100% - 10px), rgb(0 0 0 / 0.13) calc(100% - 3px), rgb(255 255 255 / 0.7)),
+      linear-gradient(90deg, rgb(0 0 0 / 0.07), transparent 5%, transparent 95%, rgb(0 0 0 / 0.08)),
+      linear-gradient(#dededf, #d2d2d4 55%, #cbcbce);
+  }
+
+  /*
+   * The foot: a plate along the bottom of the stand, its rounded ends
+   * catching the light, on two dark pads.
+   */
+  .xdr-foot {
+    position: absolute;
+    top: 1204px;
+    left: 723px;
+    width: 408px;
+    height: 22px;
+    border-radius: 3px 3px 7px 7px;
+    background:
+      linear-gradient(rgb(255 255 255 / 0.5), transparent 35%, rgb(0 0 0 / 0.07)),
+      linear-gradient(90deg, #f6f6f8, #d3d3d6 2.5%, #e3e3e6 9%, #dadadd 50%, #e3e3e6 91%, #d3d3d6 97.5%, #f6f6f8);
+    box-shadow: 0 10px 14px -6px rgb(0 0 0 / 0.12);
+  }
+
+  .xdr-foot::before,
+  .xdr-foot::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    width: 70px;
+    height: 5px;
+    border-radius: 0 0 2px 2px;
+    background: linear-gradient(#2a2a2c, #48484b);
+  }
+
+  .xdr-foot::before {
+    left: 10px;
+  }
+
+  .xdr-foot::after {
+    right: 10px;
+  }
+
+  /* ---------- Showcase (experiment) ---------- */
+
+  /*
+   * The products side by side in a row that scrolls sideways, with the
+   * photos and talks hidden. Like a shelf, it
+   * shows more than one product at once: the display, the tallest, is at
+   * most 62% of the window's height, rising to 70% in windows wider than
+   * 16:10 so the products fill them, and the laptop's base is as wide as
+   * the display's body, both standing on one line. It never fills the
+   * window's width, so some of the next product always shows as a hint to
+   * scroll.
+   *
+   * The name sits a little above the tallest product, the display, so it
+   * stays clear of every product as the row scrolls under it, and
+   * everything is centred together in the window, whatever its shape.
+   */
+  .showcase {
+    --name: 1.8rem; /* the name's line */
+    --above: clamp(2rem, 8vh, 5rem); /* between the name and the display */
+    --aspect: tan(atan2(100vw, var(--screen)));
+    --tallest: clamp(0.62, 0.62 + (var(--aspect) - 1.6) * 0.6, 0.7);
+    --scol: min(
+      var(--screen) * var(--tallest) * 1654 / 1230,
+      (var(--screen) - 3rem - var(--dcap) - var(--name) - var(--above)) * 1654 / 1230,
+      (100vw - 2 * var(--side)) * 1654 / 1854,
+      100vw * 0.58
+    );
+    /* how much taller than the laptop the display stands */
+    --taller: calc(var(--scol) * (1230 / 1654 - 294 / 486));
+    /* above the laptop's top: the name, and the display's extra height */
+    --lead: calc(var(--name) + var(--above) + var(--taller));
+    /* everything, top to bottom, which is centred in the window */
+    --extent: calc(var(--lead) + var(--scol) * 294 / 486 + var(--dcap));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    width: max-content;
+    min-width: 100%;
+    height: var(--screen);
+  }
+
+  /*
+   * The page itself scrolls sideways, so a trackpad's momentum, a new swipe
+   * cutting into it and the bounce at either end all come from the browser
+   * and the OS, as in any native app. Swiping past the left end doesn't go
+   * back a page.
+   */
+  :root:has(.showcase) {
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  :root:has(.showcase)::-webkit-scrollbar {
+    display: none;
+  }
+
+  .showcase .photos,
+  .showcase .talks {
+    display: none;
+  }
+
+  /*
+   * The name lines up with the laptop's screen: past
+   * the left terminal's 48.5em, and the 43em the base reaches out beyond
+   * the lid on either side. It's pinned to the window, so it stays put
+   * while the row scrolls under it.
+   */
+  .showcase .masthead {
+    position: fixed;
+    top: calc((var(--screen) - var(--extent)) / 2);
+    left: 0;
+    box-sizing: border-box;
+    width: 100vw;
+    margin: 0;
+    padding-block: 0;
+    padding-inline: calc(var(--side) + var(--scol) * (48.5 + 43) / 486) var(--side);
+  }
+
+  /* room above for the pinned name, and on the right to scroll the last product to the window's centre */
+  .showcase .chapters {
+    flex: none;
+    display: flex;
+    align-items: flex-end;
+    /*
+     * wide enough that the next product peeks in by about a fifth of the
+     * window: the laptop's 583em, and the 100 points left of the display's
+     * body, end there
+     */
+    gap: max(4rem, 80vw - var(--side) - var(--scol) * 583 / 486 - var(--scol) * 100 / 1654);
+    padding: calc(var(--name) + var(--above)) max(var(--side), (100vw - var(--scol) * 1854 / 1654) / 2) 0 var(--side);
+  }
+
+  /* dragged past either end, the products stretch by --stretch */
+  .showcase .chapter {
+    flex: none;
+    translate: var(--stretch, 0) 0;
+  }
+
+  .showcase .chapter + .chapter {
+    margin-top: 0;
+  }
+
+  .showcase .device {
+    --col: var(--scol);
+    padding-top: 0;
+  }
+
+  html.dragging {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /*
+   * A page wider than a phone's screen makes the browser zoom out to fit
+   * it, so on phones the row scrolls in a strip of its own instead, which
+   * touch scrolls and bounces natively. The laptop, terminals and all, is
+   * as wide as the screen.
+   */
+  @media (max-width: 700px) {
+    .showcase {
+      --scol: calc((100vw - 2 * var(--side)) * 486 / 583);
+      width: auto;
+    }
+
+    :root:has(.showcase) {
+      overflow-x: hidden;
+    }
+
+    .showcase .chapters {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+
+    .showcase .chapters::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* ---------- Case study ---------- */
+
+  /*
+   * A product opens into its case study, a page to read like a well-made
+   * doc: the product, smaller and still running, above a column of text.
+   * The browser's view transition morphs the product there from the shelf,
+   * the name glides to the column, and the rest crossfades.
+   */
+  .case {
+    --doc: min(680px, 100vw - 2 * var(--side));
+    --col: var(--doc);
+    position: relative;
+    box-sizing: border-box;
+    width: var(--doc);
+    margin: 0 auto;
+    padding: calc(var(--mast-pad) + var(--name) + 3rem) 0 8rem;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* while reading, the page scrolls down again, as a document does */
+  :root:has(.showcase.reading) {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .showcase.reading {
+    display: block;
+    width: auto;
+    height: auto;
+  }
+
+  .reading .chapters {
+    display: none;
+  }
+
+  /* the name sits over the column, and scrolls away with it */
+  .reading .masthead {
+    position: absolute;
+    z-index: 1; /* above the case study, which starts at the top of the page too */
+    pointer-events: none; /* but only the name takes clicks, not the whole bar */
+    top: var(--mast-pad);
+    padding-inline: max(var(--side), (100vw - min(680px, 100vw - 2 * var(--side))) / 2);
+  }
+
+  /* while reading, the name leads back to the shelf */
+  .home {
+    display: block;
+    width: fit-content;
+    pointer-events: auto;
+  }
+
+  /* the product, centred across the window, at most 40% of its height */
+  .case-device {
+    --hero: min(var(--screen) * 0.4 * 486 / 294, (100vw - 2 * var(--side)) * 486 / 583);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-inline: calc((var(--doc) - 100vw) / 2 + var(--side));
+  }
+
+  /* the display is taller for its width than the laptop, and hangs to the right */
+  #ignite .case-device {
+    --hero: min(var(--screen) * 0.4 * 1654 / 1230, (100vw - 2 * var(--side)) * 1654 / 1854);
+  }
+
+  .case .device {
+    --col: var(--hero);
+    padding-top: 0;
+  }
+
+  /* the way back, on the name's line, at the window's left edge */
+  .case-back {
+    position: absolute;
+    top: var(--mast-pad);
+    left: calc((var(--doc) - 100vw) / 2 + var(--side));
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    height: var(--name);
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .case-back:hover {
+    color: var(--text);
+  }
+
+  .case-back svg {
+    width: 9px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* on a phone the name starts at the edge, so Back goes to the other end */
+  @media (max-width: 700px) {
+    .case-back {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  .case .device figcaption {
+    display: none;
+  }
+
+  .case h1 {
+    margin: 3.5rem 0 0;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .case .role {
+    margin: 0.3rem 0 2rem;
+    color: var(--muted);
+  }
+
+  .case h2 {
+    margin: 3rem 0 0.75rem;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .case p {
+    margin: 0 0 1rem;
+  }
+
+  .case p a {
+    text-decoration: underline;
+    text-decoration-color: rgb(0 0 0 / 0.25);
+    text-underline-offset: 0.2em;
+  }
+
+  .case p a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .case .lede {
+    font-size: 19px;
+    line-height: 1.5;
+  }
+
+  .case code {
+    font: 0.88em ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  /* where Denis's own words are still needed */
+  .todo {
+    padding: 0.1em 0.3em;
+    border-radius: 4px;
+    background: #fff3c4;
+    color: #5c4a00;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* photos and videos sit in the text, captioned underneath */
+  .case figure figcaption {
+    position: static;
+    padding-top: 0.6rem;
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  .case figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    background: #f2f2f2;
+  }
+
+  /* photos and videos are wider than the text, all to one width */
+  .case-wide,
+  .case-photos,
+  .case-videos {
+    --wide: min(1040px, 100vw - 2 * var(--side));
+    box-sizing: border-box;
+    width: var(--wide);
+    margin-inline: calc((var(--doc) - var(--wide)) / 2);
+  }
+
+  .case-wide {
+    margin-block: 3rem 3.5rem;
+  }
+
+  .case-wide img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .case-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-block: 1.5rem 3rem;
+  }
+
+  .case-photos.pair {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .case-photos img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .case-videos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem 1rem;
+    margin-block: 2rem 3rem;
+  }
+
+  /* a hairline, so the white covers keep their edge on the white page */
+  .case-videos img {
+    aspect-ratio: 16 / 9;
+    outline: 1px solid rgb(0 0 0 / 0.08);
+    outline-offset: -1px;
+  }
+
+  /* small, and in the corner the covers leave clear of their titles and speakers */
+  .case-photos .play,
+  .case-videos .play {
+    left: auto;
+    right: 0.45rem;
+    bottom: 0.45rem;
+    font-size: 11px;
+  }
+
+  @media (max-width: 700px) {
+    .case-videos {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* three across would be too small to see the speaker */
+    .case-photos,
+    .case-photos.pair {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .case .talks {
+    display: block;
+    width: auto;
+    margin: 1.5rem 0 0;
+  }
+
+  /* the name, not the bar it sits in, so it glides from the shelf to the column */
+  .showcase .home {
+    view-transition-name: name;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 0.55s;
+    animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.35s;
+  }
+
+  /* ---------- Pointer ---------- */
+
+  /*
+   * With a mouse or trackpad, the arrow gives way to a soft circle like
+   * iPad's pointer: it dims and blurs what's under
+   * it, grows in when the mouse first moves, and shrinks a little while
+   * pressed.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    html.pointing,
+    html.pointing * {
+      cursor: none;
+    }
+  }
+
+  /*
+   * The pointer is an anchor at the mouse and a shape drawn around it, so
+   * the shape can change size and stay centred. At rest it's a small
+   * circle; over a link it snaps to a soft highlight behind it, as iPad's
+   * pointer does, and over a product, photo or video it stretches into a
+   * pill that says what a click will do.
+   */
+  .pointer {
+    --w: 24px;
+    --h: 24px;
+    --r: 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  .pointer::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--h) / -2);
+    left: calc(var(--w) / -2);
+    width: var(--w);
+    height: var(--h);
+    border-radius: var(--r);
+    -webkit-backdrop-filter: invert(30%) blur(10px);
+    backdrop-filter: invert(30%) blur(10px);
+    opacity: 0;
+    scale: 0.1;
+    transition:
+      opacity 0.25s,
+      scale 0.35s cubic-bezier(0.3, 1.6, 0.6, 1),
+      top 0.2s, left 0.2s, width 0.2s, height 0.2s, border-radius 0.2s;
+  }
+
+  .pointer.shown::before {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .pointer.shown.pressed::before {
+    scale: 0.9;
+  }
+
+  /*
+   * behind a link, a plain grey tint that darkens the page but not the
+   * link's text, which a blur would smear
+   */
+  .pointer.snapped {
+    mix-blend-mode: multiply;
+  }
+
+  .pointer.snapped::before {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #ececec;
+  }
+
+  /* the pill's label fades in once the shape has stretched */
+  .pointer::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 0;
+    left: 0;
+    translate: -50% -50%;
+    font: 500 13px/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    color: #fff;
+    text-shadow: 0 0 3px rgb(0 0 0 / 0.45); /* readable on the pill's light or dark blur */
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+
+  .pointer.shown.labelled::after {
+    opacity: 1;
+    transition-delay: 0.1s;
+  }
+
+  /* moving onto or off a link, the shape glides rather than jumps */
+  .pointer.gliding {
+    transition: translate 0.18s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pointer::before { transition: opacity 0.25s; scale: 1; }
+    .pointer.gliding { transition: none; }
+  }
+
+  /* ---------- Talks ---------- */
+
+  /* every talk, newest first, the recorded ones playing like the photos do */
+  .talks {
+    width: var(--col);
+    margin: var(--far) auto 0;
+    container-type: inline-size;
+  }
+
+  .talks h2 {
+    margin: 0 0 1.25rem;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .talks ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #ececec;
+    font-size: 14px;
+  }
+
+  .talks li {
+    border-bottom: 1px solid #ececec;
+  }
+
+  .talks li,
+  .talks li > a {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1.6fr) 5rem;
+    gap: 1.25rem;
+  }
+
+  .talks li > a {
+    grid-column: 1 / -1;
+  }
+
+  .talks span {
+    padding: 0.85rem 0;
+  }
+
+  .talk-year,
+  .talk-title,
+  .talk-length {
+    color: var(--muted);
+  }
+
+  .talk-length {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .talks a:hover .talk-title,
+  .talks a:hover .talk-length {
+    color: var(--text);
+  }
+
+  /* in a narrow column, each talk's title goes under its event */
+  @container (max-width: 760px) {
+    .talks li,
+    .talks li > a {
+      grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+      gap: 0 0.75rem;
+    }
+
+    .talks span {
+      padding: 0.75rem 0 0;
+    }
+
+    .talks .talk-title {
+      grid-row: 2;
+      grid-column: 2 / -1;
+      padding: 0.15rem 0 0.75rem;
+    }
+  }
+
+  /* ---------- Player ---------- */
+
+  .player {
+    width: min(90vw, (100vh - 8rem) * 16 / 9);
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    overflow: visible;
+    background: none;
+    color: #fff;
+  }
+
+  .player::backdrop {
+    background: rgb(0 0 0 / 0.88);
+  }
+
+  .player iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 8px;
+    background: #000;
+  }
+
+  .player p {
+    margin: 0.75rem 0 0;
+    color: rgb(255 255 255 / 0.75);
+  }
+
+  .player .close {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    padding: 0.6rem 0;
+    border: 0;
+    background: none;
+    color: rgb(255 255 255 / 0.75);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .player .close:hover {
+    color: #fff;
+  }
+
+  @media (max-width: 700px) {
+    :root {
+      --side: 16px;
+      --mast-pad: 1.5rem;
+      --gap: 1rem;
+      --far: 6rem;
+    }
+
+    /*
+     * Three photos across a phone's column would be too small to make out,
+     * so they run on past the window's edge, the first in line with the
+     * column, and scroll with a swipe.
+     */
+    .photos {
+      align-self: stretch;
+      width: auto;
+      overflow-x: auto;
+      padding-inline: calc((100% - var(--col)) / 2);
+      scroll-padding-inline: calc((100% - var(--col)) / 2);
+      scroll-snap-type: x proximity;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+
+    .photos::-webkit-scrollbar {
+      display: none;
+    }
+
+    .photo {
+      flex: none;
+      scroll-snap-align: start;
+    }
+
+    .photo img {
+      width: auto;
+      height: 52vw;
+    }
+  }
+
+
+  /*
+   * Every length is in em, and 1em is one pixel of the 486px-wide original.
+   * Change font-size to scale the whole laptop.
+   */
+  .laptop {
+    position: relative;
+    font-size: calc(var(--h) / 294);
+    width: 486em;
+    margin: 0 48.5em; /* room for the terminals hanging off both sides */
+    padding-bottom: 3em; /* room for the feet */
+  }
+
+  .laptop *,
+  .laptop *::before,
+  .laptop *::after {
+    box-sizing: border-box;
+  }
+
+  /* ---------- Lid ---------- */
+
+  .lid {
+    width: 400em;
+    height: 273em;
+    margin: 0 auto;
+    padding: 2em 2em 0;
+    border-radius: 14em 14em 0 0;
+    /* the thin aluminium rim */
+    background: linear-gradient(#6a6a6a, #575757 1.5%, #515151);
+  }
+
+  .bezel {
+    position: relative;
+    height: 100%;
+    background: #000;
+    border-radius: 12em 12em 0 0;
+    box-shadow:
+      inset 0 1em #1a1a1a,
+      inset 1em 0 #141414,
+      inset -1em 0 #141414;
+  }
+
+  .screen {
+    position: absolute;
+    top: 6em;
+    left: 5em;
+    width: 386em;
+    height: 250em;
+    overflow: hidden;
+    border-radius: 3em 3em 0 0;
+    background: #000;
+  }
+
+  /*
+   * The screenshot is 16:10, a little wider than the screen, so it fits the
+   * full width and leaves a black strip at the top for the notch, like the
+   * menu bar area of a full-screen app.
+   */
+  .screen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom;
+  }
+
+  .notch {
+    position: absolute;
+    top: 6em;
+    left: 50%;
+    width: 47em;
+    height: 7em;
+    margin-left: -23.5em;
+    background: #000;
+    border-radius: 0 0 1.5em 1.5em;
+  }
+
+  .camera {
+    position: absolute;
+    top: 6.25em;
+    left: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    margin-left: -1.25em;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #3a3d46, #17181c 55%, #0a0a0a);
+  }
+
+  /* dark strip along the bottom of the display */
+  .chin {
+    position: absolute;
+    top: 260em;
+    left: 0;
+    right: 0;
+    height: 10em;
+    background: linear-gradient(#0a0a0a, #171717 1.5em, #121212 3em, #0d0d0d 6em, #070707);
+  }
+
+  /* ---------- Base ---------- */
+
+  .base {
+    position: relative;
+    height: 18em;
+    border-radius: 2em 2em 12em 12em / 1em 1em 9em 9em;
+    /* shading near the ends: flatter, less contrast */
+    background: linear-gradient(
+      #484a4a 0.5em,
+      #77787a 1.5em,
+      #747577 10.5em,
+      #6d6e70 12.5em,
+      #626365 14.5em,
+      #6e6f71 15.5em,
+      #7a7b7d 16.5em,
+      #4e4f51 17.5em
+    );
+  }
+
+  /* brighter, more contrasty shading across the middle */
+  .base::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      #4e4e50 0.5em,
+      #afb0b2 1.5em,
+      #a3a4a6 2.5em,
+      #9fa0a2 5.5em,
+      #98999b 7.5em,
+      #919294 8.5em,
+      #838486 9.5em,
+      #6d6e70 10.5em,
+      #5e5f61 11.5em,
+      #555658 12.5em,
+      #505153 13.5em,
+      #535456 14.5em,
+      #606163 15.5em,
+      #6a6b6d 16.5em,
+      #484a4a 17.5em
+    );
+    --fade: linear-gradient(
+      90deg,
+      transparent 13em,
+      rgb(0 0 0 / 0.18) 23em,
+      rgb(0 0 0 / 0.33) 38em,
+      rgb(0 0 0 / 0.7) 68em,
+      rgb(0 0 0 / 0.85) 98em,
+      #000 140em,
+      #000 calc(100% - 140em),
+      rgb(0 0 0 / 0.85) calc(100% - 98em),
+      rgb(0 0 0 / 0.7) calc(100% - 68em),
+      rgb(0 0 0 / 0.33) calc(100% - 38em),
+      rgb(0 0 0 / 0.18) calc(100% - 23em),
+      transparent calc(100% - 13em)
+    );
+    -webkit-mask-image: var(--fade);
+    mask-image: var(--fade);
+  }
+
+  /* specular highlights where the rounded ends catch the light */
+  .base::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.15) 1em,
+      rgb(255 255 255 / 0.17) 3em,
+      rgb(255 255 255 / 0.52) 5.5em,
+      rgb(255 255 255 / 0.4) 7em,
+      transparent 10em,
+      transparent calc(100% - 10em),
+      rgb(255 255 255 / 0.4) calc(100% - 7em),
+      rgb(255 255 255 / 0.52) calc(100% - 5.5em),
+      rgb(255 255 255 / 0.17) calc(100% - 3em),
+      rgb(255 255 255 / 0.15) calc(100% - 1em)
+    );
+    --fade: linear-gradient(#000 9.5em, rgb(0 0 0 / 0.5) 12em, rgb(0 0 0 / 0.2) 14em, transparent 16em);
+    -webkit-mask-image: var(--fade);
+    mask-image: var(--fade);
+  }
+
+  /* the thumb recess for opening the lid */
+  .recess {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 50%;
+    width: 85em;
+    height: 7em;
+    margin-left: -42.5em;
+    border: solid #3a3b3d;
+    border-width: 0 1.5em;
+    border-radius: 0 0 5em 5em / 0 0 7em 7em;
+    background:
+      linear-gradient(#4f5052 1em, #bbbcbe 1em, #b9babc 3em, #c1c2c4 5.5em, #b4b5b7 7em)
+      padding-box;
+  }
+
+  .foot {
+    position: absolute;
+    z-index: 1;
+    top: 17em;
+    width: 33em;
+    height: 4em;
+    /* tapered towards the bottom */
+    clip-path: polygon(0 0, 100% 0, calc(100% - 3em) 100%, 3em 100%);
+    border-radius: 0 0 4em 4em / 0 0 2em 2em;
+    background:
+      linear-gradient(transparent 1em, rgb(0 0 0 / 0.35) 2.5em, rgb(0 0 0 / 0.7)),
+      linear-gradient(
+        90deg,
+        #262628,
+        #5e5e60 7%,
+        #343436 18%,
+        #5e5e60 48%,
+        #343436 80%,
+        #5c5c5e 92%,
+        #232325
+      );
+  }
+
+  .foot.left { left: 27em; }
+  .foot.right { right: 27em; }
+
+  /* ---------- Terminal windows ---------- */
+
+  /*
+   * Sizes are in ems, which each window sets to a macOS point: the title bar
+   * is 28pt, the traffic lights 12pt.
+   */
+  .terminal {
+    position: absolute;
+    top: 112em;
+    width: 197em;
+    height: 122.5em;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 3em;
+    background: #1e1e1e;
+    /* a soft lift off the device and the page, lighter than macOS's own */
+    box-shadow:
+      0 0 0 0.3em rgb(0 0 0 / 0.8),
+      0 4em 12em rgb(0 0 0 / 0.22);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /*
+   * The laptop's windows hang half off either edge of its screen, which
+   * runs from 50em to 436em across the laptop: 50em - 197em / 2 = -48.5em
+   * and 436em - 197em / 2 = 337.5em. They sit just below the docs' headline.
+   */
+  .laptop .terminal.localnet {
+    left: -48.5em;
+  }
+
+  .laptop .terminal.cli {
+    left: 337.5em;
+  }
+
+  /* the second window opens later, once localnet is running */
+  .terminal.cli {
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  .terminal.cli.open {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.25s, transform 0.25s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terminal.cli.open { transition: none; }
+  }
+
+  /* the faint light edge of a dark-mode window */
+  .terminal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 0.3em rgb(255 255 255 / 0.16);
+    pointer-events: none;
+  }
+
+  .titlebar {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7.5em;
+    background: #2e2e2e;
+    border-bottom: 0.3em solid #000;
+  }
+
+  .lights {
+    position: absolute;
+    top: 50%;
+    left: 2.4em;
+    display: flex;
+    gap: 2.1em;
+    margin-top: -1.6em;
+  }
+
+  .light {
+    width: 3.2em;
+    height: 3.2em;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 0.25em rgb(0 0 0 / 0.12);
+  }
+
+  .light.close { background: #ff5f57; }
+  .light.minimize { background: #febc2e; }
+  .light.zoom { background: #28c840; }
+
+  .title {
+    font-size: 3.5em;
+    font-weight: 600;
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  /*
+   * Bigger than Terminal's 11pt default so it stays readable on the page.
+   * The line height is Menlo's own, so box-drawing characters join up
+   * between rows.
+   */
+  .terminal-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0.3em 0.5em;
+    font: 4em/1.165 ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    color: #f0f0f0;
+  }
+
+  /* wraps at any character, like a terminal does at the last column */
+  .line {
+    min-height: 1.165em;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Terminal.app's default ANSI colours */
+  .dim { color: #818383; }
+  .blue { color: #492ee1; }
+  .green { color: #25bc24; }
+  .yellow { color: #adad27; }
+  .cyan { color: #33bbc8; }
+  .bold { font-weight: 700; }
+
+  /* Ignite CLI's own colours, which it prints in true colour */
+  .ig-info { color: #c4a000; }
+  .ig-success { color: #4e9a06; }
+  .ig-mnemonic { color: #729fcf; }
+
+  .cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.165em;
+    vertical-align: top;
+    background: #bfbfbf;
+  }
+
+  /* a window in the background: grey traffic lights, dimmer title, hollow cursor */
+  .terminal.inactive .titlebar { background: #262626; }
+  .terminal.inactive .light { background: #4d4d4d; }
+  .terminal.inactive .title { color: rgb(255 255 255 / 0.4); }
+
+  .terminal.inactive .cursor {
+    background: none;
+    box-shadow: inset 0 0 0 0.1em #bfbfbf;
+  }
+
+  /* ---------- Desktop windows ---------- */
+
+  /*
+   * Ignite's mockup is laid out in points on a canvas of --cw by --ch,
+   * then scaled to its section.
+   */
+  .device.windows {
+    --cw: 1590px;
+    --ch: 891px;
+  }
+
+  .desktop {
+    width: calc(var(--k) * var(--cw));
+    height: calc(var(--k) * var(--ch));
+  }
+
+  .desktop-inner {
+    position: relative;
+    width: var(--cw);
+    height: var(--ch);
+    transform: scale(var(--k));
+    transform-origin: 0 0;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /*
+   * Out on the display rather than on its screen, hanging over the
+   * bottom-right corner of the bezel, below the wallet's Send button.
+   */
+  .terminal.floating {
+    top: 630px;
+    left: 1166px;
+    width: 688px;
+    height: 434px;
+    font-size: 4.375px;
+    /* the laptop terminals' shadow, from their ems into the display's points */
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.6),
+      0 14px 41px rgb(0 0 0 / 0.22);
+  }
+
+  /* 14px Menlo, bigger than on the laptop so it reads, for 80 columns by 24 rows */
+  .terminal.floating .terminal-body {
+    font-size: 3.2em;
+  }
+
+
+  /*
+   * The wallet that came with Ignite's Vue template, laid out as in Ignite's
+   * own screenshots of a 1260 point wide window, and scaled up to fill the
+   * screen: 1590 / 1260.
+   */
+  .wallet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1260px;
+    height: 706px;
+    transform: scale(1.262);
+    transform-origin: 0 0;
+    font: 13px/1.2 Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #111;
+  }
+
+  .wallet > div,
+  .w-assets > *,
+  .w-transactions > *,
+  .w-send > * {
+    position: absolute;
+  }
+
+  .wallet b {
+    font-weight: 600;
+  }
+
+  .w-muted {
+    color: #9a9a9a;
+  }
+
+  .w-nav {
+    top: 25px;
+    left: 98px;
+    display: flex;
+    gap: 22px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .w-nav .w-muted {
+    font-weight: 400;
+    color: #777;
+  }
+
+  .w-account {
+    top: 20px;
+    right: 36px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .w-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 72% 28%, #b8f3ff, #5d8dff 30%, #3a2fd8 62%, #6b2fd3);
+  }
+
+  .w-h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .w-assets {
+    top: 0;
+    left: 98px;
+    width: 609px;
+  }
+
+  .w-assets .w-h2,
+  .w-send .w-h2 {
+    top: 113px;
+  }
+
+  .w-search {
+    top: 125px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #9a9a9a;
+  }
+
+  .w-search svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: #777;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+  }
+
+  .w-table-head {
+    top: 178px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #8b8b8b;
+  }
+
+  .w-asset {
+    left: 0;
+    right: 0;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    font-size: 13.5px;
+  }
+
+  .w-asset b {
+    margin-left: 16px;
+  }
+
+  .w-coin {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #f1f1f1;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.04);
+    font-size: 12px;
+    font-weight: 600;
+    color: #444;
+  }
+
+  .w-channels,
+  .w-tx-channels {
+    position: absolute;
+    left: 252px;
+    color: #6b6b6b;
+  }
+
+  .w-amount {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .w-more,
+  .w-advanced {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .w-more {
+    top: 328px;
+    left: 301px;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 0.12);
+  }
+
+  .w-more svg,
+  .w-advanced svg {
+    width: 10px;
+    height: 10px;
+    fill: none;
+    stroke: #222;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .w-transactions {
+    top: 409px;
+    left: 98px;
+    width: 609px;
+  }
+
+  .w-month {
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .w-tx {
+    left: 0;
+    right: 0;
+    display: flex;
+    font-size: 11.5px;
+  }
+
+  .w-tx > div span {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #8b8b8b;
+  }
+
+  .w-tx > div:first-of-type {
+    margin-left: 42px;
+  }
+
+  .w-tx-icon {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: #f4f4f4;
+    font-size: 12px;
+  }
+
+  .w-tx-channels {
+    top: 20px;
+    left: 260px;
+    font-size: 11px;
+  }
+
+  .w-tx-sum {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .w-tx-sum b {
+    font-weight: 500;
+  }
+
+  .w-in {
+    color: #22a33a;
+  }
+
+  .w-send {
+    top: 0;
+    left: 882px;
+    width: 279px;
+  }
+
+  .w-send .w-h2 .w-muted {
+    margin-left: 14px;
+    color: #b3b3b3;
+  }
+
+  .w-label {
+    top: 175px;
+    font-size: 11px;
+    color: #777;
+  }
+
+  .w-input {
+    top: 192px;
+    left: 0;
+    right: 0;
+    height: 41px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    border-radius: 4px;
+    background: #f4f4f4;
+    color: #b0b0b0;
+  }
+
+  .w-send-asset {
+    top: 264px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .w-send-asset div {
+    margin-left: 14px;
+  }
+
+  .w-send-asset div span {
+    display: block;
+    margin-top: 5px;
+    font-size: 11px;
+    color: #8b8b8b;
+  }
+
+  .w-send-asset .w-send-amount {
+    margin: 0 0 0 auto;
+    font-size: 18px;
+    color: #111;
+  }
+
+  .w-add {
+    top: 318px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 12px;
+    color: #333;
+  }
+
+  .w-add svg {
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+    fill: none;
+    stroke: #c8c8c8;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+  }
+
+  .w-advanced {
+    top: 375px;
+    font-weight: 600;
+  }
+
+  .w-button {
+    top: 412px;
+    left: 0;
+    right: 0;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    background: #a8a8a8;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .w-button.ready,
+  .w-button.sending {
+    background: #111;
+  }
+
+  .w-button.sending {
+    opacity: 0.55;
+  }
+
+  /* a pasted address, scrolled to its end as a text field does */
+  .w-input.filled {
+    justify-content: flex-end;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #111;
+  }
+
+  .w-tx,
+  .w-month {
+    transition: top 0.5s cubic-bezier(0.3, 0, 0.2, 1);
+  }
+
+  .w-new {
+    animation: w-new 0.5s ease both;
+  }
+
+  @keyframes w-new {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .w-tx, .w-month { transition: none; }
+    .w-new { animation: none; }
+  }
+
+</style>
+</head>
+<!-- showcase: an experiment with the products side by side and no photos or talks; remove the class to go back -->
+<body class="showcase">
+  <header class="masthead">
+    <!-- a link back to the shelf only while a case study is open -->
+    <a class="home">
+      <h1>Denis Fadeev</h1>
+    </a>
+  </header>
+
+  <main class="chapters">
+    <section class="chapter" aria-label="ZetaChain">
+      <figure class="device" data-case="zetachain" tabindex="0" role="link" aria-label="ZetaChain case study">
+        <div class="laptop">
+          <div class="lid">
+            <div class="bezel">
+              <div class="screen">
+                <img src="images/zetachain-docs-universal-app-2025-09.png" alt="ZetaChain docs: Build a universal app in minutes">
+              </div>
+              <div class="notch"></div>
+              <div class="camera"></div>
+              <div class="chin"></div>
+            </div>
+          </div>
+          <div class="base">
+            <div class="recess"></div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+          </div>
+          <div class="terminal localnet" aria-hidden="true">
+            <div class="titlebar">
+              <div class="lights">
+                <span class="light close"></span>
+                <span class="light minimize"></span>
+                <span class="light zoom"></span>
+              </div>
+              <span class="title">fadeev — -zsh — 80×24</span>
+            </div>
+            <div class="terminal-body"></div>
+          </div>
+          <div class="terminal cli" aria-hidden="true">
+            <div class="titlebar">
+              <div class="lights">
+                <span class="light close"></span>
+                <span class="light minimize"></span>
+                <span class="light zoom"></span>
+              </div>
+              <span class="title">fadeev — -zsh — 80×24</span>
+            </div>
+            <div class="terminal-body"></div>
+          </div>
+        </div>
+        <figcaption><strong>ZetaChain</strong>Head of Developer Experience, 2023–2025<span class="case-link">Case study →</span></figcaption>
+      </figure>
+
+    </section>
+
+    <section class="chapter" aria-label="Ignite">
+      <figure class="device windows xdr" data-case="ignite" tabindex="0" role="link" aria-label="Ignite case study">
+        <div class="desktop">
+          <div class="desktop-inner" aria-hidden="true">
+            <div class="xdr-stand"></div>
+            <div class="xdr-foot"></div>
+            <div class="xdr-body">
+              <span class="xdr-camera"></span>
+              <div class="xdr-screen">
+                <!-- the wallet that Ignite's Vue template came with in 2023 -->
+                <div class="wallet">
+                  <div class="w-nav">
+                    <span>Portfolio</span>
+                    <span class="w-muted">Data</span>
+                  </div>
+                  <div class="w-account"><span class="w-avatar"></span>Alice</div>
+
+                  <div class="w-assets">
+                    <div class="w-h2">Assets</div>
+                    <div class="w-search">
+                      <svg viewBox="0 0 14 14"><circle cx="6" cy="6" r="4.5"/><path d="m9.5 9.5 3 3"/></svg>
+                      Search assets
+                    </div>
+                    <div class="w-table-head"><span>Asset</span><span>Available balance</span></div>
+                    <div class="w-asset" style="top: 214px">
+                      <span class="w-coin">P</span><b>PHOTON</b><span class="w-amount">1,250</span>
+                    </div>
+                    <div class="w-asset" style="top: 270px">
+                      <span class="w-coin">A</span><b>ATOM</b><span class="w-channels">Channels 1 → 5 → 8</span><span class="w-amount">20,000</span>
+                    </div>
+                    <div class="w-more">Show more <svg viewBox="0 0 10 10"><path d="m2 3.5 3 3 3-3"/></svg></div>
+                  </div>
+
+                  <div class="w-transactions">
+                    <div class="w-h2">Transactions</div>
+                    <div class="w-month" style="top: 72px">February</div>
+                    <div class="w-tx" style="top: 106px">
+                      <span class="w-tx-icon">↑</span>
+                      <div><b>Send</b><span>February 2, 3:10 pm</span></div>
+                      <div class="w-tx-sum"><b>- 5.16 STPT &nbsp; - 100 AKT</b><span>to spn1p05...94029y</span></div>
+                    </div>
+                    <div class="w-tx" style="top: 159px">
+                      <span class="w-tx-icon">↓</span>
+                      <div><b>Receive</b><span>February 1, 7:55 pm</span></div>
+                      <span class="w-tx-channels">Channels 1 → 5 → 8</span>
+                      <div class="w-tx-sum"><b class="w-in">+ 1,159 STPT</b><span>from spn1p05...94029y</span></div>
+                    </div>
+                    <div class="w-month" style="top: 234px">January</div>
+                    <div class="w-tx" style="top: 268px">
+                      <span class="w-tx-icon">↑</span>
+                      <div><b>Send</b><span>January 31, 6:12 pm</span></div>
+                      <div class="w-tx-sum"><b>- 20,000 AKT</b><span>to spn1p05...94029y</span></div>
+                    </div>
+                    <div class="w-tx" style="top: 321px">
+                      <span class="w-tx-icon">↓</span>
+                      <div><b>Receive</b><span>January 30, 9:41 am</span></div>
+                      <div class="w-tx-sum"><b class="w-in">+ 1,159 STPT</b><span>from spn1p05...94029y</span></div>
+                    </div>
+                  </div>
+
+                  <div class="w-send">
+                    <div class="w-h2">Send <span class="w-muted">Receive</span></div>
+                    <div class="w-label">Send to</div>
+                    <div class="w-input">Recipient address</div>
+                    <div class="w-send-asset">
+                      <span class="w-coin">P</span>
+                      <div><b>PHOTON</b><span>1,250 available</span></div>
+                      <span class="w-send-amount">250</span>
+                    </div>
+                    <div class="w-add"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="8"/><path d="M9 5.5v7M5.5 9h7"/></svg>Add asset</div>
+                    <div class="w-advanced">Advanced <svg viewBox="0 0 10 10"><path d="m2 3.5 3 3 3-3"/></svg></div>
+                    <div class="w-button">Send</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="terminal floating ignite">
+              <div class="titlebar">
+                <div class="lights">
+                  <span class="light close"></span>
+                  <span class="light minimize"></span>
+                  <span class="light zoom"></span>
+                </div>
+                <span class="title">fadeev — -zsh — 80×24</span>
+              </div>
+              <div class="terminal-body"></div>
+            </div>
+          </div>
+        </div>
+        <figcaption><strong>Ignite</strong>Created Ignite CLI, 2020–2023<span class="case-link">Case study →</span></figcaption>
+      </figure>
+
+      <div class="photos">
+        <figure class="photo">
+          <a class="talk" href="https://www.youtube.com/watch?v=aN0EXiM2hm8" data-video="aN0EXiM2hm8" data-title="Create and launch your dApp as an app chain in just minutes · Istanbul Blockchain Week, 2022" aria-label="Watch the talk Create and launch your dApp as an app chain in just minutes, 15 minutes">
+            <img src="images/istanbul-blockchain-week-2022.jpg" width="1563" height="1172" loading="lazy" alt="Denis on stage beside a slide reading “Building with Ignite CLI” and the command ignite scaffold chain mychain">
+            <span class="play">15 min</span>
+          </a>
+          <figcaption>Istanbul Blockchain Week, 2022</figcaption>
+        </figure>
+        <figure class="photo">
+          <a class="talk" href="https://www.youtube.com/watch?v=F7yKUX1YXIM" data-video="F7yKUX1YXIM" data-title="Ignite Chain Launch · Cosmoverse, Medellín, 2022" aria-label="Watch the talk Ignite Chain Launch, 17 minutes">
+            <img src="images/cosmoverse-medellin-2022.jpg" width="1800" height="1350" loading="lazy" alt="Denis speaking with a microphone in front of the Cosmoverse 2022 backdrop">
+            <span class="play">17 min</span>
+          </a>
+          <figcaption>Cosmoverse, Medellín, 2022</figcaption>
+        </figure>
+        <figure class="photo">
+          <a class="talk" href="https://www.youtube.com/watch?v=rcPLGM9VtFc" data-video="rcPLGM9VtFc" data-title="Build your blockchain with Ignite CLI in 10 minutes · Buckle Up &amp; Build Cosmos, Berlin, 2022" aria-label="Watch the talk Build your blockchain with Ignite CLI in 10 minutes, 33 minutes">
+            <img src="images/buckle-up-and-build-2022.jpg" width="1200" height="900" loading="lazy" alt="Denis at a lectern beside a slide reading “Build your blockchain with Ignite CLI in 10 minutes”">
+            <span class="play">33 min</span>
+          </a>
+          <figcaption>Buckle Up &amp; Build Cosmos, Berlin, 2022</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="talks" aria-labelledby="talks-heading">
+      <h2 id="talks-heading">Talks</h2>
+      <ol>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=hLNoJxbLwLM" data-video="hLNoJxbLwLM" data-title="Panel: Building the next generation of blockchain infra · Multichain Day, TOKEN2049">
+            <span class="talk-year">2024</span><span class="talk-event">Multichain Day, TOKEN2049</span><span class="talk-title">Panel: Building the next generation of blockchain infra</span><span class="talk-length">▶ 31 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=Oxrou3TGhNQ" data-video="Oxrou3TGhNQ" data-title="Bringing Bitcoin to Web3 · Restaking &amp; Infra Day, Dubai">
+            <span class="talk-year">2024</span><span class="talk-event">Restaking &amp; Infra Day, Dubai</span><span class="talk-title">Bringing Bitcoin to Web3</span><span class="talk-length">▶ 17 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=KJIkRvDldwc" data-video="KJIkRvDldwc" data-title="Panel: Why appchains? · DoraHacks Appchain Day, Hong Kong">
+            <span class="talk-year">2024</span><span class="talk-event">DoraHacks Appchain Day, Hong Kong</span><span class="talk-title">Panel: Why appchains?</span><span class="talk-length">▶ 31 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=0mnr7yVn-rw" data-video="0mnr7yVn-rw" data-title="Bring Bitcoin to Web3 · Web3 Festival, Hong Kong">
+            <span class="talk-year">2024</span><span class="talk-event">Web3 Festival, Hong Kong</span><span class="talk-title">Bring Bitcoin to Web3</span><span class="talk-length">▶ 15 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=xP5LqZwBoR8" data-video="xP5LqZwBoR8" data-title="Bring BTC to Web3 · ETHSeoul">
+            <span class="talk-year">2024</span><span class="talk-event">ETHSeoul</span><span class="talk-title">Bring BTC to Web3</span><span class="talk-length">▶ 22 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=aFufmQR3TKI" data-video="aFufmQR3TKI" data-title="Omnichain dApps with ZetaChain · FILBangalore, Bengaluru">
+            <span class="talk-year">2023</span><span class="talk-event">FILBangalore, Bengaluru</span><span class="talk-title">Omnichain dApps with ZetaChain</span><span class="talk-length">▶ 11 min</span>
+          </a>
+        </li>
+        <li>
+          <span class="talk-year">2023</span><span class="talk-event">Polygon stage, Bengaluru</span><span class="talk-title">ZetaChain docs walkthrough</span>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=_HDjDUDkdnQ" data-video="_HDjDUDkdnQ" data-title="Omnichain contracts with ZetaChain · ETHGlobal Paris">
+            <span class="talk-year">2023</span><span class="talk-event">ETHGlobal Paris</span><span class="talk-title">Omnichain contracts with ZetaChain</span><span class="talk-length">▶ 17 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=aN0EXiM2hm8" data-video="aN0EXiM2hm8" data-title="Create and launch your dApp as an app chain in just minutes · Istanbul Blockchain Week">
+            <span class="talk-year">2022</span><span class="talk-event">Istanbul Blockchain Week</span><span class="talk-title">Create and launch your dApp as an app chain in just minutes</span><span class="talk-length">▶ 15 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=F7yKUX1YXIM" data-video="F7yKUX1YXIM" data-title="Ignite Chain Launch · Cosmoverse, Medellín">
+            <span class="talk-year">2022</span><span class="talk-event">Cosmoverse, Medellín</span><span class="talk-title">Ignite Chain Launch</span><span class="talk-length">▶ 17 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=rcPLGM9VtFc" data-video="rcPLGM9VtFc" data-title="Build your blockchain with Ignite CLI in 10 minutes · Buckle Up &amp; Build Cosmos, Berlin">
+            <span class="talk-year">2022</span><span class="talk-event">Buckle Up &amp; Build Cosmos, Berlin</span><span class="talk-title">Build your blockchain with Ignite CLI in 10 minutes</span><span class="talk-length">▶ 33 min</span>
+          </a>
+        </li>
+        <li>
+          <span class="talk-year">2021</span><span class="talk-event">Blockchain Life, Moscow</span><span class="talk-title">What is Cosmos</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <!-- a product's case study, opened by clicking it on the shelf -->
+  <article class="case" id="zetachain" hidden aria-labelledby="zetachain-title">
+    <a class="case-back" href="#"><svg viewBox="0 0 9 16" aria-hidden="true"><path d="M7.5 1.5 1.5 8l6 6.5"/></svg>Back</a>
+    <div class="case-device"></div>
+
+    <h1 id="zetachain-title">ZetaChain</h1>
+    <p class="role">Head of Developer Experience, 2023–2025</p>
+
+    <p class="lede">When I joined ZetaChain in 2023, building a universal app, one that works across chains, Bitcoin included, meant reading a few pages of docs and working out the rest yourself. Over the next two and a half years I built the developer experience from the ground up: the tools, the contracts, the docs, and the talks and workshops that taught people to use them.</p>
+
+    <p class="lede">The goal was simple to say: one command should give a developer a working universal app, and from there, a guided path to apps that span every chain.</p>
+
+    <figure class="case-wide">
+      <a class="talk" href="https://www.youtube.com/watch?v=0mnr7yVn-rw" data-video="0mnr7yVn-rw" data-title="Bring Bitcoin to Web3 · Web3 Festival, Hong Kong, 2024" aria-label="Watch the talk Bring Bitcoin to Web3, 15 minutes">
+        <img src="images/web3-festival-hong-kong-2024-keynote.jpg" width="1800" height="1200" loading="lazy" alt="Denis on stage giving a keynote to a full hall, the slide reads “Bitcoin was the first major breakthrough in blockchain tech”">
+        <span class="play">15 min</span>
       </a>
-      <p>2025–present</p>
+      <figcaption>Keynote at Web3 Festival, Hong Kong, 2024</figcaption>
+    </figure>
+
+    <h2>Tools</h2>
+    <p>I wrote most of the code for ZetaChain's developer tools. Each one works with every chain ZetaChain connects to: EVM chains, Solana, Sui, Bitcoin and TON.</p>
+    <p>The <a href="https://github.com/zeta-chain/toolkit">Toolkit</a> is a TypeScript SDK for ZetaChain, and the backbone of everything else here: it moves tokens between chains, calls contracts across them, and tracks a cross-chain transaction as it travels. The CLI, Localnet and the examples are all built on it.</p>
+    <p>With the <a href="https://github.com/zeta-chain/cli">CLI</a>, <code>npx zetachain new</code> starts a universal app from a template. From there, the same CLI makes calls between chains, looks up fees and balances, and follows a transaction from one chain to another.</p>
+    <p><a href="https://github.com/zeta-chain/localnet">Localnet</a> runs ZetaChain and its connected chains on your own machine, so a cross-chain app can be built and tested without waiting on a testnet. It's what the laptop above is running.</p>
+
+    <h2>Docs and teaching</h2>
+    <p>I maintained all of ZetaChain's docs, about 125 pages from getting started to the protocol reference, and wrote the tutorials that tie the tools together. Away from the docs, I spoke at conferences, ran hackathon workshops, recorded screencasts, and hosted monthly developer office hours. Many of them are on <a href="https://www.youtube.com/@ZetaBlockchain">ZetaChain's YouTube</a>.</p>
+    <div class="case-videos">
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=rDVwxRMhq2w" data-video="rDVwxRMhq2w" data-title="Getting started with ZetaChain · ZetaChain" aria-label="Watch Getting started with ZetaChain, 4 min">
+          <img src="images/videos/rDVwxRMhq2w.jpg" width="960" height="540" loading="lazy" alt="">
+          <span class="play">4 min</span>
+        </a>
+        <figcaption>Getting started with ZetaChain</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=dJG6ACgNOlg" data-video="dJG6ACgNOlg" data-title="Your first universal contract · ZetaChain" aria-label="Watch Your first universal contract, 7 min">
+          <img src="images/videos/dJG6ACgNOlg.jpg" width="960" height="540" loading="lazy" alt="">
+          <span class="play">7 min</span>
+        </a>
+        <figcaption>Your first universal contract</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=UrAMdR807JQ" data-video="UrAMdR807JQ" data-title="Cross-chain messaging · ZetaChain" aria-label="Watch Cross-chain messaging, 11 min">
+          <img src="images/videos/UrAMdR807JQ.jpg" width="960" height="540" loading="lazy" alt="">
+          <span class="play">11 min</span>
+        </a>
+        <figcaption>Cross-chain messaging</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=fRv1iyi1IjQ" data-video="fRv1iyi1IjQ" data-title="Universal NFTs · ZetaChain" aria-label="Watch Universal NFTs, 15 min">
+          <img src="images/videos/fRv1iyi1IjQ.jpg" width="960" height="540" loading="lazy" alt="">
+          <span class="play">15 min</span>
+        </a>
+        <figcaption>Universal NFTs</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=4PLFJ0LnVcQ" data-video="4PLFJ0LnVcQ" data-title="Gateway on Localnet · ZetaChain" aria-label="Watch Gateway on Localnet, 15 min">
+          <img src="images/videos/4PLFJ0LnVcQ.jpg" width="960" height="540" loading="lazy" alt="">
+          <span class="play">15 min</span>
+        </a>
+        <figcaption>Gateway on Localnet</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=avrTRzeZbtU" data-video="avrTRzeZbtU" data-title="Developer office hours · ZetaChain" aria-label="Watch Developer office hours, 37 min">
+          <img src="images/videos/avrTRzeZbtU.jpg" width="960" height="540" loading="lazy" alt="">
+          <span class="play">37 min</span>
+        </a>
+        <figcaption>Developer office hours</figcaption>
+      </figure>
     </div>
 
-    <div class="project">
-      <a href="https://zetachain.com" target="_blank" class="project-header">
-        <h2>ZetaChain</h2>
-        <img class="logo" src="logos/zetachain.svg" alt="ZetaChain" />
+    <h2>Contracts</h2>
+    <p>The <a href="https://github.com/zeta-chain/example-contracts">example contracts</a> are working universal apps, from cross-chain swaps to NFTs, that the tutorials build step by step.</p>
+    <p>The <a href="https://github.com/zeta-chain/standard-contracts">standard contracts</a> are production-grade universal tokens and NFTs. A few lines added to an existing OpenZeppelin contract let it move between chains.</p>
+
+    <h2>Talks</h2>
+    <div class="case-photos">
+      <figure class="photo">
+        <a class="talk" href="https://www.youtube.com/watch?v=xP5LqZwBoR8" data-video="xP5LqZwBoR8" data-title="Bring BTC to Web3 · ETHSeoul, 2024" aria-label="Watch the talk Bring BTC to Web3, 22 minutes">
+          <img src="images/ethseoul-2024.jpg" width="1000" height="666" loading="lazy" alt="Denis at a lectern next to a slide of ZetaChain template commands">
+          <span class="play">22 min</span>
+        </a>
+        <figcaption>ETHSeoul, 2024</figcaption>
+      </figure>
+      <figure class="photo">
+        <a class="talk" href="https://www.youtube.com/watch?v=aFufmQR3TKI" data-video="aFufmQR3TKI" data-title="Omnichain dApps with ZetaChain · FILBangalore, Bengaluru, 2023" aria-label="Watch the talk Omnichain dApps with ZetaChain, 11 minutes">
+          <img src="images/filbangalore-2023.jpg" style="object-position: 10% 50%" width="1800" height="1013" loading="lazy" alt="Denis speaking on a dark stage beside a large slide introducing ZetaChain">
+          <span class="play">11 min</span>
+        </a>
+        <figcaption>FILBangalore, Bengaluru, 2023</figcaption>
+      </figure>
+      <figure class="photo">
+        <img src="images/polygon-stage-2023.jpg" style="object-position: 0% 50%" width="1800" height="1078" loading="lazy" alt="Denis at a lectern on the Polygon stage, presenting the ZetaChain docs">
+        <figcaption>Polygon stage, Bengaluru, 2023</figcaption>
+      </figure>
+    </div>
+    <section class="talks" aria-label="Talks at ZetaChain">
+      <ol>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=hLNoJxbLwLM" data-video="hLNoJxbLwLM" data-title="Panel: Building the next generation of blockchain infra · Multichain Day, TOKEN2049">
+            <span class="talk-year">2024</span><span class="talk-event">Multichain Day, TOKEN2049</span><span class="talk-title">Panel: Building the next generation of blockchain infra</span><span class="talk-length">▶ 31 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=Oxrou3TGhNQ" data-video="Oxrou3TGhNQ" data-title="Bringing Bitcoin to Web3 · Restaking &amp; Infra Day, Dubai">
+            <span class="talk-year">2024</span><span class="talk-event">Restaking &amp; Infra Day, Dubai</span><span class="talk-title">Bringing Bitcoin to Web3</span><span class="talk-length">▶ 17 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=KJIkRvDldwc" data-video="KJIkRvDldwc" data-title="Panel: Why appchains? · DoraHacks Appchain Day, Hong Kong">
+            <span class="talk-year">2024</span><span class="talk-event">DoraHacks Appchain Day, Hong Kong</span><span class="talk-title">Panel: Why appchains?</span><span class="talk-length">▶ 31 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=0mnr7yVn-rw" data-video="0mnr7yVn-rw" data-title="Bring Bitcoin to Web3 · Web3 Festival, Hong Kong">
+            <span class="talk-year">2024</span><span class="talk-event">Web3 Festival, Hong Kong</span><span class="talk-title">Bring Bitcoin to Web3</span><span class="talk-length">▶ 15 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=xP5LqZwBoR8" data-video="xP5LqZwBoR8" data-title="Bring BTC to Web3 · ETHSeoul">
+            <span class="talk-year">2024</span><span class="talk-event">ETHSeoul</span><span class="talk-title">Bring BTC to Web3</span><span class="talk-length">▶ 22 min</span>
+          </a>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=aFufmQR3TKI" data-video="aFufmQR3TKI" data-title="Omnichain dApps with ZetaChain · FILBangalore, Bengaluru">
+            <span class="talk-year">2023</span><span class="talk-event">FILBangalore, Bengaluru</span><span class="talk-title">Omnichain dApps with ZetaChain</span><span class="talk-length">▶ 11 min</span>
+          </a>
+        </li>
+        <li>
+          <span class="talk-year">2023</span><span class="talk-event">Polygon stage, Bengaluru</span><span class="talk-title">ZetaChain docs walkthrough</span>
+        </li>
+        <li>
+          <a class="talk" href="https://www.youtube.com/watch?v=_HDjDUDkdnQ" data-video="_HDjDUDkdnQ" data-title="Omnichain contracts with ZetaChain · ETHGlobal Paris">
+            <span class="talk-year">2023</span><span class="talk-event">ETHGlobal Paris</span><span class="talk-title">Omnichain contracts with ZetaChain</span><span class="talk-length">▶ 17 min</span>
+          </a>
+        </li>
+      </ol>
+    </section>
+  </article>
+
+  <article class="case" id="ignite" hidden aria-labelledby="ignite-title">
+    <a class="case-back" href="#"><svg viewBox="0 0 9 16" aria-hidden="true"><path d="M7.5 1.5 1.5 8l6 6.5"/></svg>Back</a>
+    <div class="case-device"></div>
+
+    <h1 id="ignite-title">Ignite</h1>
+    <p class="role">Created Ignite CLI, 2020–2023</p>
+
+    <p class="lede">In 2020, starting a chain on the Cosmos SDK meant taking the SDK and wiring it up yourself before it would run. I wrote the first version of a tool, then called Starport, so a chain could start from a name.</p>
+
+    <p class="lede">It became <a href="https://github.com/ignite/cli">Ignite CLI</a>. One command writes the chain and the app in front of it, and the next one runs it. The display is that session: <code>ignite scaffold chain planet</code> writes a chain called planet, <code>ignite chain serve</code> runs it, and the wallet is the app that came with it.</p>
+
+    <figure class="case-wide">
+      <a class="talk" href="https://www.youtube.com/watch?v=aN0EXiM2hm8" data-video="aN0EXiM2hm8" data-title="Create and launch your dApp as an app chain in just minutes · Istanbul Blockchain Week, 2022" aria-label="Watch the talk Create and launch your dApp as an app chain in just minutes, 15 minutes">
+        <img src="images/istanbul-blockchain-week-2022.jpg" width="1563" height="1172" loading="lazy" alt="Denis on stage beside a slide reading “Building with Ignite CLI” and the command ignite scaffold chain mychain">
+        <span class="play">15 min</span>
       </a>
-      <p>2023–present</p>
+      <figcaption>Istanbul Blockchain Week, 2022</figcaption>
+    </figure>
+
+    <h2>Chains</h2>
+    <p>I later led the team that turned the CLI into the tool Cosmos chains were scaffolded with. A new chain started from the command instead of a fork of the SDK. Neutron, Stride, Dymension, and Kujira were among a few dozen production chains, and a long tail of experiments used it too.</p>
+    <p>With the same CLI I started SPN, a chain for launching other chains, and later led the team that built it.</p>
+
+    <h2>Teaching</h2>
+    <p>I wrote the tutorials that showed people how to build a module, and later rewrote the docs. I also started the Ignite Discord, which grew to about 2,000 people, and answered questions there about the CLI and about building on the SDK.</p>
+    <p>I recorded a short one each time the CLI changed. The first is still called Starport. By v0.13 a chain launched in minutes, which is the session on the display. v0.15 is a hello world over IBC, and v0.16 sends a token to the Cosmos Hub, which is what the wallet is for. The rest are in the <a href="https://www.youtube.com/playlist?list=PL3camC2cvS4c671T83NSp-pixvgIsbjzI">playlist</a>.</p>
+    <div class="case-videos">
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=rmbPjCGDXek" data-video="rmbPjCGDXek" data-title="Getting started with Starport" aria-label="Watch Getting started with Starport, 4 min">
+          <img src="images/videos/rmbPjCGDXek.jpg" width="1280" height="720" loading="lazy" alt="">
+          <span class="play">4 min</span>
+        </a>
+        <figcaption>Getting started with Starport</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=DhciTJHxvAY" data-video="DhciTJHxvAY" data-title="Starport v0.13: Launch your blockchain in minutes" aria-label="Watch Launch your blockchain in minutes, 6 min">
+          <img src="images/videos/DhciTJHxvAY.jpg" width="1280" height="720" loading="lazy" alt="">
+          <span class="play">6 min</span>
+        </a>
+        <figcaption>Launch your blockchain in minutes</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=NmytpuD33lY" data-video="NmytpuD33lY" data-title="Starport v0.15: IBC Hello, world!" aria-label="Watch IBC Hello, world!, 10 min">
+          <img src="images/videos/NmytpuD33lY.jpg" width="1280" height="720" loading="lazy" alt="">
+          <span class="play">10 min</span>
+        </a>
+        <figcaption>IBC Hello, world!</figcaption>
+      </figure>
+      <figure>
+        <a class="talk" href="https://www.youtube.com/watch?v=-AuExRijtrA" data-video="-AuExRijtrA" data-title="Starport v0.16: Sending tokens to Cosmos Hub with IBC" aria-label="Watch Sending tokens to Cosmos Hub with IBC, 6 min">
+          <img src="images/videos/-AuExRijtrA.jpg" width="1280" height="720" loading="lazy" alt="">
+          <span class="play">6 min</span>
+        </a>
+        <figcaption>Sending tokens to Cosmos Hub</figcaption>
+      </figure>
     </div>
 
-    <div class="project">
-      <a href="https://noble.xyz/" target="_blank" class="project-header">
-        <h2>Noble</h2>
-        <img class="logo" src="logos/noble.svg" alt="Noble" />
-      </a>
-      <p>2022</p>
+    <h2>Talks</h2>
+    <p>In 2022 I gave talks about starting a chain with the CLI, and about launching one.</p>
+    <div class="case-photos pair">
+      <figure class="photo">
+        <a class="talk" href="https://www.youtube.com/watch?v=F7yKUX1YXIM" data-video="F7yKUX1YXIM" data-title="Ignite Chain Launch · Cosmoverse, Medellín, 2022" aria-label="Watch the talk Ignite Chain Launch, 17 minutes">
+          <img src="images/cosmoverse-medellin-2022.jpg" width="1800" height="1350" loading="lazy" alt="Denis speaking with a microphone in front of the Cosmoverse 2022 backdrop">
+          <span class="play">17 min</span>
+        </a>
+        <figcaption>Cosmoverse, Medellín, 2022</figcaption>
+      </figure>
+      <figure class="photo">
+        <a class="talk" href="https://www.youtube.com/watch?v=rcPLGM9VtFc" data-video="rcPLGM9VtFc" data-title="Build your blockchain with Ignite CLI in 10 minutes · Buckle Up &amp; Build Cosmos, Berlin, 2022" aria-label="Watch the talk Build your blockchain with Ignite CLI in 10 minutes, 33 minutes">
+          <img src="images/buckle-up-and-build-2022.jpg" width="1200" height="900" loading="lazy" alt="Denis at a lectern beside a slide reading “Build your blockchain with Ignite CLI in 10 minutes”">
+          <span class="play">33 min</span>
+        </a>
+        <figcaption>Buckle Up &amp; Build Cosmos, Berlin, 2022</figcaption>
+      </figure>
     </div>
+  </article>
 
-    <div class="project">
-      <a href="https://ignite.com" target="_blank" class="project-header">
-        <h2>Ignite</h2>
-        <img class="logo" src="logos/ignite.svg" alt="Ignite" />
-      </a>
-      <p>2019–2023</p>
-    </div>
-  </body>
+  <dialog class="player" aria-label="Talk">
+    <button class="close" type="button">Close</button>
+    <iframe title="Talk recording" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+    <p></p>
+  </dialog>
+
+<script>
+  /*
+   * Plays a mock session across two Terminal windows: the first starts
+   * ZetaChain localnet, the second sends a cross-chain swap to it with
+   * `zetachain evm deposit-and-call`, and localnet logs the swap landing on
+   * BNB. Commands follow the swap tutorial in the ZetaChain docs, output
+   * follows github.com/zeta-chain/localnet and the CLI's own formatting, and
+   * the addresses are anvil's deterministic deployment addresses.
+   */
+  const instant = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = (ms) =>
+    instant ? Promise.resolve() : new Promise((resolve) => setTimeout(resolve, ms));
+
+  const PROMPT = "fadeev@MacBook-Pro ~ % ";
+  const SIGNER = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // anvil's first account
+  const UNIVERSAL = "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB"; // the deployed swap contract
+  const ZRC20_ETH = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44";
+  const ZRC20_BNB = "0x4A679253410272dd5232B3Ff7cF5dbB88f295319";
+  const TX_HASH = "0x40ec494310adf77dc45ddfbf6911ecba79269088a3c7f063ff377baa80ee7b6a";
+
+  // abi.encode(address, bytes, bool): the token to swap to, the recipient, withdraw
+  const word = (hex) => hex.replace(/^0x/, "").toLowerCase().padStart(64, "0");
+  const MESSAGE =
+    "0x" + word(ZRC20_BNB) + word("60") + word("1") + word("14") +
+    SIGNER.slice(2).toLowerCase().padEnd(64, "0");
+
+  const registry = [
+    ["Ethereum (11155112)", [
+      ["erc20Custody", "0x0B306BF915C4d645ff596e518fAf3F9669b97016"],
+      ["gateway", "0x9A676e781A523b5d0C0e43731313A708CB607508"],
+      ["zetaConnector", "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1"],
+      ["zetaToken", "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82"],
+      ["USDC.ETH", "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE"],
+    ]],
+    ["ZetaChain (31337)", [
+      ["gateway", "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"],
+      ["uniswapV2Factory", "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"],
+      ["uniswapV2Router02", "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"],
+      ["uniswapV3Factory", "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"],
+      ["uniswapV3Router", "0x0165878A594ca255338adfa4d48449f69242Eb8F"],
+      ["zetaToken", "0x5FbDB2315678afecb367f032d93F642f64180aa3"],
+      ["ZRC-20 ETH.ETH", ZRC20_ETH],
+      ["ZRC-20 USDC.ETH", "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f"],
+      ["ZRC-20 BNB.BNB", ZRC20_BNB],
+      ["ZRC-20 USDC.BNB", "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F"],
+    ]],
+    ["BNB (98)", [
+      ["erc20Custody", "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"],
+      ["gateway", "0x68B1D87F95878fE05B998F19b66F4baba5De1aed"],
+      ["zetaConnector", "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d"],
+      ["zetaToken", "0x59b670e9fA9D0A427751Af201D676719a970857b"],
+      ["USDC.BNB", "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1"],
+    ]],
+  ];
+
+  function terminal(element) {
+    const body = element.querySelector(".terminal-body");
+    const title = element.querySelector(".title");
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    let line;
+
+    // moves the cursor to a fresh line, scrolling like a terminal once full
+    function newLine() {
+      line = document.createElement("div");
+      line.className = "line";
+      line.append(cursor);
+      body.append(line);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function write(text, className) {
+      const node = className
+        ? Object.assign(document.createElement("span"), { className, textContent: text })
+        : document.createTextNode(text);
+      line.insertBefore(node, cursor);
+    }
+
+    newLine();
+
+    return {
+      element,
+      body,
+      newLine,
+      write,
+
+      // each part is plain text or a [className, text] pair
+      print(...parts) {
+        for (const part of parts) {
+          if (Array.isArray(part)) write(part[1], part[0]);
+          else write(part);
+        }
+        newLine();
+      },
+
+      async type(text) {
+        for (const char of text) {
+          write(char);
+          await sleep(40 + Math.random() * 80);
+        }
+      },
+
+      // the line is redrawn from scratch, as a finished prompt does
+      clearLine() {
+        line.replaceChildren(cursor);
+      },
+
+      // where a full-screen view starts, so it can redraw itself from there
+      mark() {
+        return line;
+      },
+
+      eraseFrom(mark) {
+        while (body.lastChild !== mark) body.lastChild.remove();
+        line = mark;
+        line.replaceChildren(cursor);
+      },
+
+      // the title names what's running, as Terminal's does: the shell, or a command
+      running(process = "-zsh") {
+        title.textContent = `fadeev — ${process} — 80×24`;
+      },
+    };
+  }
+
+  const localnet = terminal(document.querySelector(".terminal.localnet"));
+  const cli = terminal(document.querySelector(".terminal.cli"));
+
+  function focus(active) {
+    for (const term of [localnet, cli]) {
+      term.element.classList.toggle("inactive", term !== active);
+    }
+  }
+
+  function lastLogin(date, tty) {
+    const [weekday, month, , , time] = date.toString().split(" ");
+    return `Last login: ${weekday} ${month} ${String(date.getDate()).padStart(2)} ${time} on ${tty}`;
+  }
+
+  // localnet's logger: the chain's name in bold, the whole line in its colour
+  const CHAINS = {
+    localnet: ["LOCALNET", "dim"],
+    ethereum: ["Ethereum", "cyan"],
+    zetachain: ["ZetaChain", "green"],
+    bnb: ["BNB", "yellow"],
+  };
+
+  function log(chain, message) {
+    const [name, color] = CHAINS[chain];
+    localnet.print([color, "["], [`${color} bold`, name], [color, `] ${message}`]);
+  }
+
+  // the `table` package with "norc" borders, which localnet uses
+  function table(rows) {
+    const widths = rows[0].map((_, i) => Math.max(...rows.map((row) => row[i].length)));
+    const rule = (left, join, right) =>
+      left + widths.map((width) => "─".repeat(width + 2)).join(join) + right;
+    const lines = [rule("┌", "┬", "┐")];
+    rows.forEach((row, i) => {
+      if (i > 0) lines.push(rule("├", "┼", "┤"));
+      lines.push("│" + row.map((cell, j) => " " + cell.padEnd(widths[j]) + " ").join("│") + "│");
+    });
+    lines.push(rule("└", "┴", "┘"));
+    return lines;
+  }
+
+  async function startLocalnet() {
+    await localnet.type("npx zetachain localnet start");
+    await sleep(500);
+    localnet.newLine();
+    localnet.running("node");
+
+    await sleep(700);
+    log("localnet", "Starting anvil on port 8545 with args: -q");
+    await sleep(900);
+    for (const chain of ["Ton", "Solana", "Bitcoin", "Sui"]) {
+      log("localnet", `Skipping ${chain}...`);
+      await sleep(30);
+    }
+    await sleep(300);
+    log("localnet", `EVM default wallet address: ${SIGNER}`);
+    log("localnet", "EVM default wallet private key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80");
+    log("localnet", "Default wallet mnemonic: test test test test test test test test test test test junk");
+
+    // deploying the contracts
+    await sleep(2500);
+
+    for (const [chain, contracts] of registry) {
+      localnet.print();
+      localnet.print(chain);
+      for (const row of table([["Contract", "Address"], ...contracts])) {
+        localnet.print(row);
+        await sleep(15);
+      }
+      localnet.print();
+    }
+  }
+
+  async function depositAndCall() {
+    // pasted from the docs rather than typed
+    cli.write(
+      "npx zetachain evm deposit-and-call --rpc http://localhost:8545 " +
+      "--chain-id 11155112 --gateway $GATEWAY_ETHEREUM --amount 0.001 " +
+      "--types address bytes bool --receiver $UNIVERSAL " +
+      "--private-key $PRIVATE_KEY --values $ZRC20_BNB $RECIPIENT true"
+    );
+    await sleep(700);
+    cli.newLine();
+    cli.running("node");
+
+    // checking the balance
+    await sleep(900);
+    cli.print();
+    cli.print(`From:   ${SIGNER}`);
+    cli.print(`To:     ${UNIVERSAL} on ZetaChain`);
+    cli.print("Amount: 0.001 native tokens");
+    cli.print(`Refund: ${SIGNER}`);
+    cli.print("Call on revert: false");
+    cli.print();
+    cli.print("Contract call details:");
+    cli.print(`Function parameters: ${ZRC20_BNB}, ${SIGNER}, true`);
+    cli.print('Parameter types: ["address","bytes","bool"]');
+    cli.print();
+
+    cli.write("?", "blue");
+    cli.write(" Proceed with the transaction?", "bold");
+    cli.write(" (Y/n) ", "dim");
+    await sleep(1400);
+    cli.clearLine();
+    cli.print(["green", "✔"], ["bold", " Proceed with the transaction?"], ["cyan", " Yes"]);
+
+    await sleep(800);
+    cli.print(`Transaction hash: ${TX_HASH}`);
+    cli.running();
+    cli.write(PROMPT);
+  }
+
+  // localnet relays the deposit to the swap contract, which withdraws to BNB
+  async function relaySwap() {
+    await sleep(400);
+    log("ethereum", "Gateway: DepositedAndCalled event emitted");
+    await sleep(500);
+    const context = JSON.stringify({ chainID: "11155112", sender: SIGNER, senderEVM: SIGNER });
+    log(
+      "zetachain",
+      `Universal contract ${UNIVERSAL} executing onCall (context: ${context}), ` +
+      `zrc20: ${ZRC20_ETH}, amount: 1000000000000000, message: ${MESSAGE})`
+    );
+    await sleep(700);
+    log("zetachain", "Gateway: 'Withdrawn' event emitted");
+    await sleep(600);
+    log("bnb", `Transferred 0.000969817443276215 native gas tokens from TSS to ${SIGNER.toLowerCase()}`);
+  }
+
+  async function play() {
+    const opened = new Date();
+    localnet.print(lastLogin(new Date(opened - 2 * 36e5), "ttys000"));
+    localnet.write(PROMPT);
+    await sleep(1200);
+    await startLocalnet();
+
+    // a second window for commands, as localnet keeps the first one busy
+    await sleep(1500);
+    cli.element.classList.add("open");
+    focus(cli);
+    cli.print(lastLogin(opened, "ttys000"));
+    cli.write(PROMPT);
+    await sleep(1000);
+    await depositAndCall();
+    await relaySwap();
+  }
+
+  // the laptops scale with the viewport, so keep showing the latest output
+  addEventListener("resize", () => {
+    for (const { body } of [localnet, cli, ignite]) body.scrollTop = body.scrollHeight;
+  });
+
+  play();
+
+  /*
+   * Ignite's chapter has the wallet from Ignite's Vue template beside a
+   * Terminal running Ignite CLI v0.26.1 from January 2023: scaffolding a chain
+   * and serving it. The output follows the CLI's source, and alice and bob are
+   * throwaway accounts made the way serve makes them.
+   */
+  const ignite = terminal(document.querySelector(".terminal.ignite"));
+  const PLANET_PROMPT = "fadeev@MacBook-Pro planet % ";
+  const SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏";
+  const ACCOUNTS = [
+    ["alice", "cosmos1nur4ycuvvr4p0hnnma8rfyjccfxrvqrzk8rcry",
+      "talk trip december race pulse illegal jeans banana throw flavor august water jaguar monitor fix conduct across maid faith change slice polar measure fall"],
+    ["bob", "cosmos1upzfwer45nys85dw62dhjj6gn33kw5t2l9gat2",
+      "time issue clerk chief decade canal symptom hour theory drip grit brain key acid myself crash noodle art dance erode crime toward negative close"],
+  ];
+
+  // redraws with the next spinner frame until the time is up
+  async function spin(draw, ms) {
+    for (let frame = 0, end = performance.now() + ms; ; frame++) {
+      draw(SPINNER[frame % SPINNER.length]);
+      await sleep(80);
+      if (instant || performance.now() >= end) return;
+    }
+  }
+
+  // breaks between words to fit the width, as Ignite does with mnemonics
+  function wrap(text, width) {
+    const rows = [];
+    for (const word of text.split(" ")) {
+      const last = rows.length - 1;
+      if (last >= 0 && rows[last].length + 1 + word.length <= width) rows[last] += ` ${word}`;
+      else rows.push(word);
+    }
+    return rows;
+  }
+
+  async function scaffoldChain() {
+    await ignite.type("ignite scaffold chain planet");
+    await sleep(500);
+    ignite.newLine();
+    ignite.running("ignite");
+    await spin((frame) => {
+      ignite.clearLine();
+      ignite.write(`${frame} Scaffolding...`);
+    }, 1800);
+    ignite.clearLine();
+    ignite.newLine();
+    ignite.print("⭐️ Successfully created a new blockchain 'planet'.");
+    ignite.print("👉 Get started with the following commands:");
+    ignite.print();
+    ignite.print(" % cd planet");
+    ignite.print(" % ignite chain serve");
+    ignite.print();
+    ignite.print("Documentation: https://docs.ignite.com");
+    ignite.running();
+    ignite.write(PROMPT);
+  }
+
+  // serve's views are indented and drawn over the whole window each time
+  function startView(view, status) {
+    ignite.eraseFrom(view);
+    ignite.print();
+    ignite.print("  Cosmos SDK's version is: ", ["ig-info", "v0.46.7"]);
+    ignite.print();
+    ignite.print(`  ${status}`);
+    ignite.print();
+    ignite.print(["dim", "  Press the 'q' key to stop serve"]);
+  }
+
+  function runView(view) {
+    ignite.eraseFrom(view);
+    ignite.print();
+    ignite.print("  Blockchain is running");
+    ignite.print();
+    ACCOUNTS.forEach(([name, address, mnemonic], i) => {
+      if (i > 0) ignite.print();
+      ignite.print("  ", ["ig-success", "✔"], " Added account ", ["bold", name], ` with address ${address} and mnemonic:`);
+      for (const row of wrap(mnemonic, 80)) ignite.print(["ig-mnemonic", `    ${row}`]);
+    });
+    ignite.print();
+    ignite.print("  🌍 Tendermint node: http://0.0.0.0:26657");
+    ignite.print("  🌍 Blockchain API: http://0.0.0.0:1317");
+    ignite.print("  🌍 Token faucet: http://0.0.0.0:4500");
+    ignite.print();
+    ignite.print("  ", ["ig-info", "⋆"], " Data directory: ", ["dim", "/Users/fadeev/.planet"]);
+    ignite.print("  ", ["ig-info", "⋆"], " App binary: ", ["dim", "/Users/fadeev/go/bin/planetd"]);
+    ignite.print();
+    ignite.print(["dim", "  Press the 'q' key to stop serve"]);
+  }
+
+  async function serveChain() {
+    await ignite.type("cd planet");
+    await sleep(300);
+    ignite.newLine();
+    ignite.write(PLANET_PROMPT);
+    await sleep(900);
+    await ignite.type("ignite chain serve");
+    await sleep(500);
+    ignite.newLine();
+    ignite.running("ignite");
+
+    const view = ignite.mark();
+    for (const [status, ms] of [
+      ["Installing dependencies...", 2200],
+      ["Building the blockchain...", 3200],
+      ["Initializing the app...", 1400],
+    ]) {
+      await spin((frame) => startView(view, `${frame} ${status}`), ms);
+    }
+    runView(view);
+  }
+
+  ignite.print(lastLogin(new Date(Date.now() - 3 * 36e5), "ttys000"));
+  ignite.write(PROMPT);
+
+  /*
+   * Once the chain is up, the wallet sends 250 PHOTON to bob, whose address
+   * is written with the wallet's spn prefix, and the send tops its history.
+   */
+  const wallet = document.querySelector(".wallet");
+  const BOB = "spn1upzfwer45nys85dw62dhjj6gn33kw5t2resm9s";
+
+  async function sendPhoton() {
+    const $ = (selector) => wallet.querySelector(selector);
+
+    // the address is pasted in, and the amount is already 250
+    const input = $(".w-input");
+    const button = $(".w-button");
+    input.classList.add("filled");
+    input.textContent = BOB;
+    await sleep(500);
+    button.classList.add("ready");
+    await sleep(900);
+    button.classList.replace("ready", "sending");
+    await sleep(1500);
+
+    // the history makes room at the top for the new send
+    for (const row of wallet.querySelectorAll(".w-tx, .w-month")) {
+      const top = parseFloat(row.style.top);
+      if (top >= 106) row.style.top = `${top + 53}px`;
+    }
+    $(".w-transactions").insertAdjacentHTML("beforeend", `
+      <div class="w-tx w-new" style="top: 106px">
+        <span class="w-tx-icon">↑</span>
+        <div><b>Send</b><span>February 2, 3:14 pm</span></div>
+        <div class="w-tx-sum"><b>- 250 PHOTON</b><span>to ${BOB.slice(0, 7)}...${BOB.slice(-6)}</span></div>
+      </div>`);
+    $(".w-asset .w-amount").textContent = "1,000";
+    $(".w-send-asset div span").textContent = "1,000 available";
+    input.classList.remove("filled");
+    input.textContent = "Recipient address";
+    button.classList.remove("sending");
+  }
+
+  // it starts once the Terminal is mostly in view
+  new IntersectionObserver(async (entries, observer) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    await sleep(600);
+    await scaffoldChain();
+    await sleep(1200);
+    await serveChain();
+    await sleep(1500);
+    await sendPhoton();
+  }, { threshold: 0.6 }).observe(ignite.element);
+
+  /*
+   * On a phone, each chapter's photos scroll sideways in a strip. Phones
+   * swipe it natively; a mouse can drag it, and a flick keeps it gliding for
+   * a moment after the button comes up.
+   */
+  for (const strip of document.querySelectorAll(".photos")) {
+    let drag = null;
+    let dragged = false;
+    let glide = 0;
+
+    strip.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      cancelAnimationFrame(glide);
+      drag = { x: event.clientX, scroll: strip.scrollLeft, velocity: 0, time: event.timeStamp, moved: false };
+      dragged = false;
+    });
+
+    strip.addEventListener("pointermove", (event) => {
+      if (!drag) return;
+      // a press only turns into a drag once it moves, so plain clicks still
+      // reach the talks
+      if (!drag.moved) {
+        if (Math.abs(event.clientX - drag.x) < 4) return;
+        drag.moved = true;
+        strip.setPointerCapture(event.pointerId);
+        strip.classList.add("dragging");
+      }
+      const before = strip.scrollLeft;
+      strip.scrollLeft = drag.scroll - (event.clientX - drag.x);
+      const elapsed = event.timeStamp - drag.time;
+      if (elapsed > 0) drag.velocity = (strip.scrollLeft - before) / elapsed; // px per ms
+      drag.time = event.timeStamp;
+    });
+
+    function release(event) {
+      if (!drag) return;
+      const { moved } = drag;
+      // a drag that came to rest before letting go doesn't glide, and even a
+      // hard flick glides no more than about a screen
+      const flick = event.timeStamp - drag.time > 80 ? 0 : drag.velocity;
+      let velocity = Math.max(-4, Math.min(4, flick));
+      drag = null;
+      if (!moved) return;
+      dragged = true;
+
+      // snapping waits until the glide has run out
+      let last = performance.now();
+      glide = requestAnimationFrame(function step(now) {
+        const elapsed = now - last;
+        last = now;
+        velocity *= 0.95 ** (elapsed / 16);
+        strip.scrollLeft += velocity * elapsed;
+        if (Math.abs(velocity) > 0.02) glide = requestAnimationFrame(step);
+        else strip.classList.remove("dragging");
+      });
+    }
+
+    strip.addEventListener("pointerup", release);
+    strip.addEventListener("pointercancel", release);
+    // images would otherwise start the browser's own drag-and-drop
+    strip.addEventListener("dragstart", (event) => event.preventDefault());
+
+    // letting go at the end of a drag isn't a click on a talk
+    strip.addEventListener("click", (event) => {
+      if (!dragged) return;
+      dragged = false;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+  }
+
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+
+  /*
+   * In the showcase the page scrolls sideways natively. A mouse wheel only
+   * turns up and down, so its turns, and up-and-down trackpad swipes, move
+   * the page sideways too; a notch of the wheel glides rather than jumps.
+   */
+  if (document.querySelector(".showcase")) {
+    addEventListener("wheel", (event) => {
+      if (document.body.classList.contains("reading")) return;
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      // a mouse wheel turns in notches of 120; Chrome and Safari report a
+      // trackpad's wheelDelta as exactly -3 times its delta instead
+      const notch = event.deltaMode === 1 ||
+        (event.wheelDeltaY && event.wheelDeltaY % 120 === 0 && event.wheelDeltaY !== -3 * event.deltaY);
+      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+      scrollBy({ left: delta, behavior: notch ? "smooth" : "instant" });
+    }, { passive: false });
+  }
+
+  /*
+   * Dragging the showcase with the mouse: the row
+   * stays under the cursor, a flick glides on and slows, and dragging past
+   * either end stretches like a rubber band and springs back. Trackpads
+   * and touch keep the page's native scrolling.
+   */
+  const row = document.querySelector(".showcase .chapters");
+  if (row && fine.matches) {
+    const page = document.scrollingElement;
+    let x = 0; // where the row is, past its ends while stretched
+    let velocity = 0; // px per ms
+    let drag = null;
+    let dragged = false;
+    let frame = 0;
+
+    const end = () => page.scrollWidth - page.clientWidth;
+    const clamp = (value) => Math.min(Math.max(value, 0), end());
+
+    // how far a pull of `over` px past an end shows, after Apple's rubber
+    // band, which never stretches beyond `limit`
+    function stretch(over) {
+      const limit = 160;
+      return Math.sign(over) * (1 - 1 / (Math.abs(over) * 0.55 / limit + 1)) * limit;
+    }
+
+    function render() {
+      const inside = clamp(x);
+      page.scrollLeft = inside;
+      const over = x - inside;
+      row.style.setProperty("--stretch", over ? `${-stretch(over)}px` : "0px");
+    }
+
+    let last = 0;
+    function step(now) {
+      const elapsed = Math.min(now - (last || now), 32);
+      last = now;
+      const over = x - clamp(x);
+      if (over) {
+        // a critically damped spring back to the end
+        const stiffness = 0.00015;
+        velocity += (-stiffness * over - 2 * Math.sqrt(stiffness) * velocity) * elapsed;
+      } else {
+        velocity *= 0.95 ** (elapsed / 16);
+      }
+      x += velocity * elapsed;
+      if (Math.abs(velocity) < 0.01 && Math.abs(x - clamp(x)) < 0.5) {
+        x = clamp(x);
+        velocity = 0;
+      }
+      render();
+      // still gliding, or still stretched past an end
+      frame = velocity || x !== clamp(x) ? requestAnimationFrame(step) : (last = 0);
+    }
+
+    function stop() {
+      cancelAnimationFrame(frame);
+      frame = last = 0;
+    }
+
+    addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      if (document.body.classList.contains("reading")) return;
+      stop();
+      x = page.scrollLeft + (x - clamp(x));
+      drag = { pointer: event.clientX, x, time: event.timeStamp, moved: false };
+      velocity = 0;
+      dragged = false;
+    });
+
+    addEventListener("pointermove", (event) => {
+      if (!drag) return;
+      if (!drag.moved) {
+        if (Math.abs(event.clientX - drag.pointer) < 4) return;
+        drag.moved = true;
+        page.setPointerCapture(event.pointerId);
+        page.classList.add("dragging");
+      }
+      const before = x;
+      x = drag.x - (event.clientX - drag.pointer);
+      const elapsed = event.timeStamp - drag.time;
+      if (elapsed > 0) velocity = (x - before) / elapsed;
+      drag.time = event.timeStamp;
+      render();
+    });
+
+    function release(event) {
+      if (!drag) return;
+      // a drag that came to rest before letting go doesn't glide
+      if (event.timeStamp - drag.time > 80) velocity = 0;
+      velocity = Math.max(-4, Math.min(4, velocity));
+      dragged = drag.moved;
+      drag = null;
+      page.classList.remove("dragging");
+      if (dragged) frame = requestAnimationFrame(step);
+    }
+
+    addEventListener("pointerup", release);
+    addEventListener("pointercancel", release);
+    addEventListener("dragstart", (event) => event.preventDefault());
+
+    // letting go at the end of a drag isn't a click
+    addEventListener("click", (event) => {
+      if (!dragged) return;
+      dragged = false;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+
+    // a glide gives way to the trackpad or the wheel
+    addEventListener("wheel", () => {
+      if (frame && x === clamp(x)) stop();
+    }, { passive: true });
+  }
+
+  /*
+   * The iPad-style pointer follows the mouse exactly, appearing once it
+   * moves and fading when it leaves the window. Over a link it snaps to it;
+   * over something that opens or plays, it says so.
+   */
+  if (fine.matches) {
+    const pointer = document.createElement("div");
+    pointer.className = "pointer";
+    document.body.append(pointer);
+    document.documentElement.classList.add("pointing");
+
+    const snaps = ".home[href], .case-back, .case p a, .case .talks li > a";
+    const plays = ".case figure .talk";
+
+    // how wide each label is, for the pill to fit it
+    const measure = document.createElement("canvas").getContext("2d");
+    measure.font = '500 13px -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif';
+    let mode = "free";
+    let target = null;
+    let x = 0;
+    let y = 0;
+    let glide = 0;
+
+    function place() {
+      if (mode === "snap") {
+        const box = target.getBoundingClientRect();
+        pointer.style.setProperty("--w", `${box.width + 16}px`);
+        pointer.style.setProperty("--h", `${box.height + 8}px`);
+        pointer.style.setProperty("--r", "8px");
+        pointer.style.translate = `${box.left + box.width / 2}px ${box.top + box.height / 2}px`;
+      } else if (mode === "label") {
+        const width = Math.ceil(measure.measureText(pointer.dataset.label).width) + 28;
+        pointer.style.setProperty("--w", `${width}px`);
+        pointer.style.setProperty("--h", "32px");
+        pointer.style.setProperty("--r", "16px");
+        pointer.style.translate = `${x}px ${y}px`;
+      } else {
+        pointer.style.setProperty("--w", "24px");
+        pointer.style.setProperty("--h", "24px");
+        pointer.style.setProperty("--r", "12px");
+        // translate, which applies after scale, so pressing shrinks it in place
+        pointer.style.translate = `${x}px ${y}px`;
+      }
+    }
+
+    function aim(next, element) {
+      // onto, off or between links, the shape glides there
+      if ((next === "snap" || mode === "snap") && (next !== mode || element !== target)) {
+        pointer.classList.add("gliding");
+        clearTimeout(glide);
+        glide = setTimeout(() => pointer.classList.remove("gliding"), 180);
+      }
+      mode = next;
+      target = element;
+      pointer.classList.toggle("snapped", next === "snap");
+      pointer.classList.toggle("labelled", next === "label");
+    }
+
+    // what the pointer is over decides its shape
+    function update(under = document.elementFromPoint(x, y)) {
+      const link = under?.closest(snaps);
+      const play = under?.closest(plays);
+      const opens = !document.body.classList.contains("reading") && under?.closest(".device[data-case]");
+      if (link) aim("snap", link);
+      else if (play || opens) {
+        pointer.dataset.label = play ? "Play" : "Case study";
+        aim("label", play || opens);
+      } else aim("free", null);
+      place();
+    }
+
+    addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse") return;
+      x = event.clientX;
+      y = event.clientY;
+      update(event.target instanceof Element ? event.target : null);
+      pointer.classList.add("shown");
+    });
+
+    /*
+     * A click can change what's under a pointer that hasn't moved, opening
+     * a case study or a video, and so can scrolling; the shape follows
+     * straight away rather than on the next move.
+     */
+    addEventListener("click", () => {
+      requestAnimationFrame(() => update());
+      setTimeout(() => update(), 700); // once a view transition has settled
+    });
+    addEventListener("popstate", () => setTimeout(() => update(), 700));
+    addEventListener("scroll", () => update(), { passive: true });
+    document.querySelector(".player").addEventListener("close", () => update());
+
+    document.documentElement.addEventListener("pointerleave", () => pointer.classList.remove("shown"));
+    addEventListener("pointerdown", () => pointer.classList.add("pressed"));
+    addEventListener("pointerup", () => pointer.classList.remove("pressed"));
+  }
+
+  /*
+   * A product with a case study opens it when clicked. The address gets
+   * the product's name, like fadeev.org/#zetachain, so the case study can
+   * be linked to, and Back, Esc or the name close it. The product itself
+   * moves into the case study, still running, and the browser's view
+   * transition morphs it there from the shelf and back.
+   */
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let reading = null; // the open case study, its product, and its place on the shelf
+  let shelf = 0; // how far the shelf was scrolled, to come back to
+  let openedHere = false; // whether Back would return to the shelf
+  const homeLink = document.querySelector(".home");
+
+  function show(id) {
+    const article = document.getElementById(id);
+    const device = document.querySelector(`.device[data-case="${id}"]`);
+    if (!article?.classList.contains("case") || !device || reading?.article === article) return;
+    hide();
+    shelf = document.scrollingElement.scrollLeft;
+    const home = document.createComment(" its place on the shelf ");
+    device.before(home);
+    article.querySelector(".case-device").append(device);
+    article.hidden = false;
+    document.body.classList.add("reading");
+    homeLink.href = "#";
+    reading = { article, device, home };
+    scrollTo(0, 0);
+  }
+
+  function hide() {
+    if (!reading) return;
+    const { article, device, home } = reading;
+    home.replaceWith(device);
+    article.hidden = true;
+    document.body.classList.remove("reading");
+    homeLink.removeAttribute("href");
+    reading = null;
+    scrollTo(shelf, 0);
+  }
+
+  // name only the product that is moving, so the other one stays in the crossfade
+  function nameDevice(id) {
+    for (const device of document.querySelectorAll(".device[data-case]")) {
+      device.style.viewTransitionName = device.dataset.case === id ? id : "";
+    }
+  }
+
+  function route(animate) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    nameDevice(id || reading?.device?.dataset.case || "");
+    const change = () => (id ? show(id) : hide());
+    if (animate && document.startViewTransition && !reduceMotion.matches) {
+      document.startViewTransition(change);
+    } else {
+      change();
+    }
+  }
+
+  function close() {
+    if (!reading) return;
+    if (openedHere) {
+      openedHere = false;
+      history.back();
+    } else {
+      history.pushState(null, "", location.pathname + location.search);
+      route(true);
+    }
+  }
+
+  // a link, or Back and Forward, changes the address
+  addEventListener("popstate", () => route(true));
+
+  for (const device of document.querySelectorAll(".device[data-case]")) {
+    const open = () => {
+      if (reading) return;
+      openedHere = true;
+      // the hash change fires popstate, which runs the transition once the
+      // address has settled; starting it here as well makes the browser skip it
+      location.hash = device.dataset.case;
+    };
+    device.addEventListener("click", open);
+    device.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") open();
+    });
+  }
+
+  for (const link of [homeLink, ...document.querySelectorAll(".case-back")]) {
+    link.addEventListener("click", (event) => {
+      if (!reading) return;
+      event.preventDefault();
+      close();
+    });
+  }
+
+  addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !document.querySelector(".player").open) close();
+  });
+
+  route(false);
+
+  /*
+   * Photos of recorded talks play them in an overlay, from YouTube's
+   * privacy-enhanced player, which loads only once a talk is opened.
+   */
+  const player = document.querySelector(".player");
+  const recording = player.querySelector("iframe");
+
+  for (const talk of document.querySelectorAll(".talk")) {
+    talk.addEventListener("click", (event) => {
+      // a modified click still opens the talk on YouTube, in a new tab
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      recording.src = `https://www.youtube-nocookie.com/embed/${talk.dataset.video}?autoplay=1&rel=0`;
+      player.querySelector("p").textContent = talk.dataset.title;
+      player.showModal();
+    });
+  }
+
+  // a click on the dark backdrop closes it too
+  player.addEventListener("click", (event) => {
+    if (event.target === player) player.close();
+  });
+  player.querySelector(".close").addEventListener("click", () => player.close());
+  player.addEventListener("close", () => recording.removeAttribute("src"));
+</script>
+</body>
 </html>
