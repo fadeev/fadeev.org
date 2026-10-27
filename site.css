@@ -1,0 +1,2145 @@
+:root {
+  --bg: #fff;
+  --text: #111;
+  --muted: #8c8c8c;
+  --side: 2rem; /* the least margin on either side */
+  --screen: 100vh;
+  --mast-pad: clamp(1.5rem, 7vh, 4rem); /* above the name in a case study */
+  --dcap: 3.1rem; /* room for a product's two-line caption */
+}
+
+/* on phones, the window less the browser's toolbars when they're showing */
+@supports (height: 100svh) {
+  :root {
+    --screen: 100svh;
+  }
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Masthead ---------- */
+
+/*
+ * The name lines up with the first product's screen, the phone's: past
+ * the room the phone keeps beside it, and inside its 13 point border.
+ * It's pinned to the window, so it stays put while the row scrolls under
+ * it.
+ */
+.masthead {
+  position: fixed;
+  top: calc((var(--screen) - var(--extent)) / 2);
+  left: 0;
+  box-sizing: border-box;
+  width: 100vw;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: calc(var(--side) + var(--phone-left) + var(--phone-h) * 13 / 900) var(--side);
+}
+
+.masthead h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/*
+ * About waits behind an ⓘ in the window's corner, clear of the products,
+ * and on the About page it turns into a ⓧ that closes it again
+ */
+.info {
+  position: fixed;
+  z-index: 2; /* above a case study's name and text */
+  top: 1.5rem;
+  right: 1.5rem;
+  border-radius: 50%;
+  background: var(--bg); /* so text scrolling under it doesn't show through */
+  color: var(--text);
+}
+
+.info svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/*
+ * The i is two strokes, a dot and a stem, each a dash along a line through
+ * the middle. Opening About, they turn either way and stretch to the
+ * line's full length, the two strokes of an ×.
+ */
+.info line {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition-property: transform, stroke-dasharray, stroke-dashoffset;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.info .stem {
+  stroke-dasharray: 6 20;
+  stroke-dashoffset: -2;
+  transform: translateY(0.5px) rotate(0deg);
+}
+
+/* a dash too short to see but for its round caps, which make the dot */
+.info .dot {
+  stroke-dasharray: 0.01 20;
+  stroke-dashoffset: -4;
+  transform: translateY(-4.5px) rotate(0deg);
+}
+
+body:has(#about:not([hidden])) .info line {
+  stroke-dasharray: 8 20;
+  stroke-dashoffset: 0;
+}
+
+body:has(#about:not([hidden])) .info .stem {
+  transform: translateY(0) rotate(45deg);
+}
+
+body:has(#about:not([hidden])) .info .dot {
+  transform: translateY(0) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info line { transition: none; }
+}
+
+/* ---------- Shelf ---------- */
+
+/*
+ * The products side by side in a row that scrolls sideways, like a
+ * shelf. The display, the tallest, is at most 62% of the window's
+ * height, rising to 70% in windows wider than 16:10 so the products fill
+ * them, and every product stands on one line.
+ *
+ * The name sits a little above the tallest product, so it stays clear of
+ * every product as the row scrolls under it, and everything is centred
+ * together in the window, whatever its shape.
+ */
+body {
+  --name: 1.8rem; /* the name's line */
+  --above: clamp(2rem, 8vh, 5rem); /* between the name and the tallest product */
+  --aspect: tan(atan2(100vw, var(--screen)));
+  --tallest: clamp(0.62, 0.62 + (var(--aspect) - 1.6) * 0.6, 0.7);
+  /* the column the laptop's base and the display's body are as wide as */
+  --scol: min(
+    var(--screen) * var(--tallest) * 1654 / 1230,
+    (var(--screen) - 3rem - var(--dcap) - var(--name) - var(--above)) * 1654 / 1230,
+    (100vw - 2 * var(--side)) * 1654 / 1854,
+    100vw * 0.58
+  );
+  /*
+   * The laptop's base is as wide as the column, 486 of its 294 ems tall,
+   * and the phone stands halfway between the laptop's height and the
+   * display's, stand and all, far bigger than life.
+   */
+  --laptop-h: calc(var(--scol) * 294 / 486);
+  --phone-h: calc(var(--scol) * (294 / 486 + 1230 / 1654) / 2);
+  /*
+   * The same space between every pair of products, from the edge of one
+   * to the edge of the next, terminals included. At first the phone has
+   * most of the window, and the laptop after it is partly in view, its
+   * terminals waiting until it's swiped all the way in.
+   */
+  --apart: 17vw;
+  /* the phone stands in from the edge, with room for at least twice the laptop's terminals */
+  --phone-left: max(var(--scol) * 100 / 486, 17vw);
+  /* how much taller than the laptop the tallest product stands */
+  --taller: calc(max(var(--scol) * 1230 / 1654, var(--phone-h)) - var(--laptop-h));
+  /* above the laptop's top: the name, and the tallest product's extra height */
+  --lead: calc(var(--name) + var(--above) + var(--taller));
+  /* everything, top to bottom, which is centred in the window */
+  --extent: calc(var(--lead) + var(--laptop-h) + var(--dcap));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 100%;
+  height: var(--screen);
+}
+
+/*
+ * The page itself scrolls sideways, so a trackpad's momentum, a new swipe
+ * cutting into it and the bounce at either end all come from the browser
+ * and the OS, as in any native app. Swiping past the left end doesn't go
+ * back a page.
+ */
+html {
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* room above for the pinned name, and on the right to scroll the last product to the window's centre */
+.chapters {
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(var(--name) + var(--above)) max(var(--side), (100vw - var(--scol) * 1854 / 1654) / 2) 0 var(--side);
+}
+
+/* one job: its product and caption; dragged past either end, the products stretch by --stretch */
+.chapter {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  translate: var(--stretch, 0) 0;
+}
+
+.chapter + .chapter {
+  margin-left: var(--apart);
+}
+
+/*
+ * the laptop's terminals reach the edges of its box, but the display's
+ * body starts 100 points in, so the space before it is that much less
+ */
+.chapter + .chapter:has(.xdr) {
+  margin-left: calc(var(--apart) - var(--scol) * 100 / 1654);
+}
+
+html.dragging {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+ * A page wider than a phone's screen makes the browser zoom out to fit
+ * it, so on phones the row scrolls inside the screen-sized body instead,
+ * which touch scrolls and bounces natively, and a swipe anywhere on the
+ * screen moves it, not only one across the products. The laptop,
+ * terminals and all, is as wide as the screen, and the phone, narrow
+ * beside it, half as tall again, so it isn't lost on a small screen; past
+ * it, the laptop peeks in at the edge as a hint to swipe.
+ */
+@media (max-width: 700px) {
+  :root {
+    --side: 16px;
+    --mast-pad: 1.5rem;
+  }
+
+  body {
+    --scol: calc((100vw - 2 * var(--side)) * 486 / 583);
+    --phone-h: calc(var(--laptop-h) * 1.5);
+    --phone-left: calc(var(--scol) * 100 / 486);
+    --apart: 3.5rem;
+    --dcap: 4.6rem; /* the caption, and the line under it that says it opens */
+    width: auto;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  /*
+   * a role that wraps would lift its product off the line the others
+   * stand on, so it runs on past the lid instead, into the space between
+   */
+  .chapter .device figcaption {
+    white-space: nowrap;
+  }
+
+  body:not(.reading) {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+   * the row as wide as the products, so its end padding scrolls the last
+   * one to the middle, with room below for the line that says it opens
+   */
+  .chapters {
+    width: max-content;
+    padding-bottom: 1.5rem;
+  }
+}
+
+figure {
+  position: relative;
+  margin: 0;
+}
+
+/* a caption under a product, photo or video, its title if any on a line of its own */
+figcaption strong {
+  display: block;
+  font-weight: 500;
+  color: var(--text);
+}
+
+figcaption {
+  padding-top: 0.6rem;
+  color: var(--muted);
+}
+
+/*
+ * A product is as wide as the column, but for the windows hanging off it.
+ * The laptop's base is 486 of its ems, which are a 294th of its height;
+ * the display and the phone are drawn in points and scaled by --k.
+ */
+.device {
+  --col: var(--scol);
+  --h: calc(var(--col) * 294 / 486);
+}
+
+.device.phone {
+  margin-left: var(--phone-left);
+}
+
+/* under the laptop's base or the display's body */
+.device figcaption {
+  width: var(--col);
+  margin: 0 auto;
+}
+
+/* says the product opens, for touch screens, which have no pointer to say it */
+.device[data-case] figcaption {
+  position: relative;
+}
+
+/* hung below the caption, so the products still stand on one line */
+.case-link {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.15rem;
+  color: var(--muted);
+}
+
+/* with a mouse or trackpad, the pointer's pill says it instead */
+@media (hover: hover) and (pointer: fine) {
+  .case-link {
+    display: none;
+  }
+
+  /* but the pill doesn't follow the keyboard, so a focused product says it itself */
+  .device[data-case]:focus-visible .case-link {
+    display: block;
+  }
+}
+
+/* the same size as the Talks heading */
+.device figcaption strong {
+  font-size: 16px;
+}
+
+/* a photo of a recorded talk, which plays it */
+.talk {
+  position: relative;
+  display: block;
+  border-radius: 6px;
+}
+
+.talk:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* in a corner, where it keeps clear of the speaker */
+.play {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.4em 0.8em 0.4em 0.7em;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.8);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  font-weight: 500;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.play::before {
+  content: "";
+  border-style: solid;
+  border-width: 0.42em 0 0.42em 0.7em;
+  border-color: transparent transparent transparent currentColor;
+}
+
+.talk:hover .play {
+  background: #fff;
+  transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play { transition: none; }
+}
+
+/* ---------- Display ---------- */
+
+/*
+ * Ignite's windows sit on a display in the style of Apple's: a black
+ * body with an even bezel around a 1590 by 891 point screen, a camera at
+ * the top, and a wide aluminium stand with a round cable cut-out. It
+ * leaves 100 points either side, which the Terminal hangs into the way
+ * the laptop's do, and its 1654 point body is as wide as the column.
+ */
+.device.windows.xdr {
+  --cw: 1854px;
+  --ch: 1230px;
+  --k: tan(atan2(var(--col), 1654px));
+}
+
+.xdr-body {
+  position: absolute;
+  top: 0;
+  left: 100px;
+  width: 1654px;
+  height: 962px;
+  box-sizing: border-box;
+  padding: 35px 32px;
+  border-radius: 18px;
+  background: #0c0c0c;
+  box-shadow:
+    inset 0 0 0 1.5px #2a2a2a,
+    0 30px 70px rgb(0 0 0 / 0.14);
+}
+
+.xdr-camera {
+  position: absolute;
+  top: 13px;
+  left: 821px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #3a3d46, #121316 60%);
+}
+
+.xdr-screen {
+  position: relative;
+  width: 1590px;
+  height: 891px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/*
+ * The stand, as wide as a quarter of the display, comes out from behind
+ * it. The display sits low enough to hide the stand's cable cut-out.
+ */
+.xdr-stand {
+  position: absolute;
+  top: 900px;
+  left: 725px;
+  width: 404px;
+  height: 306px;
+  background:
+    /* the display's faint shadow, below the 62px hidden behind it */
+    linear-gradient(transparent 62px, rgb(0 0 0 / 0.1) 62px, rgb(0 0 0 / 0.04) 92px, transparent 150px),
+    /* where the stand bends forward into the foot */
+    linear-gradient(transparent calc(100% - 26px), rgb(0 0 0 / 0.07) calc(100% - 10px), rgb(0 0 0 / 0.13) calc(100% - 3px), rgb(255 255 255 / 0.7)),
+    linear-gradient(90deg, rgb(0 0 0 / 0.07), transparent 5%, transparent 95%, rgb(0 0 0 / 0.08)),
+    linear-gradient(#dededf, #d2d2d4 55%, #cbcbce);
+}
+
+/*
+ * The foot: a plate along the bottom of the stand, its rounded ends
+ * catching the light, on two dark pads.
+ */
+.xdr-foot {
+  position: absolute;
+  top: 1204px;
+  left: 723px;
+  width: 408px;
+  height: 22px;
+  border-radius: 3px 3px 7px 7px;
+  background:
+    linear-gradient(rgb(255 255 255 / 0.5), transparent 35%, rgb(0 0 0 / 0.07)),
+    linear-gradient(90deg, #f6f6f8, #d3d3d6 2.5%, #e3e3e6 9%, #dadadd 50%, #e3e3e6 91%, #d3d3d6 97.5%, #f6f6f8);
+  box-shadow: 0 10px 14px -6px rgb(0 0 0 / 0.12);
+}
+
+.xdr-foot::before,
+.xdr-foot::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  width: 70px;
+  height: 5px;
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(#2a2a2c, #48484b);
+}
+
+.xdr-foot::before {
+  left: 10px;
+}
+
+.xdr-foot::after {
+  right: 10px;
+}
+
+/* ---------- Phone ---------- */
+
+/*
+ * Anuma runs on an iPhone 16 Pro, drawn in points like the display: a
+ * 402 by 874 point screen with rounded corners, a thin black border and a
+ * dark titanium band, 428 by 900 points in all, with its buttons on the
+ * sides. It stands --phone-h tall: as tall as the display, and taller
+ * still on a phone's screen.
+ */
+.device.phone {
+  --k: tan(atan2(var(--phone-h, var(--col) * 294 / 486), 900px));
+}
+
+.iphone {
+  width: calc(var(--k) * 428px);
+  height: calc(var(--k) * 900px);
+}
+
+.iphone-inner {
+  position: relative;
+  width: 428px;
+  height: 900px;
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+}
+
+.iphone-body {
+  position: absolute;
+  inset: 0;
+  border-radius: 71px;
+  background: #0b0b0c;
+  box-shadow:
+    /* the titanium band, catching the light on its outer edge */
+    inset 0 0 0 1.5px #6b6b6e,
+    inset 0 0 0 4px #2c2c2e,
+    /* the same soft shadow as the display's */
+    0 30px 70px rgb(0 0 0 / 0.14);
+}
+
+/*
+ * The recording comes from the simulator, whose sheets stand a hair in
+ * from the screen's edges, with the map behind showing around them. So
+ * the video is drawn 2 points bigger all round and trimmed back to the
+ * screen, with corners a little rounder than the sheets'.
+ */
+.iphone-screen {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  width: 406px;
+  height: 878px;
+  clip-path: inset(2px round 61px);
+  object-fit: cover;
+  background: #fff;
+}
+
+/* the buttons stand a little proud of the band, behind it */
+.iphone-button {
+  position: absolute;
+  width: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #4a4a4d, #2a2a2c);
+}
+
+.iphone-button.action,
+.iphone-button.volume-up,
+.iphone-button.volume-down {
+  left: -2.5px;
+}
+
+.iphone-button.power,
+.iphone-button.camera-control {
+  right: -2.5px;
+}
+
+.iphone-button.action { top: 180px; height: 42px; }
+.iphone-button.volume-up { top: 265px; height: 66px; }
+.iphone-button.volume-down { top: 361px; height: 66px; }
+.iphone-button.power { top: 283px; height: 120px; }
+.iphone-button.camera-control { top: 638px; height: 78px; }
+
+/*
+ * the caption runs on past the phone, which is narrower than the others,
+ * without widening its box and the space after it
+ */
+.device.phone figcaption {
+  width: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ---------- Case study ---------- */
+
+/*
+ * A product opens into its case study, a page to read like a well-made
+ * doc: the product, smaller and still running, above a column of text.
+ * The browser's view transition morphs the product there from the shelf,
+ * the name glides to the column, and the rest crossfades.
+ */
+.case {
+  --doc: min(680px, 100vw - 2 * var(--side));
+  --col: var(--doc);
+  position: relative;
+  box-sizing: border-box;
+  width: var(--doc);
+  margin: 0 auto;
+  padding: calc(var(--mast-pad) + var(--name) + 3rem) 0 8rem;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* while reading, the page scrolls down again, as a document does */
+:root:has(.reading) {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body.reading {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.reading .chapters {
+  display: none;
+}
+
+/* the name sits over the column, and scrolls away with it */
+.reading .masthead {
+  position: absolute;
+  z-index: 1; /* above the case study, which starts at the top of the page too */
+  pointer-events: none; /* but only the name takes clicks, not the whole bar */
+  top: var(--mast-pad);
+  padding-inline: max(var(--side), (100vw - min(680px, 100vw - 2 * var(--side))) / 2);
+}
+
+/* while reading, the name leads back to the shelf */
+.home {
+  display: block;
+  width: fit-content;
+  pointer-events: auto;
+}
+
+@media (max-width: 700px) {
+  .info {
+    top: var(--side);
+    right: var(--side);
+  }
+
+  /* in a case study on a phone, Back takes that corner */
+  .reading:not(:has(#about:not([hidden]))) .info {
+    display: none;
+  }
+}
+
+/* Denis's face, above the text */
+.portrait {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+}
+
+/* and where the margin is wide enough, hung beside his name like a byline */
+@media (min-width: 900px) {
+  .portrait {
+    position: absolute;
+    top: calc(var(--mast-pad) + var(--name) / 2 - 2.25rem);
+    left: -5.5rem;
+    margin: 0;
+  }
+}
+
+/* at the end of a case study, for whoever read that far: a way to write */
+.case-end {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.05rem 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: #f2f2f2;
+  color: var(--text);
+  transition: background 0.15s;
+}
+
+.pill:hover {
+  background: #e9e9e9;
+}
+
+.pill svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+/* the ways to reach Denis, ruled like a list of talks */
+.contact {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #ececec;
+  font-size: 14px;
+}
+
+.contact li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.contact span {
+  color: var(--muted);
+}
+
+/* only as wide as the address, so pointing at it highlights just that */
+.contact a {
+  justify-self: start;
+}
+
+.contact a:hover {
+  text-decoration: underline;
+  text-decoration-color: rgb(0 0 0 / 0.25);
+  text-underline-offset: 0.2em;
+}
+
+/* the product, centred across the window, at most 40% of its height */
+.case-device {
+  --hero: min(var(--screen) * 0.4 * 486 / 294, (100vw - 2 * var(--side)) * 486 / 583);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-inline: calc((var(--doc) - 100vw) / 2 + var(--side));
+}
+
+/* the display is taller for its width than the laptop, and hangs to the right */
+#ignite .case-device {
+  --hero: min(var(--screen) * 0.4 * 1654 / 1230, (100vw - 2 * var(--side)) * 1654 / 1854);
+}
+
+.case .device {
+  --col: var(--hero);
+  padding-top: 0;
+}
+
+/* the phone stands as tall as the others do here, 40% of the window */
+.case .device.phone {
+  --phone-h: calc(var(--screen) * 0.4);
+  margin: 0;
+}
+
+/* the way back, on the name's line, at the window's left edge */
+.case-back {
+  position: absolute;
+  top: var(--mast-pad);
+  left: calc((var(--doc) - 100vw) / 2 + var(--side));
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: var(--name);
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.case-back:hover {
+  color: var(--text);
+}
+
+.case-back svg {
+  width: 9px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* on a phone the name starts at the edge, so Back goes to the other end */
+@media (max-width: 700px) {
+  .case-back {
+    left: auto;
+    right: 0;
+  }
+}
+
+.case .device figcaption {
+  display: none;
+}
+
+.case h1 {
+  margin: 3.5rem 0 0;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.case .role {
+  margin: 0.3rem 0 2rem;
+  color: var(--muted);
+}
+
+.case h2 {
+  margin: 3rem 0 0.75rem;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.case p {
+  margin: 0 0 1rem;
+}
+
+.case p a {
+  text-decoration: underline;
+  text-decoration-color: rgb(0 0 0 / 0.25);
+  text-underline-offset: 0.2em;
+}
+
+.case p a:hover {
+  text-decoration-color: currentColor;
+}
+
+.case .lede {
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.case code {
+  font: 0.88em ui-monospace, "SF Mono", Menlo, monospace;
+  white-space: nowrap; /* a command reads as one piece */
+}
+
+/* where Denis's own words are still needed */
+.todo {
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  background: #fff3c4;
+  color: #5c4a00;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* photos and videos sit in the text, captioned underneath */
+.case figure figcaption {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.case figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  background: #f2f2f2;
+}
+
+/* photos and videos are wider than the text, all to one width */
+.case-wide,
+.case-photos,
+.case-videos {
+  --wide: min(1040px, 100vw - 2 * var(--side));
+  box-sizing: border-box;
+  width: var(--wide);
+  margin-inline: calc((var(--doc) - var(--wide)) / 2);
+}
+
+.case-wide {
+  margin-block: 3rem 3.5rem;
+}
+
+.case-wide img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* a recording of the app at work, with a hairline so its white keeps its edge */
+.case-wide video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  outline: 1px solid rgb(0 0 0 / 0.08);
+  outline-offset: -1px;
+}
+
+.case-wide + .case-wide {
+  margin-top: -1.5rem;
+}
+
+/* recordings of the phone app, side by side, each in a phone's screen */
+.case-phones {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-block: 2rem 3rem;
+}
+
+.case-phones figure {
+  width: min(250px, 42vw);
+  margin: 0;
+}
+
+.case-phones video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 540 / 1174;
+  border: 5px solid #0b0b0c;
+  border-radius: 34px;
+  background: #0b0b0c;
+}
+
+.case-phones figcaption {
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .case-phones {
+    gap: 1rem;
+  }
+
+  .case-phones video {
+    border-width: 3px;
+    border-radius: 22px;
+  }
+}
+
+.case-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-block: 1.5rem 3rem;
+}
+
+.case-photos img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.case-videos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem 1rem;
+  margin-block: 2rem 3rem;
+}
+
+/* four in one row, rather than three and one left over */
+.case-videos.four {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* a hairline, so the white covers keep their edge on the white page */
+.case-videos img {
+  aspect-ratio: 16 / 9;
+  outline: 1px solid rgb(0 0 0 / 0.08);
+  outline-offset: -1px;
+}
+
+/* small, and in the corner the covers leave clear of their titles and speakers */
+.case-photos .play,
+.case-videos .play {
+  left: auto;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+  .case-videos,
+  .case-videos.four {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* three across would be too small to see the speaker */
+  .case-photos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.case .talks {
+  margin: 1.5rem 0 0;
+}
+
+/* the name, not the bar it sits in, so it glides from the shelf to the column */
+.home {
+  view-transition-name: name;
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.55s;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+}
+
+/*
+ * opening About, the portrait waits for the name to arrive beside it and
+ * then fades in; closing, it goes first, before the name moves away
+ */
+.portrait {
+  view-transition-name: portrait;
+}
+
+::view-transition-new(portrait) {
+  animation: portrait-in 0.3s ease-out 0.5s both;
+}
+
+::view-transition-old(portrait) {
+  animation: portrait-out 0.15s ease-in both;
+}
+
+@keyframes portrait-in {
+  from { opacity: 0; }
+}
+
+@keyframes portrait-out {
+  to { opacity: 0; }
+}
+
+/* ---------- Pointer ---------- */
+
+/*
+ * With a mouse or trackpad, the arrow gives way to a soft circle like
+ * iPad's pointer: it dims and blurs what's under
+ * it, grows in when the mouse first moves, and shrinks a little while
+ * pressed.
+ */
+@media (hover: hover) and (pointer: fine) {
+  html.pointing:not(:has(dialog[open])),
+  html.pointing:not(:has(dialog[open])) * {
+    cursor: none;
+  }
+}
+
+/*
+ * a playing talk sits in the browser's top layer, above the circle, so
+ * while it's open the ordinary cursor comes back and the circle goes
+ */
+html:has(dialog[open]) .pointer {
+  visibility: hidden;
+}
+
+/*
+ * The pointer is an anchor at the mouse and a shape drawn around it, so
+ * the shape can change size and stay centred. At rest it's a small
+ * circle; over a link it snaps to a soft highlight behind it, as iPad's
+ * pointer does, and over a product, photo or video it stretches into a
+ * pill that says what a click will do.
+ */
+.pointer {
+  --w: 24px;
+  --h: 24px;
+  --r: 12px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.pointer::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--h) / -2);
+  left: calc(var(--w) / -2);
+  width: var(--w);
+  height: var(--h);
+  border-radius: var(--r);
+  -webkit-backdrop-filter: invert(30%) blur(10px);
+  backdrop-filter: invert(30%) blur(10px);
+  opacity: 0;
+  scale: 0.1;
+  transition:
+    opacity 0.25s,
+    scale 0.35s cubic-bezier(0.3, 1.6, 0.6, 1),
+    top 0.2s, left 0.2s, width 0.2s, height 0.2s, border-radius 0.2s;
+}
+
+.pointer.shown::before {
+  opacity: 1;
+  scale: 1;
+}
+
+.pointer.shown.pressed::before {
+  scale: 0.9;
+}
+
+/*
+ * behind a link, a plain grey tint that darkens the page but not the
+ * link's text, which a blur would smear
+ */
+.pointer.snapped {
+  mix-blend-mode: multiply;
+}
+
+.pointer.snapped::before {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: #ececec;
+}
+
+/* the pill's label fades in once the shape has stretched */
+.pointer::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: -50% -50%;
+  font: 500 13px/1 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  color: #fff;
+  text-shadow: 0 0 3px rgb(0 0 0 / 0.45); /* readable on the pill's light or dark blur */
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.pointer.shown.labelled::after {
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+/* moving onto or off a link, the shape glides rather than jumps */
+.pointer.gliding {
+  transition: translate 0.18s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pointer::before { transition: opacity 0.25s; scale: 1; }
+  .pointer.gliding { transition: none; }
+}
+
+/* ---------- Talks ---------- */
+
+/* a list of talks, newest first, the recorded ones playing like the photos do */
+.talks {
+  container-type: inline-size;
+}
+
+.talks h2 {
+  margin: 0 0 1.25rem;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.talks ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #ececec;
+  font-size: 14px;
+}
+
+.talks li {
+  border-bottom: 1px solid #ececec;
+}
+
+.talks li,
+.talks li > a {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1.6fr) 5rem;
+  gap: 1.25rem;
+}
+
+.talks li > a {
+  grid-column: 1 / -1;
+}
+
+.talks span {
+  padding: 0.85rem 0;
+}
+
+.talk-year,
+.talk-title,
+.talk-length {
+  color: var(--muted);
+}
+
+.talk-length {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.talks a:hover .talk-title,
+.talks a:hover .talk-length {
+  color: var(--text);
+}
+
+/*
+ * the pointer highlights the talk it's on, and the rules above and below
+ * that row give way rather than cut across the highlight
+ */
+.talks ol,
+.talks li {
+  transition: border-color 0.15s;
+}
+
+html.pointing .talks li:has(> a:hover),
+html.pointing .talks li:has(+ li > a:hover) {
+  border-bottom-color: transparent;
+}
+
+html.pointing .talks ol:has(> li:first-child > a:hover) {
+  border-top-color: transparent;
+}
+
+/* in a narrow column, each talk's title goes under its event */
+@container (max-width: 760px) {
+  .talks li,
+  .talks li > a {
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+    gap: 0 0.75rem;
+  }
+
+  .talks span {
+    padding: 0.75rem 0 0;
+  }
+
+  .talks .talk-title {
+    grid-row: 2;
+    grid-column: 2 / -1;
+    padding: 0.15rem 0 0.75rem;
+  }
+}
+
+/* ---------- Player ---------- */
+
+.player {
+  width: min(90vw, (100vh - 8rem) * 16 / 9);
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  overflow: visible;
+  background: none;
+  color: var(--text);
+}
+
+/*
+ * the page's own white, so the talk seems to settle in the middle of the
+ * page rather than open over it (spelled out, as older browsers don't
+ * pass the page's colours down to a backdrop)
+ */
+.player::backdrop {
+  background: #fff;
+}
+
+.player iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 8px;
+  background: #000;
+}
+
+.player p {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}
+
+.player .close {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  padding: 0.6rem 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.player .close:hover {
+  color: var(--text);
+}
+
+/* a talk's photo, growing into the player or shrinking back from it */
+.flyer {
+  position: fixed;
+  z-index: 1;
+  margin: 0;
+  object-fit: cover;
+  background: #000;
+  pointer-events: none;
+}
+
+/* where the photo was, while it's in the player */
+.talk.away {
+  visibility: hidden;
+}
+
+/*
+ * The backdrop and the player's own parts fade in as it opens, wait while
+ * a photo is still flying in, and fade out as it closes.
+ */
+.player::backdrop,
+.player > :not(.flyer) {
+  transition: opacity 0.3s;
+}
+
+@starting-style {
+  .player[open]::backdrop,
+  .player[open] > :not(.flyer) {
+    opacity: 0;
+  }
+}
+
+.player.flying > :not(.flyer),
+.player.leaving > :not(.flyer),
+.player.leaving::backdrop {
+  opacity: 0;
+}
+
+.player.leaving > :not(.flyer) {
+  transition-duration: 0.15s;
+}
+
+/* the emptied player would show as a grey box behind the shrinking photo */
+.player.leaving iframe {
+  visibility: hidden;
+}
+
+
+/*
+ * Every length is in em, and 1em is one pixel of the 486px-wide original.
+ * Change font-size to scale the whole laptop.
+ */
+.laptop {
+  position: relative;
+  font-size: calc(var(--h) / 294);
+  width: 486em;
+  margin: 0 48.5em; /* room for the terminals hanging off both sides */
+  padding-bottom: 3em; /* room for the feet */
+}
+
+.laptop *,
+.laptop *::before,
+.laptop *::after {
+  box-sizing: border-box;
+}
+
+/* ---------- Lid ---------- */
+
+.lid {
+  width: 400em;
+  height: 273em;
+  margin: 0 auto;
+  padding: 2em 2em 0;
+  border-radius: 14em 14em 0 0;
+  /* the thin aluminium rim */
+  background: linear-gradient(#6a6a6a, #575757 1.5%, #515151);
+}
+
+.bezel {
+  position: relative;
+  height: 100%;
+  background: #000;
+  border-radius: 12em 12em 0 0;
+  box-shadow:
+    inset 0 1em #1a1a1a,
+    inset 1em 0 #141414,
+    inset -1em 0 #141414;
+}
+
+.screen {
+  position: absolute;
+  top: 6em;
+  left: 5em;
+  width: 386em;
+  height: 250em;
+  overflow: hidden;
+  border-radius: 3em 3em 0 0;
+  background: #000;
+}
+
+/*
+ * The screenshot is 16:10, a little wider than the screen, so it fits the
+ * full width and leaves a black strip at the top for the notch, like the
+ * menu bar area of a full-screen app.
+ */
+.screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+}
+
+.notch {
+  position: absolute;
+  top: 6em;
+  left: 50%;
+  width: 47em;
+  height: 7em;
+  margin-left: -23.5em;
+  background: #000;
+  border-radius: 0 0 1.5em 1.5em;
+}
+
+.camera {
+  position: absolute;
+  top: 6.25em;
+  left: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  margin-left: -1.25em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #3a3d46, #17181c 55%, #0a0a0a);
+}
+
+/* dark strip along the bottom of the display */
+.chin {
+  position: absolute;
+  top: 260em;
+  left: 0;
+  right: 0;
+  height: 10em;
+  background: linear-gradient(#0a0a0a, #171717 1.5em, #121212 3em, #0d0d0d 6em, #070707);
+}
+
+/* ---------- Base ---------- */
+
+.base {
+  position: relative;
+  height: 18em;
+  border-radius: 2em 2em 12em 12em / 1em 1em 9em 9em;
+  /* shading near the ends: flatter, less contrast */
+  background: linear-gradient(
+    #484a4a 0.5em,
+    #77787a 1.5em,
+    #747577 10.5em,
+    #6d6e70 12.5em,
+    #626365 14.5em,
+    #6e6f71 15.5em,
+    #7a7b7d 16.5em,
+    #4e4f51 17.5em
+  );
+}
+
+/* brighter, more contrasty shading across the middle */
+.base::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    #4e4e50 0.5em,
+    #afb0b2 1.5em,
+    #a3a4a6 2.5em,
+    #9fa0a2 5.5em,
+    #98999b 7.5em,
+    #919294 8.5em,
+    #838486 9.5em,
+    #6d6e70 10.5em,
+    #5e5f61 11.5em,
+    #555658 12.5em,
+    #505153 13.5em,
+    #535456 14.5em,
+    #606163 15.5em,
+    #6a6b6d 16.5em,
+    #484a4a 17.5em
+  );
+  --fade: linear-gradient(
+    90deg,
+    transparent 13em,
+    rgb(0 0 0 / 0.18) 23em,
+    rgb(0 0 0 / 0.33) 38em,
+    rgb(0 0 0 / 0.7) 68em,
+    rgb(0 0 0 / 0.85) 98em,
+    #000 140em,
+    #000 calc(100% - 140em),
+    rgb(0 0 0 / 0.85) calc(100% - 98em),
+    rgb(0 0 0 / 0.7) calc(100% - 68em),
+    rgb(0 0 0 / 0.33) calc(100% - 38em),
+    rgb(0 0 0 / 0.18) calc(100% - 23em),
+    transparent calc(100% - 13em)
+  );
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
+}
+
+/* specular highlights where the rounded ends catch the light */
+.base::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.15) 1em,
+    rgb(255 255 255 / 0.17) 3em,
+    rgb(255 255 255 / 0.52) 5.5em,
+    rgb(255 255 255 / 0.4) 7em,
+    transparent 10em,
+    transparent calc(100% - 10em),
+    rgb(255 255 255 / 0.4) calc(100% - 7em),
+    rgb(255 255 255 / 0.52) calc(100% - 5.5em),
+    rgb(255 255 255 / 0.17) calc(100% - 3em),
+    rgb(255 255 255 / 0.15) calc(100% - 1em)
+  );
+  --fade: linear-gradient(#000 9.5em, rgb(0 0 0 / 0.5) 12em, rgb(0 0 0 / 0.2) 14em, transparent 16em);
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
+}
+
+/* the thumb recess for opening the lid */
+.recess {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  width: 85em;
+  height: 7em;
+  margin-left: -42.5em;
+  border: solid #3a3b3d;
+  border-width: 0 1.5em;
+  border-radius: 0 0 5em 5em / 0 0 7em 7em;
+  background:
+    linear-gradient(#4f5052 1em, #bbbcbe 1em, #b9babc 3em, #c1c2c4 5.5em, #b4b5b7 7em)
+    padding-box;
+}
+
+.foot {
+  position: absolute;
+  z-index: 1;
+  top: 17em;
+  width: 33em;
+  height: 4em;
+  /* tapered towards the bottom */
+  clip-path: polygon(0 0, 100% 0, calc(100% - 3em) 100%, 3em 100%);
+  border-radius: 0 0 4em 4em / 0 0 2em 2em;
+  background:
+    linear-gradient(transparent 1em, rgb(0 0 0 / 0.35) 2.5em, rgb(0 0 0 / 0.7)),
+    linear-gradient(
+      90deg,
+      #262628,
+      #5e5e60 7%,
+      #343436 18%,
+      #5e5e60 48%,
+      #343436 80%,
+      #5c5c5e 92%,
+      #232325
+    );
+}
+
+.foot.left { left: 27em; }
+.foot.right { right: 27em; }
+
+/* ---------- Terminal windows ---------- */
+
+/*
+ * Sizes are in ems, which each window sets to a macOS point: the title bar
+ * is 28pt, the traffic lights 12pt.
+ */
+.terminal {
+  position: absolute;
+  top: 112em;
+  width: 197em;
+  height: 122.5em;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 3em;
+  background: #1e1e1e;
+  /* a soft lift off the device and the page, lighter than macOS's own */
+  box-shadow:
+    0 0 0 0.3em rgb(0 0 0 / 0.8),
+    0 4em 12em rgb(0 0 0 / 0.22);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+ * The laptop's windows hang half off either edge of its screen, which
+ * runs from 50em to 436em across the laptop: 50em - 197em / 2 = -48.5em
+ * and 436em - 197em / 2 = 337.5em. They sit just below the docs' headline.
+ */
+.laptop .terminal.localnet {
+  left: -48.5em;
+}
+
+.laptop .terminal.cli {
+  left: 337.5em;
+}
+
+/*
+ * A window opens as its product comes into view, so a product that only
+ * peeks in shows just its screen; ZetaChain's second window opens later,
+ * once localnet is running.
+ */
+.terminal {
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.terminal.open {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal.open { transition: none; }
+}
+
+/* the faint light edge of a dark-mode window */
+.terminal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 0.3em rgb(255 255 255 / 0.16);
+  pointer-events: none;
+}
+
+.titlebar {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7.5em;
+  background: #2e2e2e;
+  border-bottom: 0.3em solid #000;
+}
+
+.lights {
+  position: absolute;
+  top: 50%;
+  left: 2.4em;
+  display: flex;
+  gap: 2.1em;
+  margin-top: -1.6em;
+}
+
+.light {
+  width: 3.2em;
+  height: 3.2em;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.25em rgb(0 0 0 / 0.12);
+}
+
+.light.close { background: #ff5f57; }
+.light.minimize { background: #febc2e; }
+.light.zoom { background: #28c840; }
+
+.title {
+  font-size: 3.5em;
+  font-weight: 600;
+  color: rgb(255 255 255 / 0.7);
+}
+
+/*
+ * Bigger than Terminal's 11pt default so it stays readable on the page.
+ * The line height is Menlo's own, so box-drawing characters join up
+ * between rows.
+ */
+.terminal-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0.3em 0.5em;
+  font: 4em/1.165 ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  color: #f0f0f0;
+}
+
+/* wraps at any character, like a terminal does at the last column */
+.line {
+  min-height: 1.165em;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Terminal.app's default ANSI colours */
+.dim { color: #818383; }
+.blue { color: #492ee1; }
+.green { color: #25bc24; }
+.yellow { color: #adad27; }
+.cyan { color: #33bbc8; }
+.bold { font-weight: 700; }
+
+/* Ignite CLI's own colours, which it prints in true colour */
+.ig-info { color: #c4a000; }
+.ig-success { color: #4e9a06; }
+.ig-mnemonic { color: #729fcf; }
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.165em;
+  vertical-align: top;
+  background: #bfbfbf;
+}
+
+/* a window in the background: grey traffic lights, dimmer title, hollow cursor */
+.terminal.inactive .titlebar { background: #262626; }
+.terminal.inactive .light { background: #4d4d4d; }
+.terminal.inactive .title { color: rgb(255 255 255 / 0.4); }
+
+.terminal.inactive .cursor {
+  background: none;
+  box-shadow: inset 0 0 0 0.1em #bfbfbf;
+}
+
+/* ---------- Desktop windows ---------- */
+
+/*
+ * Ignite's mockup is laid out in points on a canvas of --cw by --ch,
+ * then scaled to its section.
+ */
+.device.windows {
+  --cw: 1590px;
+  --ch: 891px;
+}
+
+.desktop {
+  width: calc(var(--k) * var(--cw));
+  height: calc(var(--k) * var(--ch));
+}
+
+.desktop-inner {
+  position: relative;
+  width: var(--cw);
+  height: var(--ch);
+  transform: scale(var(--k));
+  transform-origin: 0 0;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/*
+ * Out on the display rather than on its screen, hanging over the
+ * bottom-right corner of the bezel, below the wallet's Send button.
+ */
+.terminal.floating {
+  top: 630px;
+  left: 1166px;
+  width: 688px;
+  height: 434px;
+  font-size: 4.375px;
+  /* the laptop terminals' shadow, from their ems into the display's points */
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.6),
+    0 14px 41px rgb(0 0 0 / 0.22);
+}
+
+/* 14px Menlo, bigger than on the laptop so it reads, for 80 columns by 24 rows */
+.terminal.floating .terminal-body {
+  font-size: 3.2em;
+}
+
+
+/*
+ * The wallet that came with Ignite's Vue template, laid out as in Ignite's
+ * own screenshots of a 1260 point wide window, and scaled up to fill the
+ * screen: 1590 / 1260.
+ */
+.wallet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1260px;
+  height: 706px;
+  transform: scale(1.262);
+  transform-origin: 0 0;
+  font: 13px/1.2 Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #111;
+}
+
+.wallet > div,
+.w-assets > *,
+.w-transactions > *,
+.w-send > * {
+  position: absolute;
+}
+
+.wallet b {
+  font-weight: 600;
+}
+
+.w-muted {
+  color: #9a9a9a;
+}
+
+.w-nav {
+  top: 25px;
+  left: 98px;
+  display: flex;
+  gap: 22px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.w-nav .w-muted {
+  font-weight: 400;
+  color: #777;
+}
+
+.w-account {
+  top: 20px;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.w-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 72% 28%, #b8f3ff, #5d8dff 30%, #3a2fd8 62%, #6b2fd3);
+}
+
+.w-h2 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.w-assets {
+  top: 0;
+  left: 98px;
+  width: 609px;
+}
+
+.w-assets .w-h2,
+.w-send .w-h2 {
+  top: 113px;
+}
+
+.w-search {
+  top: 125px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9a9a9a;
+}
+
+.w-search svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: #777;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.w-table-head {
+  top: 178px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #8b8b8b;
+}
+
+.w-asset {
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  font-size: 13.5px;
+}
+
+.w-asset b {
+  margin-left: 16px;
+}
+
+.w-coin {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.04);
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+}
+
+.w-channels,
+.w-tx-channels {
+  position: absolute;
+  left: 252px;
+  color: #6b6b6b;
+}
+
+.w-amount {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.w-more,
+.w-advanced {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.w-more {
+  top: 328px;
+  left: 301px;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.12);
+}
+
+.w-more svg,
+.w-advanced svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: #222;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.w-transactions {
+  top: 409px;
+  left: 98px;
+  width: 609px;
+}
+
+.w-month {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.w-tx {
+  left: 0;
+  right: 0;
+  display: flex;
+  font-size: 11.5px;
+}
+
+.w-tx > div span {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #8b8b8b;
+}
+
+.w-tx > div:first-of-type {
+  margin-left: 42px;
+}
+
+.w-tx-icon {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: #f4f4f4;
+  font-size: 12px;
+}
+
+.w-tx-channels {
+  top: 20px;
+  left: 260px;
+  font-size: 11px;
+}
+
+.w-tx-sum {
+  margin-left: auto;
+  text-align: right;
+}
+
+.w-tx-sum b {
+  font-weight: 500;
+}
+
+.w-in {
+  color: #22a33a;
+}
+
+.w-send {
+  top: 0;
+  left: 882px;
+  width: 279px;
+}
+
+.w-send .w-h2 .w-muted {
+  margin-left: 14px;
+  color: #b3b3b3;
+}
+
+.w-label {
+  top: 175px;
+  font-size: 11px;
+  color: #777;
+}
+
+.w-input {
+  top: 192px;
+  left: 0;
+  right: 0;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 4px;
+  background: #f4f4f4;
+  color: #b0b0b0;
+}
+
+.w-send-asset {
+  top: 264px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+}
+
+.w-send-asset div {
+  margin-left: 14px;
+}
+
+.w-send-asset div span {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  color: #8b8b8b;
+}
+
+.w-send-asset .w-send-amount {
+  margin: 0 0 0 auto;
+  font-size: 18px;
+  color: #111;
+}
+
+.w-add {
+  top: 318px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  color: #333;
+}
+
+.w-add svg {
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  fill: none;
+  stroke: #c8c8c8;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.w-advanced {
+  top: 375px;
+  font-weight: 600;
+}
+
+.w-button {
+  top: 412px;
+  left: 0;
+  right: 0;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  background: #a8a8a8;
+  font-weight: 500;
+  color: #fff;
+}
+
+.w-button.ready,
+.w-button.sending {
+  background: #111;
+}
+
+.w-button.sending {
+  opacity: 0.55;
+}
+
+/* a pasted address, scrolled to its end as a text field does */
+.w-input.filled {
+  justify-content: flex-end;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #111;
+}
+
+.w-tx,
+.w-month {
+  transition: top 0.5s cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.w-new {
+  animation: w-new 0.5s ease both;
+}
+
+@keyframes w-new {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .w-tx, .w-month { transition: none; }
+  .w-new { animation: none; }
+}
