@@ -4,6 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Denis Fadeev</title>
+<meta name="description" content="Denis Fadeev turns new technology into products people can use. Now he designs and builds multiplayer AI at Anuma; before that, he created Ignite CLI and led developer experience at ZetaChain.">
+<link rel="canonical" href="https://fadeev.org/">
+<!-- "Fadeev", as in fadeev.org, white on black, for tabs and for phones' home screens -->
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- what a shared link shows on X, LinkedIn, Slack and in Messages -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fadeev.org/">
+<meta property="og:title" content="Denis Fadeev">
+<meta property="og:description" content="Denis Fadeev turns new technology into products people can use. Now he designs and builds multiplayer AI at Anuma; before that, he created Ignite CLI and led developer experience at ZetaChain.">
+<meta property="og:image" content="https://fadeev.org/images/preview.jpg">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="ZetaChain's docs on a laptop with two terminals running a cross-chain swap, beside Ignite's wallet on a display">
+<meta name="twitter:card" content="summary_large_image">
 <!-- Inter, the font of the wallet on Ignite's display -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,6 +97,73 @@
     letter-spacing: -0.01em;
   }
 
+  /*
+   * About waits behind an ⓘ in the window's corner, clear of the products,
+   * and on the About page it turns into a ⓧ that closes it again
+   */
+  .info {
+    position: fixed;
+    z-index: 2; /* above a case study's name and text */
+    top: 1.5rem;
+    right: 1.5rem;
+    border-radius: 50%;
+    background: var(--bg); /* so text scrolling under it doesn't show through */
+    color: var(--text);
+  }
+
+  .info svg {
+    display: block;
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  /*
+   * The i is two strokes, a dot and a stem, each a dash along a line through
+   * the middle. Opening About, they turn either way and stretch to the
+   * line's full length, the two strokes of an ×.
+   */
+  .info line {
+    transform-box: view-box;
+    transform-origin: 12px 12px;
+    transition-property: transform, stroke-dasharray, stroke-dashoffset;
+    transition-duration: 0.4s;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .info .stem {
+    stroke-dasharray: 6 20;
+    stroke-dashoffset: -2;
+    transform: translateY(0.5px) rotate(0deg);
+  }
+
+  /* a dash too short to see but for its round caps, which make the dot */
+  .info .dot {
+    stroke-dasharray: 0.01 20;
+    stroke-dashoffset: -4;
+    transform: translateY(-4.5px) rotate(0deg);
+  }
+
+  body:has(#about:not([hidden])) .info line {
+    stroke-dasharray: 8 20;
+    stroke-dashoffset: 0;
+  }
+
+  body:has(#about:not([hidden])) .info .stem {
+    transform: translateY(0) rotate(45deg);
+  }
+
+  body:has(#about:not([hidden])) .info .dot {
+    transform: translateY(0) rotate(-45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .info line { transition: none; }
+  }
+
   /* ---------- Chapters ---------- */
 
   .chapters {
@@ -154,11 +236,18 @@
     left: 0;
     margin-top: 0.15rem;
     color: var(--muted);
-    transition: color 0.15s;
   }
 
-  .device[data-case]:hover .case-link {
-    color: var(--text);
+  /* with a mouse or trackpad, the pointer's pill says it instead */
+  @media (hover: hover) and (pointer: fine) {
+    .case-link {
+      display: none;
+    }
+
+    /* but the pill doesn't follow the keyboard, so a focused product says it itself */
+    .device[data-case]:focus-visible .case-link {
+      display: block;
+    }
   }
 
   /* the same size as the Talks heading */
@@ -359,6 +448,97 @@
     right: 10px;
   }
 
+  /* ---------- Phone ---------- */
+
+  /*
+   * Anuma runs on an iPhone 16 Pro, drawn in points like the display: a
+   * 402 by 874 point screen with rounded corners, a thin black border and a
+   * dark titanium band, 428 by 900 points in all, with its buttons on the
+   * sides. It stands --phone-h tall: as tall as the display, and taller
+   * still on a phone's screen.
+   */
+  .device.phone {
+    --k: tan(atan2(var(--phone-h, var(--col) * 294 / 486), 900px));
+  }
+
+  .iphone {
+    width: calc(var(--k) * 428px);
+    height: calc(var(--k) * 900px);
+  }
+
+  .iphone-inner {
+    position: relative;
+    width: 428px;
+    height: 900px;
+    transform: scale(var(--k));
+    transform-origin: 0 0;
+  }
+
+  .iphone-body {
+    position: absolute;
+    inset: 0;
+    border-radius: 71px;
+    background: #0b0b0c;
+    box-shadow:
+      /* the titanium band, catching the light on its outer edge */
+      inset 0 0 0 1.5px #6b6b6e,
+      inset 0 0 0 4px #2c2c2e,
+      /* the same soft shadow as the display's */
+      0 30px 70px rgb(0 0 0 / 0.14);
+  }
+
+  /*
+   * The recording comes from the simulator, whose sheets stand a hair in
+   * from the screen's edges, with the map behind showing around them. So
+   * the video is drawn 2 points bigger all round and trimmed back to the
+   * screen, with corners a little rounder than the sheets'.
+   */
+  .iphone-screen {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    width: 406px;
+    height: 878px;
+    clip-path: inset(2px round 61px);
+    object-fit: cover;
+    background: #fff;
+  }
+
+  /* the buttons stand a little proud of the band, behind it */
+  .iphone-button {
+    position: absolute;
+    width: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #4a4a4d, #2a2a2c);
+  }
+
+  .iphone-button.action,
+  .iphone-button.volume-up,
+  .iphone-button.volume-down {
+    left: -2.5px;
+  }
+
+  .iphone-button.power,
+  .iphone-button.camera-control {
+    right: -2.5px;
+  }
+
+  .iphone-button.action { top: 180px; height: 42px; }
+  .iphone-button.volume-up { top: 265px; height: 66px; }
+  .iphone-button.volume-down { top: 361px; height: 66px; }
+  .iphone-button.power { top: 283px; height: 120px; }
+  .iphone-button.camera-control { top: 638px; height: 78px; }
+
+  /*
+   * the caption runs on past the phone, which is narrower than the others,
+   * without widening its box and the space after it
+   */
+  .device.phone figcaption {
+    width: 0;
+    margin: 0;
+    white-space: nowrap;
+  }
+
   /* ---------- Showcase (experiment) ---------- */
 
   /*
@@ -386,12 +566,28 @@
       (100vw - 2 * var(--side)) * 1654 / 1854,
       100vw * 0.58
     );
-    /* how much taller than the laptop the display stands */
-    --taller: calc(var(--scol) * (1230 / 1654 - 294 / 486));
-    /* above the laptop's top: the name, and the display's extra height */
+    /*
+     * The laptop's base is as wide as the column, 486 of its 294 ems tall,
+     * and the phone stands halfway between the laptop's height and the
+     * display's, stand and all, far bigger than life.
+     */
+    --laptop-h: calc(var(--scol) * 294 / 486);
+    --phone-h: calc(var(--scol) * (294 / 486 + 1230 / 1654) / 2);
+    /*
+     * The same space between every pair of products, from the edge of one
+     * to the edge of the next, terminals included. At first the phone has
+     * most of the window, and the laptop after it is partly in view, its
+     * terminals waiting until it's swiped all the way in.
+     */
+    --apart: 17vw;
+    /* the phone stands in from the edge, with room for at least twice the laptop's terminals */
+    --phone-left: max(var(--scol) * 100 / 486, 17vw);
+    /* how much taller than the laptop the tallest product stands */
+    --taller: calc(max(var(--scol) * 1230 / 1654, var(--phone-h)) - var(--laptop-h));
+    /* above the laptop's top: the name, and the tallest product's extra height */
     --lead: calc(var(--name) + var(--above) + var(--taller));
     /* everything, top to bottom, which is centred in the window */
-    --extent: calc(var(--lead) + var(--scol) * 294 / 486 + var(--dcap));
+    --extent: calc(var(--lead) + var(--laptop-h) + var(--dcap));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -423,10 +619,10 @@
   }
 
   /*
-   * The name lines up with the laptop's screen: past
-   * the left terminal's 48.5em, and the 43em the base reaches out beyond
-   * the lid on either side. It's pinned to the window, so it stays put
-   * while the row scrolls under it.
+   * The name lines up with the first product's screen, the phone's: past
+   * the room the phone keeps beside it, and inside its 13 point border.
+   * It's pinned to the window, so it stays put while the row scrolls under
+   * it.
    */
   .showcase .masthead {
     position: fixed;
@@ -436,7 +632,7 @@
     width: 100vw;
     margin: 0;
     padding-block: 0;
-    padding-inline: calc(var(--side) + var(--scol) * (48.5 + 43) / 486) var(--side);
+    padding-inline: calc(var(--side) + var(--phone-left) + var(--phone-h) * 13 / 900) var(--side);
   }
 
   /* room above for the pinned name, and on the right to scroll the last product to the window's centre */
@@ -444,12 +640,6 @@
     flex: none;
     display: flex;
     align-items: flex-end;
-    /*
-     * wide enough that the next product peeks in by about a fifth of the
-     * window: the laptop's 583em, and the 100 points left of the display's
-     * body, end there
-     */
-    gap: max(4rem, 80vw - var(--side) - var(--scol) * 583 / 486 - var(--scol) * 100 / 1654);
     padding: calc(var(--name) + var(--above)) max(var(--side), (100vw - var(--scol) * 1854 / 1654) / 2) 0 var(--side);
   }
 
@@ -461,11 +651,24 @@
 
   .showcase .chapter + .chapter {
     margin-top: 0;
+    margin-left: var(--apart);
+  }
+
+  /*
+   * the laptop's terminals reach the edges of its box, but the display's
+   * body starts 100 points in, so the space before it is that much less
+   */
+  .showcase .chapter + .chapter:has(.xdr) {
+    margin-left: calc(var(--apart) - var(--scol) * 100 / 1654);
   }
 
   .showcase .device {
     --col: var(--scol);
     padding-top: 0;
+  }
+
+  .showcase .device.phone {
+    margin-left: var(--phone-left);
   }
 
   html.dragging {
@@ -475,13 +678,20 @@
 
   /*
    * A page wider than a phone's screen makes the browser zoom out to fit
-   * it, so on phones the row scrolls in a strip of its own instead, which
-   * touch scrolls and bounces natively. The laptop, terminals and all, is
-   * as wide as the screen.
+   * it, so on phones the row scrolls inside the screen-sized body instead,
+   * which touch scrolls and bounces natively, and a swipe anywhere on the
+   * screen moves it, not only one across the products. The laptop,
+   * terminals and all, is as wide as the screen, and the phone, narrow
+   * beside it, half as tall again, so it isn't lost on a small screen; past
+   * it, the laptop peeks in at the edge as a hint to swipe.
    */
   @media (max-width: 700px) {
     .showcase {
       --scol: calc((100vw - 2 * var(--side)) * 486 / 583);
+      --phone-h: calc(var(--laptop-h) * 1.5);
+      --phone-left: calc(var(--scol) * 100 / 486);
+      --apart: 3.5rem;
+      --dcap: 4.6rem; /* the caption, and the line under it that says it opens */
       width: auto;
     }
 
@@ -489,14 +699,31 @@
       overflow-x: hidden;
     }
 
-    .showcase .chapters {
+    /*
+     * a role that wraps would lift its product off the line the others
+     * stand on, so it runs on past the lid instead, into the space between
+     */
+    .showcase .device figcaption {
+      white-space: nowrap;
+    }
+
+    .showcase:not(.reading) {
       overflow-x: auto;
       overscroll-behavior-x: contain;
       scrollbar-width: none;
     }
 
-    .showcase .chapters::-webkit-scrollbar {
+    .showcase::-webkit-scrollbar {
       display: none;
+    }
+
+    /*
+     * the row as wide as the products, so its end padding scrolls the last
+     * one to the middle, with room below for the line that says it opens
+     */
+    .showcase .chapters {
+      width: max-content;
+      padding-bottom: 1.5rem;
     }
   }
 
@@ -552,6 +779,99 @@
     pointer-events: auto;
   }
 
+  @media (max-width: 700px) {
+    .info {
+      top: var(--side);
+      right: var(--side);
+    }
+
+    /* in a case study on a phone, Back takes that corner */
+    .reading:not(:has(#about:not([hidden]))) .info {
+      display: none;
+    }
+  }
+
+  /* Denis's face, above the text */
+  .portrait {
+    display: block;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 50%;
+  }
+
+  /* and where the margin is wide enough, hung beside his name like a byline */
+  @media (min-width: 900px) {
+    .portrait {
+      position: absolute;
+      top: calc(var(--mast-pad) + var(--name) / 2 - 2.25rem);
+      left: -5.5rem;
+      margin: 0;
+    }
+  }
+
+  /* at the end of a case study, for whoever read that far: a way to write */
+  .case-end {
+    margin-top: 4rem;
+    text-align: center;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.05rem 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: #f2f2f2;
+    color: var(--text);
+    transition: background 0.15s;
+  }
+
+  .pill:hover {
+    background: #e9e9e9;
+  }
+
+  .pill svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  /* the ways to reach Denis, ruled like a list of talks */
+  .contact {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #ececec;
+    font-size: 14px;
+  }
+
+  .contact li {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #ececec;
+  }
+
+  .contact span {
+    color: var(--muted);
+  }
+
+  /* only as wide as the address, so pointing at it highlights just that */
+  .contact a {
+    justify-self: start;
+  }
+
+  .contact a:hover {
+    text-decoration: underline;
+    text-decoration-color: rgb(0 0 0 / 0.25);
+    text-underline-offset: 0.2em;
+  }
+
   /* the product, centred across the window, at most 40% of its height */
   .case-device {
     --hero: min(var(--screen) * 0.4 * 486 / 294, (100vw - 2 * var(--side)) * 486 / 583);
@@ -569,6 +889,12 @@
   .case .device {
     --col: var(--hero);
     padding-top: 0;
+  }
+
+  /* the phone stands as tall as the others do here, 40% of the window */
+  .case .device.phone {
+    --phone-h: calc(var(--screen) * 0.4);
+    margin: 0;
   }
 
   /* the way back, on the name's line, at the window's left edge */
@@ -651,6 +977,7 @@
 
   .case code {
     font: 0.88em ui-monospace, "SF Mono", Menlo, monospace;
+    white-space: nowrap; /* a command reads as one piece */
   }
 
   /* where Denis's own words are still needed */
@@ -700,6 +1027,58 @@
     border-radius: 8px;
   }
 
+  /* a recording of the app at work, with a hairline so its white keeps its edge */
+  .case-wide video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    outline: 1px solid rgb(0 0 0 / 0.08);
+    outline-offset: -1px;
+  }
+
+  .case-wide + .case-wide {
+    margin-top: -1.5rem;
+  }
+
+  /* recordings of the phone app, side by side, each in a phone's screen */
+  .case-phones {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-block: 2rem 3rem;
+  }
+
+  .case-phones figure {
+    width: min(250px, 42vw);
+    margin: 0;
+  }
+
+  .case-phones video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 540 / 1174;
+    border: 5px solid #0b0b0c;
+    border-radius: 34px;
+    background: #0b0b0c;
+  }
+
+  .case-phones figcaption {
+    text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    .case-phones {
+      gap: 1rem;
+    }
+
+    .case-phones video {
+      border-width: 3px;
+      border-radius: 22px;
+    }
+  }
+
   .case-photos {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -723,6 +1102,11 @@
     margin-block: 2rem 3rem;
   }
 
+  /* four in one row, rather than three and one left over */
+  .case-videos.four {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   /* a hairline, so the white covers keep their edge on the white page */
   .case-videos img {
     aspect-ratio: 16 / 9;
@@ -740,7 +1124,8 @@
   }
 
   @media (max-width: 700px) {
-    .case-videos {
+    .case-videos,
+    .case-videos.four {
       grid-template-columns: 1fr 1fr;
     }
 
@@ -772,6 +1157,30 @@
     animation-duration: 0.35s;
   }
 
+  /*
+   * opening About, the portrait waits for the name to arrive beside it and
+   * then fades in; closing, it goes first, before the name moves away
+   */
+  .showcase .portrait {
+    view-transition-name: portrait;
+  }
+
+  ::view-transition-new(portrait) {
+    animation: portrait-in 0.3s ease-out 0.5s both;
+  }
+
+  ::view-transition-old(portrait) {
+    animation: portrait-out 0.15s ease-in both;
+  }
+
+  @keyframes portrait-in {
+    from { opacity: 0; }
+  }
+
+  @keyframes portrait-out {
+    to { opacity: 0; }
+  }
+
   /* ---------- Pointer ---------- */
 
   /*
@@ -781,10 +1190,18 @@
    * pressed.
    */
   @media (hover: hover) and (pointer: fine) {
-    html.pointing,
-    html.pointing * {
+    html.pointing:not(:has(dialog[open])),
+    html.pointing:not(:has(dialog[open])) * {
       cursor: none;
     }
+  }
+
+  /*
+   * a playing talk sits in the browser's top layer, above the circle, so
+   * while it's open the ordinary cursor comes back and the circle goes
+   */
+  html:has(dialog[open]) .pointer {
+    visibility: hidden;
   }
 
   /*
@@ -934,6 +1351,24 @@
     color: var(--text);
   }
 
+  /*
+   * the pointer highlights the talk it's on, and the rules above and below
+   * that row give way rather than cut across the highlight
+   */
+  .talks ol,
+  .talks li {
+    transition: border-color 0.15s;
+  }
+
+  html.pointing .talks li:has(> a:hover),
+  html.pointing .talks li:has(+ li > a:hover) {
+    border-bottom-color: transparent;
+  }
+
+  html.pointing .talks ol:has(> li:first-child > a:hover) {
+    border-top-color: transparent;
+  }
+
   /* in a narrow column, each talk's title goes under its event */
   @container (max-width: 760px) {
     .talks li,
@@ -963,11 +1398,16 @@
     border: 0;
     overflow: visible;
     background: none;
-    color: #fff;
+    color: var(--text);
   }
 
+  /*
+   * the page's own white, so the talk seems to settle in the middle of the
+   * page rather than open over it (spelled out, as older browsers don't
+   * pass the page's colours down to a backdrop)
+   */
   .player::backdrop {
-    background: rgb(0 0 0 / 0.88);
+    background: #fff;
   }
 
   .player iframe {
@@ -981,7 +1421,7 @@
 
   .player p {
     margin: 0.75rem 0 0;
-    color: rgb(255 255 255 / 0.75);
+    color: var(--muted);
   }
 
   .player .close {
@@ -991,13 +1431,59 @@
     padding: 0.6rem 0;
     border: 0;
     background: none;
-    color: rgb(255 255 255 / 0.75);
+    color: var(--muted);
     font: inherit;
     cursor: pointer;
   }
 
   .player .close:hover {
-    color: #fff;
+    color: var(--text);
+  }
+
+  /* a talk's photo, growing into the player or shrinking back from it */
+  .flyer {
+    position: fixed;
+    z-index: 1;
+    margin: 0;
+    object-fit: cover;
+    background: #000;
+    pointer-events: none;
+  }
+
+  /* where the photo was, while it's in the player */
+  .talk.away {
+    visibility: hidden;
+  }
+
+  /*
+   * The backdrop and the player's own parts fade in as it opens, wait while
+   * a photo is still flying in, and fade out as it closes.
+   */
+  .player::backdrop,
+  .player > :not(.flyer) {
+    transition: opacity 0.3s;
+  }
+
+  @starting-style {
+    .player[open]::backdrop,
+    .player[open] > :not(.flyer) {
+      opacity: 0;
+    }
+  }
+
+  .player.flying > :not(.flyer),
+  .player.leaving > :not(.flyer),
+  .player.leaving::backdrop {
+    opacity: 0;
+  }
+
+  .player.leaving > :not(.flyer) {
+    transition-duration: 0.15s;
+  }
+
+  /* the emptied player would show as a grey box behind the shrinking photo */
+  .player.leaving iframe {
+    visibility: hidden;
   }
 
   @media (max-width: 700px) {
@@ -1303,14 +1789,18 @@
     left: 337.5em;
   }
 
-  /* the second window opens later, once localnet is running */
-  .terminal.cli {
+  /*
+   * A window opens as its product comes into view, so a product that only
+   * peeks in shows just its screen; ZetaChain's second window opens later,
+   * once localnet is running.
+   */
+  .terminal {
     visibility: hidden;
     opacity: 0;
     transform: scale(0.95);
   }
 
-  .terminal.cli.open {
+  .terminal.open {
     visibility: visible;
     opacity: 1;
     transform: none;
@@ -1318,7 +1808,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .terminal.cli.open { transition: none; }
+    .terminal.open { transition: none; }
   }
 
   /* the faint light edge of a dark-mode window */
@@ -1848,7 +2338,35 @@
     </a>
   </header>
 
+  <!-- About, behind an ⓘ in the window's corner, drawn to match Hugeicons -->
+  <a class="info" href="#about" aria-label="About">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <line class="stem" x1="12" y1="8" x2="12" y2="16"/>
+      <line class="dot" x1="12" y1="8" x2="12" y2="16"/>
+    </svg>
+  </a>
+
   <main class="chapters">
+    <section class="chapter" aria-label="Anuma">
+      <figure class="device phone" data-case="anuma" tabindex="0" role="link" aria-label="Anuma case study">
+        <div class="iphone">
+          <div class="iphone-inner" aria-hidden="true">
+            <span class="iphone-button action"></span>
+            <span class="iphone-button volume-up"></span>
+            <span class="iphone-button volume-down"></span>
+            <span class="iphone-button power"></span>
+            <span class="iphone-button camera-control"></span>
+            <div class="iphone-body">
+              <!-- a recording of the app, Dynamic Island and all -->
+              <video class="iphone-screen" src="images/anuma-demo.mp4" poster="images/anuma-demo.jpg" muted autoplay loop playsinline preload="auto"></video>
+            </div>
+          </div>
+        </div>
+        <figcaption><strong>Anuma</strong>Product Engineer, 2025–present<span class="case-link">Case study →</span></figcaption>
+      </figure>
+    </section>
+
     <section class="chapter" aria-label="ZetaChain">
       <figure class="device" data-case="zetachain" tabindex="0" role="link" aria-label="ZetaChain case study">
         <div class="laptop">
@@ -2077,6 +2595,42 @@
   </main>
 
   <!-- a product's case study, opened by clicking it on the shelf -->
+  <article class="case" id="anuma" hidden aria-labelledby="anuma-title">
+    <a class="case-back" href="#"><svg viewBox="0 0 9 16" aria-hidden="true"><path d="M7.5 1.5 1.5 8l6 6.5"/></svg>Back</a>
+    <div class="case-device"></div>
+
+    <h1 id="anuma-title">Anuma</h1>
+    <p class="role">Product Engineer, 2025–present</p>
+
+    <p class="lede"><a href="https://anuma.ai">Anuma</a> is multiplayer AI for real life: it learns what you care about from your chats and memories, and shows you the people and plans nearby you'd get along with.</p>
+
+    <p class="lede">I've worked on it since late 2025, on the web and in the iOS and Android apps, designing features and writing the code for them.</p>
+
+    <h2>People Nearby</h2>
+    <p>I built the first version of People Nearby in the web and mobile apps: a full-screen map of the people around you, a sheet with a row of faces and your recent chats, profiles you can tap, and messages that start as a request. None of it opens until you share your own location.</p>
+    <p>Then came meetups, with pins on the map, attendees, RSVPs and hosting; a ring around each face that shows how well you'd get along; and one thread for chatting with people and with the AI alike, where a Vibe check helps you start a first conversation. I also built parts of the backend behind the map: presence and live location, messaging and meetups.</p>
+
+    <h2>Memory</h2>
+    <p>I replaced the list of memories with a profile built on the device from what Anuma knows about you: a memory of the day, and stickers on a cork board, piled up by subject, with a full-screen sticker book. It's the cork board on the phone above.</p>
+
+    <h2>Things the AI makes</h2>
+    <p>Anuma's assistant makes things as well as writing, and I built the pieces that show them: interactive apps that run right in the chat, safely sandboxed; documents it writes and renders on the device as real PDFs, with text you can select; maps, timelines and photo collages that appear inside a reply as it streams in; and a slide-deck editor with a presentation mode and PowerPoint export. Any app it makes can be saved as a tool it uses again later.</p>
+
+    <h2>Feeling native</h2>
+    <p>Then the details that make it feel like it belongs on an iPhone: glass that matches iOS 27's and really bends the content behind it, even in Safari; a glass menu that grows out of its button, on springs fitted to recordings of iOS; a sidebar that follows your finger from the edge of the screen; and replies that stream in smoothly, without flashes or jumps.</p>
+
+    <h2>The SDK</h2>
+    <p>Under all of it is the TypeScript SDK that Anuma's AI runs on, which I worked on from the start: streaming replies, long-term memory, tool calling and end-to-end encryption, each a few lines of code. I wrote starter apps for it too, for Next.js, Expo, Telegram and AI agents, and its docs.</p>
+
+    <div class="case-end">
+      <p>Let's talk.</p>
+      <a class="pill" href="mailto:denis@fadeev.org">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6L8.91302 9.91697C11.4616 11.361 12.5384 11.361 15.087 9.91697L22 6"/><path d="M2.01577 13.4756C2.08114 16.5412 2.11383 18.0739 3.24496 19.2094C4.37608 20.3448 5.95033 20.3843 9.09883 20.4634C11.0393 20.5122 12.9607 20.5122 14.9012 20.4634C18.0497 20.3843 19.6239 20.3448 20.7551 19.2094C21.8862 18.0739 21.9189 16.5412 21.9842 13.4756C22.0053 12.4899 22.0053 11.5101 21.9842 10.5244C21.9189 7.45886 21.8862 5.92609 20.7551 4.79066C19.6239 3.65523 18.0497 3.61568 14.9012 3.53657C12.9607 3.48781 11.0393 3.48781 9.09882 3.53656C5.95033 3.61566 4.37608 3.65521 3.24495 4.79065C2.11382 5.92608 2.08114 7.45885 2.01576 10.5244C1.99474 11.5101 1.99475 12.4899 2.01577 13.4756Z"/></svg>
+        denis@fadeev.org
+      </a>
+    </div>
+  </article>
+
   <article class="case" id="zetachain" hidden aria-labelledby="zetachain-title">
     <a class="case-back" href="#"><svg viewBox="0 0 9 16" aria-hidden="true"><path d="M7.5 1.5 1.5 8l6 6.5"/></svg>Back</a>
     <div class="case-device"></div>
@@ -2216,6 +2770,14 @@
         </li>
       </ol>
     </section>
+
+    <div class="case-end">
+      <p>Let's talk.</p>
+      <a class="pill" href="mailto:denis@fadeev.org">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6L8.91302 9.91697C11.4616 11.361 12.5384 11.361 15.087 9.91697L22 6"/><path d="M2.01577 13.4756C2.08114 16.5412 2.11383 18.0739 3.24496 19.2094C4.37608 20.3448 5.95033 20.3843 9.09883 20.4634C11.0393 20.5122 12.9607 20.5122 14.9012 20.4634C18.0497 20.3843 19.6239 20.3448 20.7551 19.2094C21.8862 18.0739 21.9189 16.5412 21.9842 13.4756C22.0053 12.4899 22.0053 11.5101 21.9842 10.5244C21.9189 7.45886 21.8862 5.92609 20.7551 4.79066C19.6239 3.65523 18.0497 3.61568 14.9012 3.53657C12.9607 3.48781 11.0393 3.48781 9.09882 3.53656C5.95033 3.61566 4.37608 3.65521 3.24495 4.79065C2.11382 5.92608 2.08114 7.45885 2.01576 10.5244C1.99474 11.5101 1.99475 12.4899 2.01577 13.4756Z"/></svg>
+        denis@fadeev.org
+      </a>
+    </div>
   </article>
 
   <article class="case" id="ignite" hidden aria-labelledby="ignite-title">
@@ -2225,9 +2787,9 @@
     <h1 id="ignite-title">Ignite</h1>
     <p class="role">Created Ignite CLI, 2020–2023</p>
 
-    <p class="lede">In 2020, starting a chain on the Cosmos SDK meant taking the SDK and wiring it up yourself before it would run. I wrote the first version of a tool, then called Starport, so a chain could start from a name.</p>
+    <p class="lede"><a href="https://github.com/ignite/cli">Ignite CLI</a> starts a blockchain with one command. dYdX, Celestia, Sei, Wormhole and Dymension were built with it, along with dozens of other chains in production and hundreds of experiments. So was ZetaChain, where I later led developer experience.</p>
 
-    <p class="lede">It became <a href="https://github.com/ignite/cli">Ignite CLI</a>. One command writes the chain and the app in front of it, and the next one runs it. The display is that session: <code>ignite scaffold chain planet</code> writes a chain called planet, <code>ignite chain serve</code> runs it, and the wallet is the app that came with it.</p>
+    <p class="lede">I joined Tendermint, the company behind the Cosmos SDK, as a frontend engineer in 2019. A year later I designed and wrote the first version, then called Starport, built an engineering team around it from scratch, and led it as Director of Developer Experience and then VP of Product. In 2022 the company itself took the name Ignite.</p>
 
     <figure class="case-wide">
       <a class="talk" href="https://www.youtube.com/watch?v=aN0EXiM2hm8" data-video="aN0EXiM2hm8" data-title="Create and launch your dApp as an app chain in just minutes · Istanbul Blockchain Week, 2022" aria-label="Watch the talk Create and launch your dApp as an app chain in just minutes, 15 minutes">
@@ -2237,14 +2799,19 @@
       <figcaption>Istanbul Blockchain Week, 2022</figcaption>
     </figure>
 
-    <h2>Chains</h2>
-    <p>I later led the team that turned the CLI into the tool Cosmos chains were scaffolded with. A new chain started from the command instead of a fork of the SDK. Neutron, Stride, Dymension, and Kujira were among a few dozen production chains, and a long tail of experiments used it too.</p>
-    <p>With the same CLI I started SPN, a chain for launching other chains, and later led the team that built it.</p>
+    <h2>One command</h2>
+    <p>In 2020, a new chain on the Cosmos SDK started as a fork of another one, wired up by hand before anything would run, with the app in front of it as a separate project. Ignite turned that into a command.</p>
+    <p><code>ignite scaffold chain planet</code> writes a working chain called planet and a web app for it. <code>ignite chain serve</code> builds the chain, starts a node with test accounts and a token faucet, and rebuilds it whenever you save. From there, <code>ignite scaffold</code> adds the rest a piece at a time: a module, or a type of data with its transactions, queries and the client code to call them. The display at the top is that first session, and the wallet is the app that came with the chain.</p>
+    <p>Everything it writes is ordinary code in your own repository, not a framework hidden underneath. A chain lives for years and grows in ways no tool can predict, so its code had to belong to the team: plain Cosmos SDK code they could read, change and keep if they ever stopped using Ignite. It also meant that everyone who scaffolded a chain was reading real SDK code from the first minute.</p>
+    <p>I used it myself, too. In 2022 I prototyped the first version of <a href="https://github.com/noble-assets/noble">Noble</a> with it, the chain Circle later chose for native USDC in Cosmos.</p>
 
-    <h2>Teaching</h2>
-    <p>I wrote the tutorials that showed people how to build a module, and later rewrote the docs. I also started the Ignite Discord, which grew to about 2,000 people, and answered questions there about the CLI and about building on the SDK.</p>
-    <p>I recorded a short one each time the CLI changed. The first is still called Starport. By v0.13 a chain launched in minutes, which is the session on the display. v0.15 is a hello world over IBC, and v0.16 sends a token to the Cosmos Hub, which is what the wallet is for. The rest are in the <a href="https://www.youtube.com/playlist?list=PL3camC2cvS4c671T83NSp-pixvgIsbjzI">playlist</a>.</p>
-    <div class="case-videos">
+    <h2>Launching chains</h2>
+    <p>Once a chain could start in minutes, launching it became the hard part: every validator has to start from the same genesis file, at the same moment. I started SPN, a chain for launching other chains, and led the team that built it as a working prototype. From the same CLI, a team would publish its chain, validators would join it, and it would launch when they were ready. In December 2020, during Tendermint's Starport talk at Interchain Conversations, the annual Cosmos conference, we created an example chain and <a href="https://www.youtube.com/watch?v=DWVPTYOrUUo&amp;t=1110s">launched it live</a>.</p>
+
+    <h2>Docs and teaching</h2>
+    <p>Before Starport, I built the documentation system that the Cosmos SDK, Cosmos Hub, Keplr, CosmWasm and others published their docs with.</p>
+    <p>For Starport I wrote the introductory tutorials on building a module, which thousands of developers started from, and later rewrote the docs. I started the Ignite Discord, which grew to about 2,000 developers, and answered their questions there. I ran community calls and workshops, and judged and mentored at HackAtom hackathons. With each release I recorded a short video of what was new. The rest are in the <a href="https://www.youtube.com/playlist?list=PL3camC2cvS4c671T83NSp-pixvgIsbjzI">playlist</a>.</p>
+    <div class="case-videos four">
       <figure>
         <a class="talk" href="https://www.youtube.com/watch?v=rmbPjCGDXek" data-video="rmbPjCGDXek" data-title="Getting started with Starport" aria-label="Watch Getting started with Starport, 4 min">
           <img src="images/videos/rmbPjCGDXek.jpg" width="1280" height="720" loading="lazy" alt="">
@@ -2276,8 +2843,12 @@
     </div>
 
     <h2>Talks</h2>
-    <p>In 2022 I gave talks about starting a chain with the CLI, and about launching one.</p>
-    <div class="case-photos pair">
+    <p>When IBC, the protocol that lets Cosmos chains talk to each other, went live on the Cosmos Hub in 2021, I gave the Starport demo at the <a href="https://www.youtube.com/watch?v=idLl1u-7iO8&amp;t=2529s">launch party</a>. On the stream, I created a new chain, set up a relayer and sent tokens from it to the Cosmos Hub and back. I also spoke about Cosmos and Ignite at conferences in Moscow, Istanbul, Berlin, Lisbon and Medellín.</p>
+    <div class="case-photos">
+      <figure class="photo">
+        <img src="images/blockchain-life-moscow-2021.jpg" style="object-position: 30% 50%" width="1200" height="800" loading="lazy" alt="Denis on the Blockchain Life 2021 stage beside a large screen reading “What is Cosmos”">
+        <figcaption>Blockchain Life, Moscow, 2021</figcaption>
+      </figure>
       <figure class="photo">
         <a class="talk" href="https://www.youtube.com/watch?v=F7yKUX1YXIM" data-video="F7yKUX1YXIM" data-title="Ignite Chain Launch · Cosmoverse, Medellín, 2022" aria-label="Watch the talk Ignite Chain Launch, 17 minutes">
           <img src="images/cosmoverse-medellin-2022.jpg" width="1800" height="1350" loading="lazy" alt="Denis speaking with a microphone in front of the Cosmoverse 2022 backdrop">
@@ -2293,6 +2864,35 @@
         <figcaption>Buckle Up &amp; Build Cosmos, Berlin, 2022</figcaption>
       </figure>
     </div>
+
+    <div class="case-end">
+      <p>Let's talk.</p>
+      <a class="pill" href="mailto:denis@fadeev.org">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6L8.91302 9.91697C11.4616 11.361 12.5384 11.361 15.087 9.91697L22 6"/><path d="M2.01577 13.4756C2.08114 16.5412 2.11383 18.0739 3.24496 19.2094C4.37608 20.3448 5.95033 20.3843 9.09883 20.4634C11.0393 20.5122 12.9607 20.5122 14.9012 20.4634C18.0497 20.3843 19.6239 20.3448 20.7551 19.2094C21.8862 18.0739 21.9189 16.5412 21.9842 13.4756C22.0053 12.4899 22.0053 11.5101 21.9842 10.5244C21.9189 7.45886 21.8862 5.92609 20.7551 4.79066C19.6239 3.65523 18.0497 3.61568 14.9012 3.53657C12.9607 3.48781 11.0393 3.48781 9.09882 3.53656C5.95033 3.61566 4.37608 3.65521 3.24495 4.79065C2.11382 5.92608 2.08114 7.45885 2.01576 10.5244C1.99474 11.5101 1.99475 12.4899 2.01577 13.4756Z"/></svg>
+        denis@fadeev.org
+      </a>
+    </div>
+  </article>
+
+  <!-- who Denis is and how to reach him, opened from the ⓘ in the corner, which,
+       now a ⓧ, closes it, so it needs no Back of its own -->
+
+  <article class="case" id="about" hidden aria-label="About">
+    <img class="portrait" src="images/denis.jpg" width="320" height="320" alt="Portrait of Denis Fadeev">
+    <p class="lede">I turn new technology into products people can use. Right now that's AI: at <a href="https://anuma.ai">Anuma</a>, I design and build multiplayer AI for real life, an app that uses what it knows about you to help you find the right people nearby.</p>
+
+    <p class="lede">Before that, I spent six years on developer tools for blockchains. I created Ignite CLI, which well-known chains like dYdX, Celestia and Sei started from, and built and led the team behind it. Then I led developer experience at ZetaChain.</p>
+
+    <p class="lede">I've spoken at dozens of conferences, from ETHSeoul to Cosmoverse in Medellín: keynotes, workshops, panels and live demos.</p>
+
+    <h2>Contact</h2>
+    <ul class="contact">
+      <li><span>Email</span><a href="mailto:denis@fadeev.org">denis@fadeev.org</a></li>
+      <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/denis-fadeev/">denis-fadeev</a></li>
+      <li><span>GitHub</span><a href="https://github.com/fadeev">fadeev</a></li>
+      <li><span>X</span><a href="https://x.com/fadeev">@fadeev</a></li>
+      <li><span>Telegram</span><a href="https://t.me/dfadeev">@dfadeev</a></li>
+    </ul>
   </article>
 
   <dialog class="player" aria-label="Talk">
@@ -2555,10 +3155,11 @@
     log("bnb", `Transferred 0.000969817443276215 native gas tokens from TSS to ${SIGNER.toLowerCase()}`);
   }
 
+  const opened = new Date();
+  localnet.print(lastLogin(new Date(opened - 2 * 36e5), "ttys000"));
+  localnet.write(PROMPT);
+
   async function play() {
-    const opened = new Date();
-    localnet.print(lastLogin(new Date(opened - 2 * 36e5), "ttys000"));
-    localnet.write(PROMPT);
     await sleep(1200);
     await startLocalnet();
 
@@ -2578,7 +3179,13 @@
     for (const { body } of [localnet, cli, ignite]) body.scrollTop = body.scrollHeight;
   });
 
-  play();
+  // the window opens and the session starts once the laptop's screen is all but fully in view
+  new IntersectionObserver((entries, observer) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    localnet.element.classList.add("open");
+    play();
+  }, { threshold: 0.95 }).observe(document.querySelector(".laptop .lid"));
 
   /*
    * Ignite's chapter has the wallet from Ignite's Vue template beside a
@@ -2734,10 +3341,11 @@
     button.classList.remove("sending");
   }
 
-  // it starts once the Terminal is mostly in view
+  // the window opens and the session starts once the Terminal is mostly in view
   new IntersectionObserver(async (entries, observer) => {
     if (!entries.some((entry) => entry.isIntersecting)) return;
     observer.disconnect();
+    ignite.element.classList.add("open");
     await sleep(600);
     await scaffoldChain();
     await sleep(1200);
@@ -2819,6 +3427,10 @@
 
   const fine = matchMedia("(hover: hover) and (pointer: fine)");
 
+  // the shelf scrolls the page, or on a narrow screen the screen-sized body
+  const narrow = matchMedia("(max-width: 700px)");
+  const shelfScroller = () => (narrow.matches ? document.body : document.scrollingElement);
+
   /*
    * In the showcase the page scrolls sideways natively. A mouse wheel only
    * turns up and down, so its turns, and up-and-down trackpad swipes, move
@@ -2834,7 +3446,7 @@
       const notch = event.deltaMode === 1 ||
         (event.wheelDeltaY && event.wheelDeltaY % 120 === 0 && event.wheelDeltaY !== -3 * event.deltaY);
       const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
-      scrollBy({ left: delta, behavior: notch ? "smooth" : "instant" });
+      shelfScroller().scrollBy({ left: delta, behavior: notch ? "smooth" : "instant" });
     }, { passive: false });
   }
 
@@ -2842,11 +3454,13 @@
    * Dragging the showcase with the mouse: the row
    * stays under the cursor, a flick glides on and slows, and dragging past
    * either end stretches like a rubber band and springs back. Trackpads
-   * and touch keep the page's native scrolling.
+   * and touch keep the page's native scrolling, and so does a mouse on a
+   * device whose main input is touch.
    */
   const row = document.querySelector(".showcase .chapters");
-  if (row && fine.matches) {
-    const page = document.scrollingElement;
+  if (row) {
+    const root = document.documentElement;
+    let page = shelfScroller(); // what scrolls, taken afresh as each drag starts
     let x = 0; // where the row is, past its ends while stretched
     let velocity = 0; // px per ms
     let drag = null;
@@ -2898,9 +3512,10 @@
     }
 
     addEventListener("pointerdown", (event) => {
-      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      if (event.pointerType !== "mouse" || event.button !== 0 || !fine.matches) return;
       if (document.body.classList.contains("reading")) return;
       stop();
+      page = shelfScroller();
       x = page.scrollLeft + (x - clamp(x));
       drag = { pointer: event.clientX, x, time: event.timeStamp, moved: false };
       velocity = 0;
@@ -2912,8 +3527,8 @@
       if (!drag.moved) {
         if (Math.abs(event.clientX - drag.pointer) < 4) return;
         drag.moved = true;
-        page.setPointerCapture(event.pointerId);
-        page.classList.add("dragging");
+        root.setPointerCapture(event.pointerId);
+        root.classList.add("dragging");
       }
       const before = x;
       x = drag.x - (event.clientX - drag.pointer);
@@ -2930,7 +3545,7 @@
       velocity = Math.max(-4, Math.min(4, velocity));
       dragged = drag.moved;
       drag = null;
-      page.classList.remove("dragging");
+      root.classList.remove("dragging");
       if (dragged) frame = requestAnimationFrame(step);
     }
 
@@ -2955,15 +3570,16 @@
   /*
    * The iPad-style pointer follows the mouse exactly, appearing once it
    * moves and fading when it leaves the window. Over a link it snaps to it;
-   * over something that opens or plays, it says so.
+   * over something that opens or plays, it says so. It starts once there's
+   * a mouse or trackpad, when the page loads or when one is plugged in.
    */
-  if (fine.matches) {
+  function point() {
     const pointer = document.createElement("div");
     pointer.className = "pointer";
     document.body.append(pointer);
     document.documentElement.classList.add("pointing");
 
-    const snaps = ".home[href], .case-back, .case p a, .case .talks li > a";
+    const snaps = ".home[href], .case-back, .case p a, .contact a, .pill, .case .talks li > a";
     const plays = ".case figure .talk";
 
     // how wide each label is, for the pill to fit it
@@ -2978,9 +3594,12 @@
     function place() {
       if (mode === "snap") {
         const box = target.getBoundingClientRect();
-        pointer.style.setProperty("--w", `${box.width + 16}px`);
-        pointer.style.setProperty("--h", `${box.height + 8}px`);
-        pointer.style.setProperty("--r", "8px");
+        // a pill becomes the pointer's own shape; anything else gets a soft
+        // box a little bigger than it
+        const pill = target.classList.contains("pill");
+        pointer.style.setProperty("--w", `${box.width + (pill ? 0 : 16)}px`);
+        pointer.style.setProperty("--h", `${box.height + (pill ? 0 : 8)}px`);
+        pointer.style.setProperty("--r", pill ? `${box.height / 2}px` : "8px");
         pointer.style.translate = `${box.left + box.width / 2}px ${box.top + box.height / 2}px`;
       } else if (mode === "label") {
         const width = Math.ceil(measure.measureText(pointer.dataset.label).width) + 28;
@@ -3012,19 +3631,25 @@
 
     // what the pointer is over decides its shape
     function update(under = document.elementFromPoint(x, y)) {
+      // mid-transition the browser finds only the page itself under the
+      // mouse; the ⓘ never moves, so a pill on it stays there
+      if (under === document.documentElement && target?.closest(".info")) under = target;
       const link = under?.closest(snaps);
+      const info = under?.closest(".info");
       const play = under?.closest(plays);
       const opens = !document.body.classList.contains("reading") && under?.closest(".device[data-case]");
+      // the ⓘ says in words what it opens, or that it closes
+      const about = document.getElementById("about").hidden ? "About" : "Close";
       if (link) aim("snap", link);
-      else if (play || opens) {
-        pointer.dataset.label = play ? "Play" : "Case study";
-        aim("label", play || opens);
+      else if (info || play || opens) {
+        pointer.dataset.label = info ? about : play ? "Play" : "Case study";
+        aim("label", info || play || opens);
       } else aim("free", null);
       place();
     }
 
     addEventListener("pointermove", (event) => {
-      if (event.pointerType !== "mouse") return;
+      if (event.pointerType !== "mouse" || !fine.matches) return;
       x = event.clientX;
       y = event.clientY;
       update(event.target instanceof Element ? event.target : null);
@@ -3041,13 +3666,23 @@
       setTimeout(() => update(), 700); // once a view transition has settled
     });
     addEventListener("popstate", () => setTimeout(() => update(), 700));
+    // the moment a case study or About opens or closes, so the ⓘ's word switches with it
+    addEventListener("route", () => update());
     addEventListener("scroll", () => update(), { passive: true });
     document.querySelector(".player").addEventListener("close", () => update());
 
     document.documentElement.addEventListener("pointerleave", () => pointer.classList.remove("shown"));
     addEventListener("pointerdown", () => pointer.classList.add("pressed"));
     addEventListener("pointerup", () => pointer.classList.remove("pressed"));
+
+    // and when the mouse goes, the pointer goes with it
+    fine.addEventListener("change", () => {
+      if (!fine.matches) pointer.classList.remove("shown");
+    });
   }
+
+  if (fine.matches) point();
+  else fine.addEventListener("change", point, { once: true });
 
   /*
    * A product with a case study opens it when clicked. The address gets
@@ -3061,19 +3696,24 @@
   let shelf = 0; // how far the shelf was scrolled, to come back to
   let openedHere = false; // whether Back would return to the shelf
   const homeLink = document.querySelector(".home");
+  const info = document.querySelector(".info");
 
   function show(id) {
     const article = document.getElementById(id);
     const device = document.querySelector(`.device[data-case="${id}"]`);
-    if (!article?.classList.contains("case") || !device || reading?.article === article) return;
+    if (!article?.classList.contains("case") || reading?.article === article) return;
     hide();
-    shelf = document.scrollingElement.scrollLeft;
-    const home = document.createComment(" its place on the shelf ");
-    device.before(home);
-    article.querySelector(".case-device").append(device);
+    shelf = shelfScroller().scrollLeft;
+    // the About page has no product to bring along
+    const home = device && document.createComment(" its place on the shelf ");
+    if (device) {
+      device.before(home);
+      article.querySelector(".case-device").append(device);
+    }
     article.hidden = false;
     document.body.classList.add("reading");
     homeLink.href = "#";
+    info.ariaLabel = id === "about" ? "Close" : "About";
     reading = { article, device, home };
     scrollTo(0, 0);
   }
@@ -3081,12 +3721,14 @@
   function hide() {
     if (!reading) return;
     const { article, device, home } = reading;
-    home.replaceWith(device);
+    home?.replaceWith(device);
     article.hidden = true;
     document.body.classList.remove("reading");
     homeLink.removeAttribute("href");
+    info.ariaLabel = "About";
     reading = null;
-    scrollTo(shelf, 0);
+    scrollTo(0, 0);
+    shelfScroller().scrollLeft = shelf;
   }
 
   // name only the product that is moving, so the other one stays in the crossfade
@@ -3099,7 +3741,11 @@
   function route(animate) {
     const id = decodeURIComponent(location.hash.slice(1));
     nameDevice(id || reading?.device?.dataset.case || "");
-    const change = () => (id ? show(id) : hide());
+    const change = () => {
+      if (id) show(id);
+      else hide();
+      dispatchEvent(new Event("route")); // for the pointer, which shows what's under it
+    };
     if (animate && document.startViewTransition && !reduceMotion.matches) {
       document.startViewTransition(change);
     } else {
@@ -3135,6 +3781,16 @@
     });
   }
 
+  // the ⓘ opens About like a product opens its case study, and closes it again
+  info.addEventListener("click", (event) => {
+    if (reading?.article.id === "about") {
+      event.preventDefault();
+      close();
+    } else {
+      openedHere = true;
+    }
+  });
+
   for (const link of [homeLink, ...document.querySelectorAll(".case-back")]) {
     link.addEventListener("click", (event) => {
       if (!reading) return;
@@ -3150,28 +3806,119 @@
   route(false);
 
   /*
+   * For people who'd rather not have motion, Anuma's recording stays on its
+   * first frame, and the first Terminal windows are open from the start
+   * rather than opening as their products come into view.
+   */
+  if (instant) {
+    for (const video of document.querySelectorAll("video[autoplay]")) {
+      video.removeAttribute("autoplay");
+      video.pause();
+    }
+    for (const window of [localnet, ignite]) window.element.classList.add("open");
+  } else {
+    // a case study's recordings load and play only while they're on screen
+    const onScreen = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        if (isIntersecting) target.play().catch(() => {});
+        else target.pause();
+      }
+    }, { threshold: 0.25 });
+    for (const video of document.querySelectorAll(".case video")) onScreen.observe(video);
+  }
+
+  /*
    * Photos of recorded talks play them in an overlay, from YouTube's
-   * privacy-enhanced player, which loads only once a talk is opened.
+   * privacy-enhanced player, which loads only once a talk is opened. The
+   * photo itself grows from its place into the player, leaving its place
+   * empty, stands in for the video until the video has loaded, and shrinks
+   * back into its place when the player closes.
    */
   const player = document.querySelector(".player");
   const recording = player.querySelector("iframe");
+  const flyer = document.createElement("img"); // the photo, while it's on the move
+  flyer.className = "flyer";
+  flyer.alt = "";
+  flyer.hidden = true;
+  player.append(flyer);
+  let source = null; // the talk whose photo is in the player
+
+  const box = (element) => {
+    const { left, top, width, height } = element.getBoundingClientRect();
+    return { left: `${left}px`, top: `${top}px`, width: `${width}px`, height: `${height}px` };
+  };
+
+  // the photo goes from one box to another, cropped the way each box crops it
+  function flyPhoto(from, to) {
+    for (const animation of flyer.getAnimations()) animation.cancel();
+    flyer.hidden = false;
+    return flyer.animate(
+      [
+        { ...box(from), borderRadius: getComputedStyle(from).borderRadius },
+        { ...box(to), borderRadius: getComputedStyle(to).borderRadius },
+      ],
+      { duration: 450, easing: "cubic-bezier(0.2, 0, 0, 1)", fill: "forwards" },
+    ).finished;
+  }
+
+  function openTalk(talk) {
+    const photo = talk.querySelector("img");
+    const loaded = new Promise((resolve) => recording.addEventListener("load", resolve, { once: true }));
+    recording.src = `https://www.youtube-nocookie.com/embed/${talk.dataset.video}?autoplay=1&rel=0`;
+    player.querySelector("p").textContent = talk.dataset.title;
+    player.showModal();
+    // a talk in a list has no photo to grow, and it just fades in
+    if (!photo || reduceMotion.matches) return;
+    source = talk;
+    talk.classList.add("away");
+    player.classList.add("flying");
+    flyer.src = photo.currentSrc || photo.src;
+    flyer.style.objectPosition = getComputedStyle(photo).objectPosition;
+    const landed = flyPhoto(photo, recording);
+    landed.then(() => player.classList.remove("flying"), () => {});
+    // once the video has loaded behind it, the photo fades away
+    Promise.all([landed, loaded]).then(() => {
+      if (source !== talk || player.classList.contains("leaving")) return;
+      flyer.animate({ opacity: [1, 0] }, { duration: 250, fill: "forwards" })
+        .finished.then(() => { flyer.hidden = true; }, () => {});
+    }, () => {});
+  }
+
+  function closeTalk() {
+    if (!player.open || player.classList.contains("leaving")) return;
+    player.classList.add("leaving");
+    recording.removeAttribute("src"); // the sound stops straight away
+    const talk = source;
+    const photo = talk?.querySelector("img");
+    const back = photo ? flyPhoto(recording, photo) : Promise.resolve();
+    const faded = new Promise((resolve) => setTimeout(resolve, 300)); // the backdrop's fade
+    Promise.all([back, faded]).then(() => {
+      player.close();
+      player.classList.remove("leaving", "flying");
+      talk?.classList.remove("away");
+      flyer.hidden = true;
+      source = null;
+    }, () => {});
+  }
 
   for (const talk of document.querySelectorAll(".talk")) {
     talk.addEventListener("click", (event) => {
       // a modified click still opens the talk on YouTube, in a new tab
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
-      recording.src = `https://www.youtube-nocookie.com/embed/${talk.dataset.video}?autoplay=1&rel=0`;
-      player.querySelector("p").textContent = talk.dataset.title;
-      player.showModal();
+      openTalk(talk);
     });
   }
 
-  // a click on the dark backdrop closes it too
+  // a click on the dark backdrop closes it too, and so does Esc, both animated
   player.addEventListener("click", (event) => {
-    if (event.target === player) player.close();
+    if (event.target === player) closeTalk();
   });
-  player.querySelector(".close").addEventListener("click", () => player.close());
+  player.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeTalk();
+  });
+  player.querySelector(".close").addEventListener("click", closeTalk);
   player.addEventListener("close", () => recording.removeAttribute("src"));
 </script>
 </body>
