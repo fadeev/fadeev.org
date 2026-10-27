@@ -708,11 +708,12 @@ if (fine.matches) point();
 else fine.addEventListener("change", point, { once: true });
 
 /*
- * A product with a case study opens it when clicked. The address gets
- * the product's name, like fadeev.org/#zetachain, so the case study can
- * be linked to, and Back, Esc or the name close it. The product itself
+ * A product with a case study opens it when clicked. The address becomes
+ * the product's own, like fadeev.org/zetachain, so the case study can be
+ * linked to, and Back, Esc or the name close it. The product itself
  * moves into the case study, still running, and the browser's view
- * transition morphs it there from the shelf and back.
+ * transition morphs it there from the shelf and back. About works the
+ * same way, at fadeev.org/about.
  */
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let reading = null; // the open case study, its product, and its place on the shelf
@@ -720,6 +721,25 @@ let shelf = 0; // how far the shelf was scrolled, to come back to
 let openedHere = false; // whether Back would return to the shelf
 const homeLink = document.querySelector(".home");
 const info = document.querySelector(".info");
+// the shelf's title, the name alone, even when the page loads under a page's own title
+const shelfTitle = document.title.split(" · ").pop();
+
+// the page an address names: "zetachain" for /zetachain, "" for the shelf
+const pageOf = (path) => decodeURIComponent(path).replace(/^\/+|\/+$/g, "").replace(/\.html$/, "").replace(/^index$/, "");
+
+// links from before the pages had addresses of their own, like /#zetachain,
+// whether the page loads from one or is already open
+function fromHash() {
+  if (!pageOf(location.pathname) && location.hash.length > 1) {
+    history.replaceState(null, "", `/${location.hash.slice(1)}`);
+  }
+}
+fromHash();
+
+// and a page's file, like /zetachain.html, at its address
+if (location.pathname.endsWith(".html")) {
+  history.replaceState(null, "", `/${pageOf(location.pathname)}`);
+}
 
 function show(id) {
   const article = document.getElementById(id);
@@ -735,8 +755,9 @@ function show(id) {
   }
   article.hidden = false;
   document.body.classList.add("reading");
-  homeLink.href = "#";
+  homeLink.href = "/";
   info.ariaLabel = id === "about" ? "Close" : "About";
+  document.title = `${article.querySelector("h1")?.textContent ?? "About"} · ${shelfTitle}`;
   reading = { article, device, home };
   scrollTo(0, 0);
 }
@@ -749,6 +770,7 @@ function hide() {
   document.body.classList.remove("reading");
   homeLink.removeAttribute("href");
   info.ariaLabel = "About";
+  document.title = shelfTitle;
   reading = null;
   scrollTo(0, 0);
   shelfScroller().scrollLeft = shelf;
@@ -762,7 +784,12 @@ function nameDevice(id) {
 }
 
 function route(animate) {
-  const id = decodeURIComponent(location.hash.slice(1));
+  let id = pageOf(location.pathname);
+  // an address that names no page shows the shelf, at the shelf's address
+  if (id && !document.getElementById(id)?.classList.contains("case")) {
+    history.replaceState(null, "", "/");
+    id = "";
+  }
   nameDevice(id || reading?.device?.dataset.case || "");
   const change = () => {
     if (id) show(id);
@@ -776,47 +803,57 @@ function route(animate) {
   }
 }
 
+// opens a page from the shelf, giving it its address
+function open(id) {
+  if (reading) return;
+  openedHere = true;
+  history.pushState(null, "", `/${id}`);
+  route(true);
+}
+
 function close() {
   if (!reading) return;
   if (openedHere) {
     openedHere = false;
     history.back();
   } else {
-    history.pushState(null, "", location.pathname + location.search);
+    history.pushState(null, "", `/${location.search}`);
     route(true);
   }
 }
 
-// a link, or Back and Forward, changes the address
-addEventListener("popstate", () => route(true));
+// Back and Forward change the address, and so does an old #link
+addEventListener("popstate", () => {
+  fromHash();
+  route(true);
+});
 
 for (const device of document.querySelectorAll(".device[data-case]")) {
-  const open = () => {
-    if (reading) return;
-    openedHere = true;
-    // the hash change fires popstate, which runs the transition once the
-    // address has settled; starting it here as well makes the browser skip it
-    location.hash = device.dataset.case;
-  };
-  device.addEventListener("click", open);
+  device.addEventListener("click", () => open(device.dataset.case));
   device.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") open();
+    if (event.key === "Enter") open(device.dataset.case);
   });
 }
 
+// a modified click opens a link's address in a new tab, as any link's does
+const newTab = (event) => event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+
 // the ⓘ opens About like a product opens its case study, and closes it again
 info.addEventListener("click", (event) => {
-  if (reading?.article.id === "about") {
-    event.preventDefault();
-    close();
-  } else {
+  if (newTab(event)) return;
+  event.preventDefault();
+  if (reading?.article.id === "about") close();
+  else if (reading) {
+    // from a case study, About takes its place
     openedHere = true;
-  }
+    history.pushState(null, "", "/about");
+    route(true);
+  } else open("about");
 });
 
 for (const link of [homeLink, ...document.querySelectorAll(".case-back")]) {
   link.addEventListener("click", (event) => {
-    if (!reading) return;
+    if (!reading || newTab(event)) return;
     event.preventDefault();
     close();
   });

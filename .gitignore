@@ -1,0 +1,8 @@
+# written by build.js on each deploy
+/anuma.html
+/zetachain.html
+/ignite.html
+/about.html
+
+.DS_Store
+node_modules/

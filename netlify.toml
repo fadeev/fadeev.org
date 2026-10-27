@@ -1,0 +1,31 @@
+# The site is plain files; the build only writes a copy of index.html for
+# each page the shelf opens (see build.js).
+[build]
+  command = "node build.js"
+  publish = "."
+
+# Each page at its own address, without .html or a trailing slash
+[[redirects]]
+  from = "/anuma"
+  to = "/anuma.html"
+  status = 200
+
+[[redirects]]
+  from = "/zetachain"
+  to = "/zetachain.html"
+  status = 200
+
+[[redirects]]
+  from = "/ignite"
+  to = "/ignite.html"
+  status = 200
+
+[[redirects]]
+  from = "/about"
+  to = "/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/:page/"
+  to = "/:page"
+  status = 301
