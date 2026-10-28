@@ -29,3 +29,10 @@
   from = "/:page/"
   to = "/:page"
   status = 301
+
+# Any other address gets the shelf, marked as not found, and the page
+# itself moves the address back to /
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404

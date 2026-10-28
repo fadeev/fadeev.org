@@ -17,12 +17,25 @@
 <meta property="og:image" content="https://fadeev.org/images/preview.jpg">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
-<meta property="og:image:alt" content="ZetaChain's docs on a laptop with two terminals running a cross-chain swap, beside Ignite's wallet on a display">
+<meta property="og:image:alt" content="Anuma's map of people nearby on an iPhone, beside ZetaChain's docs on a laptop">
 <meta name="twitter:card" content="summary_large_image">
-<!-- Inter, the font of the wallet on Ignite's display -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<!-- who the site is about, for search engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Denis Fadeev",
+  "url": "https://fadeev.org/",
+  "jobTitle": "Product Engineer",
+  "worksFor": { "@type": "Organization", "name": "Anuma", "url": "https://anuma.ai" },
+  "sameAs": [
+    "https://www.linkedin.com/in/denis-fadeev/",
+    "https://github.com/fadeev",
+    "https://x.com/fadeev",
+    "https://t.me/dfadeev"
+  ]
+}
+</script>
 <link rel="stylesheet" href="/site.css">
 </head>
 <!-- the shelf of products; a case study or About opens over it, marked by .reading -->
@@ -207,7 +220,23 @@
   <!-- a product's case study, opened by clicking it on the shelf -->
   <article class="case" id="anuma" hidden aria-labelledby="anuma-title">
     <a class="case-back" href="/"><svg viewBox="0 0 9 16" aria-hidden="true"><path d="M7.5 1.5 1.5 8l6 6.5"/></svg>Back</a>
-    <div class="case-device"></div>
+    <div class="case-device">
+      <!-- the app in dark mode, beside the phone from the shelf once it arrives -->
+      <div class="device phone companion" aria-hidden="true">
+        <div class="iphone">
+          <div class="iphone-inner">
+            <span class="iphone-button action"></span>
+            <span class="iphone-button volume-up"></span>
+            <span class="iphone-button volume-down"></span>
+            <span class="iphone-button power"></span>
+            <span class="iphone-button camera-control"></span>
+            <div class="iphone-body">
+              <video class="iphone-screen" src="/images/anuma-chat-flow.mp4" data-poster="/images/anuma-chat-flow.jpg" muted playsinline preload="none"></video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <h1 id="anuma-title">Anuma</h1>
     <p class="role">Product Engineer, 2025–present</p>
@@ -221,13 +250,18 @@
     <p>Then came meetups, with pins on the map, attendees, RSVPs and hosting; a ring around each face that shows how well you'd get along; and one thread for chatting with people and with the AI alike, where a Vibe check helps you start a first conversation. I also built parts of the backend behind the map: presence and live location, messaging and meetups.</p>
 
     <h2>Memory</h2>
-    <p>I replaced the list of memories with a profile built on the device from what Anuma knows about you: a memory of the day, and stickers on a cork board, piled up by subject, with a full-screen sticker book. It's the cork board on the phone above.</p>
+    <p>I replaced the list of memories with a profile built on the device from what Anuma knows about you: a memory of the day, and stickers on a cork board, piled up by subject, with a full-screen sticker book. It's the cork board in the recording at the top.</p>
 
     <h2>Things the AI makes</h2>
     <p>Anuma's assistant makes things as well as writing, and I built the pieces that show them: interactive apps that run right in the chat, safely sandboxed; documents it writes and renders on the device as real PDFs, with text you can select; maps, timelines and photo collages that appear inside a reply as it streams in; and a slide-deck editor with a presentation mode and PowerPoint export. Any app it makes can be saved as a tool it uses again later.</p>
 
     <h2>Feeling native</h2>
     <p>Then the details that make it feel like it belongs on an iPhone: glass that matches iOS 27's and really bends the content behind it, even in Safari; a glass menu that grows out of its button, on springs fitted to recordings of iOS; a sidebar that follows your finger from the edge of the screen; and replies that stream in smoothly, without flashes or jumps.</p>
+
+    <figure class="case-clip">
+      <video src="/images/anuma-liquid-glass.mp4" data-poster="/images/anuma-liquid-glass.jpg" width="1360" height="680" muted loop playsinline preload="none"></video>
+      <figcaption>The search bar's glass, bending the photos that scroll under it</figcaption>
+    </figure>
 
     <h2>The SDK</h2>
     <p>Under all of it is the TypeScript SDK that Anuma's AI runs on, which I worked on from the start: streaming replies, long-term memory, tool calling and end-to-end encryption, each a few lines of code. I wrote starter apps for it too, for Next.js, Expo, Telegram and AI agents, and its docs.</p>
@@ -488,10 +522,14 @@
        now a ⓧ, closes it, so it needs no Back of its own -->
 
   <article class="case" id="about" hidden aria-label="About">
-    <img class="portrait" src="/images/denis.jpg" width="320" height="320" alt="Portrait of Denis Fadeev">
+    <figure class="case-photo">
+      <img src="/images/eth-hong-kong-2023-stage.jpg" width="2080" height="1170" loading="lazy" data-warm alt="Denis on stage at ETH Hong Kong, answering into a microphone from an armchair">
+      <figcaption>ETH Hong Kong, 2023</figcaption>
+    </figure>
+
     <p class="lede">I turn new technology into products people can use. Right now that's AI: at <a href="https://anuma.ai">Anuma</a>, I design and build multiplayer AI for real life, an app that uses what it knows about you to help you find the right people nearby.</p>
 
-    <p class="lede">Before that, I spent six years on developer tools for blockchains. I created Ignite CLI, which well-known chains like dYdX, Celestia and Sei started from, and built and led the team behind it. Then I led developer experience at ZetaChain.</p>
+    <p class="lede">Before that, I spent six years on developer tools for blockchains. I created Ignite CLI, which chains like dYdX, Celestia and Sei started from, and built and led the team behind it. Then I led developer experience at ZetaChain.</p>
 
     <p class="lede">I've spoken at dozens of conferences, from ETHSeoul to Cosmoverse in Medellín: keynotes, workshops, panels and live demos.</p>
 
@@ -507,7 +545,7 @@
 
   <dialog class="player" aria-label="Talk">
     <button class="close" type="button">Close</button>
-    <iframe title="Talk recording" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+    <iframe title="Talk recording" allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>
     <p></p>
   </dialog>
 

@@ -741,6 +741,23 @@ if (location.pathname.endsWith(".html")) {
   history.replaceState(null, "", `/${pageOf(location.pathname)}`);
 }
 
+/*
+ * Pictures for pages that aren't open wait until the shelf has finished
+ * loading, then come in while nothing else is, so they're ready by the time
+ * a page opens. Opening a page brings its own in straight away.
+ */
+function warmUp(root) {
+  for (const video of root.querySelectorAll("video[data-poster]")) {
+    video.poster = video.dataset.poster;
+    video.removeAttribute("data-poster");
+  }
+  for (const img of root.querySelectorAll("img[data-warm]")) {
+    img.loading = "eager";
+    img.removeAttribute("data-warm");
+  }
+}
+addEventListener("load", () => (window.requestIdleCallback ?? setTimeout)(() => warmUp(document)));
+
 function show(id) {
   const article = document.getElementById(id);
   const device = document.querySelector(`.device[data-case="${id}"]`);
@@ -753,9 +770,12 @@ function show(id) {
     device.before(home);
     article.querySelector(".case-device").append(device);
   }
+  warmUp(article);
   article.hidden = false;
   document.body.classList.add("reading");
   homeLink.href = "/";
+  // a case study's own name is its heading, and the site's name just the way home
+  if (article.querySelector("h1")) homeLink.firstElementChild.setAttribute("role", "none");
   info.ariaLabel = id === "about" ? "Close" : "About";
   document.title = `${article.querySelector("h1")?.textContent ?? "About"} · ${shelfTitle}`;
   reading = { article, device, home };
@@ -769,6 +789,7 @@ function hide() {
   article.hidden = true;
   document.body.classList.remove("reading");
   homeLink.removeAttribute("href");
+  homeLink.firstElementChild.removeAttribute("role");
   info.ariaLabel = "About";
   document.title = shelfTitle;
   reading = null;
@@ -884,7 +905,34 @@ if (instant) {
       else target.pause();
     }
   }, { threshold: 0.25 });
-  for (const video of document.querySelectorAll(".case video")) onScreen.observe(video);
+  for (const video of document.querySelectorAll(".case video:not(.iphone-screen)")) onScreen.observe(video);
+
+  /*
+   * In Anuma's case study the two phones take turns, so only one of them
+   * moves at a time: the one from the shelf plays to its end, then the dark
+   * one, then the first again. Back on the shelf, the first loops on its own.
+   */
+  const light = document.querySelector(".device[data-case=anuma] video");
+  const dark = document.querySelector(".companion video");
+  const turns = () => {
+    if (reading?.article.id === "anuma") {
+      light.loop = false;
+      return;
+    }
+    dark.pause();
+    dark.currentTime = 0;
+    // one that had played to its end starts over, which Safari won't do by itself once it loops
+    if (light.ended) light.currentTime = 0;
+    light.loop = true;
+    light.play().catch(() => {});
+  };
+  light.addEventListener("ended", () => {
+    dark.currentTime = 0;
+    dark.play().catch(() => {});
+  });
+  dark.addEventListener("ended", () => light.play().catch(() => {}));
+  addEventListener("route", turns);
+  turns();
 }
 
 /*

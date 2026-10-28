@@ -16,7 +16,7 @@ const pages = {
   anuma: {
     title: "Anuma",
     description: "How Denis Fadeev designs and builds Anuma, multiplayer AI for real life: People Nearby, memory, the things its AI makes, and the SDK under it.",
-    alt: "Anuma on an iPhone, its memories as stickers on a cork board",
+    alt: "Anuma on two iPhones, in light and dark: its map of people nearby, and a chat with its AI",
   },
   zetachain: {
     title: "ZetaChain",
@@ -31,7 +31,7 @@ const pages = {
   about: {
     title: "About",
     description: "Denis Fadeev turns new technology into products people can use: Anuma now, and before it Ignite CLI and developer experience at ZetaChain.",
-    alt: "Denis Fadeev's portrait beside his bio",
+    alt: "Denis Fadeev on stage at ETH Hong Kong, answering into a microphone from an armchair",
   },
 };
 

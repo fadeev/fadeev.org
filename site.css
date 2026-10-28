@@ -1,8 +1,32 @@
+/*
+ * The products scale by ratios of lengths, worked out as tan(atan2(a, b)),
+ * which is a / b as a plain number. Safari gets that wrong when a length
+ * still holds the window's units (vw, svh), so every length that goes into
+ * one is registered here, which makes the browser turn it into pixels first.
+ */
+@property --vw { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --screen { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --scol { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --laptop-h { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --phone-h { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --col { syntax: "<length>"; inherits: true; initial-value: 0px; }
+
+/* Inter, the font of the wallet on Ignite's display, its Latin letters in every weight */
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --bg: #fff;
   --text: #111;
-  --muted: #8c8c8c;
+  --muted: #6e6e73; /* as faint as small text can be and still read easily */
   --side: 2rem; /* the least margin on either side */
+  --vw: 100vw;
   --screen: 100vh;
   --mast-pad: clamp(1.5rem, 7vh, 4rem); /* above the name in a case study */
   --dcap: 3.1rem; /* room for a product's two-line caption */
@@ -141,7 +165,7 @@ body:has(#about:not([hidden])) .info .dot {
 body {
   --name: 1.8rem; /* the name's line */
   --above: clamp(2rem, 8vh, 5rem); /* between the name and the tallest product */
-  --aspect: tan(atan2(100vw, var(--screen)));
+  --aspect: tan(atan2(var(--vw), var(--screen)));
   --tallest: clamp(0.62, 0.62 + (var(--aspect) - 1.6) * 0.6, 0.7);
   /* the column the laptop's base and the display's body are as wide as */
   --scol: min(
@@ -514,7 +538,7 @@ figcaption {
  * still on a phone's screen.
  */
 .device.phone {
-  --k: tan(atan2(var(--phone-h, var(--col) * 294 / 486), 900px));
+  --k: tan(atan2(var(--phone-h), 900px));
 }
 
 .iphone {
@@ -659,25 +683,6 @@ body.reading {
   }
 }
 
-/* Denis's face, above the text */
-.portrait {
-  display: block;
-  width: 4.5rem;
-  height: 4.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 50%;
-}
-
-/* and where the margin is wide enough, hung beside his name like a byline */
-@media (min-width: 900px) {
-  .portrait {
-    position: absolute;
-    top: calc(var(--mast-pad) + var(--name) / 2 - 2.25rem);
-    left: -5.5rem;
-    margin: 0;
-  }
-}
-
 /* at the end of a case study, for whoever read that far: a way to write */
 .case-end {
   margin-top: 4rem;
@@ -765,6 +770,18 @@ body.reading {
   margin: 0;
 }
 
+/* Anuma's case study shows the app in dark mode too, to the right of it */
+.case .device.companion {
+  order: 1;
+  margin-left: 1.75rem;
+  view-transition-name: companion;
+}
+
+/* dark, too, in the moment before its first frame arrives */
+.companion .iphone-screen {
+  background: #000;
+}
+
 /* the way back, on the name's line, at the window's left edge */
 .case-back {
   position: absolute;
@@ -848,16 +865,6 @@ body.reading {
   white-space: nowrap; /* a command reads as one piece */
 }
 
-/* where Denis's own words are still needed */
-.todo {
-  padding: 0.1em 0.3em;
-  border-radius: 4px;
-  background: #fff3c4;
-  color: #5c4a00;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-
 /* photos and videos sit in the text, captioned underneath */
 .case figure figcaption {
   font-size: 13px;
@@ -886,62 +893,39 @@ body.reading {
   margin-block: 3rem 3.5rem;
 }
 
+/*
+ * a photo as wide as the text, as About opens with, sitting as close under
+ * the name as a product does
+ */
+.case-photo {
+  margin-block: 0 3rem;
+}
+
+.case-photo img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .case-wide img {
   aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 8px;
 }
 
+/* a recording as wide as the text, for a detail that needs no more room */
+.case-clip {
+  margin-block: 2rem 3rem;
+}
+
 /* a recording of the app at work, with a hairline so its white keeps its edge */
-.case-wide video {
+.case-clip video {
   display: block;
   width: 100%;
   height: auto;
   border-radius: 8px;
   outline: 1px solid rgb(0 0 0 / 0.08);
   outline-offset: -1px;
-}
-
-.case-wide + .case-wide {
-  margin-top: -1.5rem;
-}
-
-/* recordings of the phone app, side by side, each in a phone's screen */
-.case-phones {
-  display: flex;
-  justify-content: center;
-  gap: 2.5rem;
-  margin-block: 2rem 3rem;
-}
-
-.case-phones figure {
-  width: min(250px, 42vw);
-  margin: 0;
-}
-
-.case-phones video {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 540 / 1174;
-  border: 5px solid #0b0b0c;
-  border-radius: 34px;
-  background: #0b0b0c;
-}
-
-.case-phones figcaption {
-  text-align: center;
-}
-
-@media (max-width: 700px) {
-  .case-phones {
-    gap: 1rem;
-  }
-
-  .case-phones video {
-    border-width: 3px;
-    border-radius: 22px;
-  }
 }
 
 .case-photos {
@@ -1016,27 +1000,31 @@ body.reading {
 }
 
 /*
- * opening About, the portrait waits for the name to arrive beside it and
- * then fades in; closing, it goes first, before the name moves away
+ * The dark phone stands a little smaller behind the one coming from the
+ * shelf, as if further back, and as that one lands, steps out to the right
+ * and forward to stand level with it, in one move. On the way out it just
+ * fades where it stands.
  */
-.portrait {
-  view-transition-name: portrait;
+::view-transition-group(anuma) {
+  z-index: 1;
 }
 
-::view-transition-new(portrait) {
-  animation: portrait-in 0.3s ease-out 0.5s both;
+::view-transition-new(companion) {
+  animation: fan-out 0.6s 0.2s cubic-bezier(0.3, 0, 0.2, 1) both;
 }
 
-::view-transition-old(portrait) {
-  animation: portrait-out 0.15s ease-in both;
+::view-transition-old(companion) {
+  animation-duration: 0.2s;
 }
 
-@keyframes portrait-in {
-  from { opacity: 0; }
-}
-
-@keyframes portrait-out {
-  to { opacity: 0; }
+@keyframes fan-out {
+  from {
+    transform: translateX(calc(-100% - 1.75rem)) scale(0.88);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
 }
 
 /* ---------- Pointer ---------- */
@@ -1156,12 +1144,6 @@ html:has(dialog[open]) .pointer {
 /* a list of talks, newest first, the recorded ones playing like the photos do */
 .talks {
   container-type: inline-size;
-}
-
-.talks h2 {
-  margin: 0 0 1.25rem;
-  font-size: 16px;
-  font-weight: 500;
 }
 
 .talks ol {
