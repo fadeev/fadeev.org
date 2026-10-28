@@ -273,7 +273,7 @@ html.dragging {
   body {
     --scol: calc((100vw - 2 * var(--side)) * 486 / 583);
     --phone-h: calc(var(--laptop-h) * 1.5);
-    --phone-left: calc(var(--scol) * 100 / 486);
+    --phone-left: 2.5rem;
     --apart: 3.5rem;
     --dcap: 4.6rem; /* the caption, and the line under it that says it opens */
     width: auto;
