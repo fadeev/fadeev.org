@@ -736,8 +736,8 @@ function fromHash() {
 }
 fromHash();
 
-// and a page's file, like /zetachain.html, at its address
-if (location.pathname.endsWith(".html")) {
+// and a page's file, like /zetachain.html, or /zetachain/, at its address
+if (location.pathname.endsWith(".html") || /.\/$/.test(location.pathname)) {
   history.replaceState(null, "", `/${pageOf(location.pathname)}`);
 }
 

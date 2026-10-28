@@ -4,7 +4,8 @@
   command = "node build.js"
   publish = "."
 
-# Each page at its own address, without .html or a trailing slash
+# Each page at its own address, without .html. Netlify matches an address
+# with or without a trailing slash, so /anuma/ is served too.
 [[redirects]]
   from = "/anuma"
   to = "/anuma.html"
@@ -24,11 +25,6 @@
   from = "/about"
   to = "/about.html"
   status = 200
-
-[[redirects]]
-  from = "/:page/"
-  to = "/:page"
-  status = 301
 
 # Any other address gets the shelf, marked as not found, and the page
 # itself moves the address back to /
