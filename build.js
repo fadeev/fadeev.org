@@ -24,7 +24,7 @@ const pages = {
     alt: "ZetaChain's docs on a laptop, with two terminals running a cross-chain swap",
   },
   ignite: {
-    title: "Ignite",
+    title: "Tendermint",
     description: "Denis Fadeev created Ignite CLI, which dYdX, Celestia, Sei, Wormhole and Dymension were built with, and built and led the team behind it.",
     alt: "Ignite's wallet on a display, with a terminal serving a new chain",
   },
