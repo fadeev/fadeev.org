@@ -871,7 +871,7 @@ body.reading {
   line-height: 1.4;
 }
 
-.case figure img {
+.case figure:not(.device) img {
   display: block;
   width: 100%;
   height: auto;
@@ -1040,6 +1040,10 @@ body.reading {
   html.pointing:not(:has(dialog[open])) * {
     cursor: none;
   }
+
+  html.pointing:not(:has(dialog[open])) .lid-toggle {
+    cursor: pointer;
+  }
 }
 
 /*
@@ -1047,6 +1051,11 @@ body.reading {
  * while it's open the ordinary cursor comes back and the circle goes
  */
 html:has(dialog[open]) .pointer {
+  visibility: hidden;
+}
+
+/* follow hover directly, so a moving lid restores the circle without a mouse move */
+html:has(.lid-toggle:hover) .pointer {
   visibility: hidden;
 }
 
@@ -1330,11 +1339,27 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
  * Change font-size to scale the whole laptop.
  */
 .laptop {
+  --lid-width: 413.1em; /* 85% of the 486em base */
+  --lid-depth: 5em;
+  --lid-front-roll: 1.6em;
+  --lid-front-inset: 0.35em;
+  --lid-front-trim: 0.45em;
+  --lid-back-roll: 2.2em;
+  --lid-perspective: 1440em;
+  --base-perspective-scale: 0.813888889;
   position: relative;
   font-size: calc(var(--h) / 294);
   width: 486em;
   margin: 0 48.5em; /* room for the terminals hanging off both sides */
   padding-bottom: 3em; /* room for the feet */
+}
+
+/* isolate the solid assembly so its depth cannot cover the terminal overlays */
+.laptop-scene {
+  position: relative;
+  isolation: isolate;
+  perspective: var(--lid-perspective);
+  perspective-origin: 50% 273em;
 }
 
 .laptop *,
@@ -1343,23 +1368,146 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   box-sizing: border-box;
 }
 
+/* one 3D assembly; the terminals and hit area remain in front of the scene */
+.laptop-body {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
 /* ---------- Lid ---------- */
 
 .lid {
-  width: 400em;
+  position: relative;
+  z-index: 1;
+  width: var(--lid-width);
   height: 273em;
   margin: 0 auto;
-  padding: 2em 2em 0;
-  border-radius: 14em 14em 0 0;
-  /* the thin aluminium rim */
-  background: linear-gradient(#6a6a6a, #575757 1.5%, #515151);
+  border-radius: 14em 14em 3em 3em;
+  transform-style: preserve-3d;
+  /* pivot through the shell's thickness, inside the fixed hinge barrel */
+  transform-origin: 50% calc(100% - var(--lid-depth) / 2) calc(var(--lid-depth) / -2);
+  transform: rotateX(0deg);
+}
+
+/* the terminals fade first, then the lid folds forward around its bottom edge */
+.laptop.lid-closed .lid {
+  transform: rotateX(-90deg);
+}
+
+/* a closed aluminium shell: two faces joined around the rounded perimeter */
+.lid-front,
+.lid-back {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.lid-front {
+  inset: var(--lid-front-inset);
+  border-radius: calc(14em - var(--lid-front-inset)) calc(14em - var(--lid-front-inset)) calc(3em - var(--lid-front-inset)) calc(3em - var(--lid-front-inset));
+  padding: var(--lid-front-trim) var(--lid-front-trim) 0;
+  overflow: hidden;
+  background: linear-gradient(#929395, #626365 1.5%, #4b4c4e);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* A plane seen exactly edge-on can leave a stray rasterized line at the seam. */
+.lid.shut .lid-front {
+  visibility: hidden;
+}
+
+.lid-back {
+  inset: var(--lid-back-roll);
+  border-radius: calc(14em - var(--lid-back-roll)) calc(14em - var(--lid-back-roll)) calc(3em - var(--lid-back-roll)) calc(3em - var(--lid-back-roll));
+  background: linear-gradient(110deg, #9fa0a2, #7a7b7d 38%, #68696b 78%, #929395);
+  box-shadow: inset 0 0.8em 1.5em rgb(255 255 255 / 0.2);
+  transform: translateZ(calc(-1 * var(--lid-depth))) rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+/* A single antialiased surface avoids seams between separate CSS layers. */
+.lid-rim {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 486em;
+  height: 291em;
+  pointer-events: none;
+}
+
+/* Recess the hinge behind the display, centred on the lid's rotation axis. */
+.hinge-assembly {
+  position: absolute;
+  z-index: 0;
+  top: calc(273em - var(--lid-depth) / 2 - 7em);
+  left: calc((486em - var(--lid-width)) / 2);
+  width: var(--lid-width);
+  height: 14em;
+  transform: translateZ(calc(var(--lid-depth) / -2));
+  pointer-events: none;
+}
+
+.hinge-mount {
+  position: absolute;
+  top: 4em;
+  width: 32em;
+  height: 10em;
+  border: 0.7em solid #404247;
+  border-radius: 3em 3em 0 0;
+  background: linear-gradient(90deg, #18191b, #2d2e30 24%, #242527 65%, #17181a);
+}
+
+.hinge-mount.left { left: 15em; }
+.hinge-mount.right { right: 15em; }
+
+.hinge-barrel {
+  position: absolute;
+  top: 4.5em;
+  left: 24em;
+  right: 24em;
+  height: 5em;
+  border-radius: 2.5em;
+  background:
+    linear-gradient(90deg, #121315, transparent 3%, transparent 97%, #121315),
+    linear-gradient(#17181a, #292a2c 20%, #202123 48%, #151618 80%, #101113);
+}
+
+/* a separate hit area stays usable once the lid has folded down to the base */
+.lid-toggle {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  left: calc((486em - var(--lid-width)) / 2);
+  width: var(--lid-width);
+  height: max(20em, 24px);
+  padding: 0;
+  border: 0;
+  border-radius: 6em;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: translateY(-50%);
+}
+
+.lid-toggle:focus-visible {
+  outline: 2px solid var(--muted);
+  outline-offset: 3px;
+}
+
+.laptop.lid-closed .lid-toggle {
+  top: 270em;
+  left: 0.5em;
+  width: 485em;
 }
 
 .bezel {
   position: relative;
   height: 100%;
   background: #000;
-  border-radius: 12em 12em 0 0;
+  border-radius: calc(14em - var(--lid-front-inset) - var(--lid-front-trim)) calc(14em - var(--lid-front-inset) - var(--lid-front-trim)) 0 0;
   box-shadow:
     inset 0 1em #1a1a1a,
     inset 1em 0 #141414,
@@ -1370,7 +1518,7 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   position: absolute;
   top: 6em;
   left: 5em;
-  width: 386em;
+  width: calc(100% - 10em);
   height: 250em;
   overflow: hidden;
   border-radius: 3em 3em 0 0;
@@ -1388,6 +1536,13 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   height: 100%;
   object-fit: contain;
   object-position: bottom;
+  transition: filter 0.25s 0.55s;
+}
+
+/* the display sleeps as the lid folds; its black bezel stays attached */
+.laptop.lid-closed .screen img {
+  filter: brightness(0);
+  transition-delay: 0.15s;
 }
 
 .notch {
@@ -1415,7 +1570,7 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
 /* dark strip along the bottom of the display */
 .chin {
   position: absolute;
-  top: 260em;
+  bottom: 0;
   left: 0;
   right: 0;
   height: 10em;
@@ -1426,9 +1581,12 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
 
 .base {
   position: relative;
+  z-index: 2;
+  /* place the front fascia at the closed lid's front, preserving its drawn size */
+  transform-origin: 50% 0;
+  transform: translateZ(calc(273em - var(--lid-depth))) scale(var(--base-perspective-scale));
   height: 18em;
   border-radius: 2em 2em 12em 12em / 1em 1em 9em 9em;
-  /* shading near the ends: flatter, less contrast */
   background: linear-gradient(
     #484a4a 0.5em,
     #77787a 1.5em,
@@ -1441,7 +1599,7 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   );
 }
 
-/* brighter, more contrasty shading across the middle */
+/* The broad upper face catches soft light above the darker curved underside. */
 .base::before {
   content: "";
   position: absolute;
@@ -1483,26 +1641,36 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   mask-image: var(--fade);
 }
 
+/* One contact line, shared across the front and seated in the chassis. */
+.base-seam {
+  position: absolute;
+  z-index: 2;
+  top: -0.25em;
+  left: 0.5em;
+  right: 0.5em;
+  height: 0.6em;
+  border-radius: 1em;
+  background: #484a4a;
+  pointer-events: none;
+}
+
 /* specular highlights where the rounded ends catch the light */
 .base::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    rgb(255 255 255 / 0.15) 1em,
-    rgb(255 255 255 / 0.17) 3em,
-    rgb(255 255 255 / 0.52) 5.5em,
-    rgb(255 255 255 / 0.4) 7em,
-    transparent 10em,
-    transparent calc(100% - 10em),
-    rgb(255 255 255 / 0.4) calc(100% - 7em),
-    rgb(255 255 255 / 0.52) calc(100% - 5.5em),
-    rgb(255 255 255 / 0.17) calc(100% - 3em),
-    rgb(255 255 255 / 0.15) calc(100% - 1em)
-  );
-  --fade: linear-gradient(#000 9.5em, rgb(0 0 0 / 0.5) 12em, rgb(0 0 0 / 0.2) 14em, transparent 16em);
+  /* Tilt the reflection inward as the front face rolls under the chassis. */
+  --corner-tilt: 12deg;
+  --reflection: rgb(255 255 255 / 0.06) 1em,
+    rgb(255 255 255 / 0.16) 3em, rgb(255 255 255 / 0.36) 5.5em,
+    rgb(255 255 255 / 0.31) 7em, rgb(255 255 255 / 0.12) 10em,
+    transparent 15em;
+  background:
+    linear-gradient(calc(90deg - var(--corner-tilt)), var(--reflection)) left / 50% 100% no-repeat,
+    linear-gradient(calc(270deg + var(--corner-tilt)), var(--reflection)) right / 50% 100% no-repeat;
+  --fade: linear-gradient(#000 2em, rgb(0 0 0 / 0.86) 8em, rgb(0 0 0 / 0.58) 11em,
+    rgb(0 0 0 / 0.25) 14em, transparent 17em);
   -webkit-mask-image: var(--fade);
   mask-image: var(--fade);
 }
@@ -1528,11 +1696,9 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   position: absolute;
   z-index: 1;
   top: 17em;
-  width: 33em;
-  height: 4em;
-  /* tapered towards the bottom */
-  clip-path: polygon(0 0, 100% 0, calc(100% - 3em) 100%, 3em 100%);
-  border-radius: 0 0 4em 4em / 0 0 2em 2em;
+  width: 26em;
+  height: 3em;
+  border-radius: 0 0 4em 4em / 0 0 3em 3em;
   background:
     linear-gradient(transparent 1em, rgb(0 0 0 / 0.35) 2.5em, rgb(0 0 0 / 0.7)),
     linear-gradient(
@@ -1547,8 +1713,8 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
     );
 }
 
-.foot.left { left: 27em; }
-.foot.right { right: 27em; }
+.foot.left { left: 23em; }
+.foot.right { right: 23em; }
 
 /* ---------- Terminal windows ---------- */
 
@@ -1584,6 +1750,10 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   left: -48.5em;
 }
 
+.laptop .terminal {
+  z-index: 3;
+}
+
 .laptop .terminal.cli {
   left: 337.5em;
 }
@@ -1606,8 +1776,28 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   transition: opacity 0.25s, transform 0.25s;
 }
 
+/* on reopening, the windows wait for the lid to stand upright */
+.laptop .terminal.open {
+  transition: opacity 0.25s 0.85s, transform 0.25s 0.85s, visibility 0s 0.85s;
+}
+
+/* this also hides a window whose mock session opens it after the lid is closed */
+.laptop.lid-closed .terminal {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, visibility 0s 0.2s;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .terminal.open { transition: none; }
+  .terminal.open,
+  .laptop .terminal.open,
+  .laptop.lid-closed .terminal,
+  .lid,
+  .lid-toggle,
+  .screen img {
+    transition: none;
+  }
 }
 
 /* the faint light edge of a dark-mode window */

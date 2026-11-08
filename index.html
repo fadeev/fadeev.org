@@ -79,21 +79,36 @@
     <section class="chapter" aria-label="ZetaChain">
       <figure class="device" data-case="zetachain" tabindex="0" role="link" aria-label="ZetaChain case study">
         <div class="laptop">
-          <div class="lid">
-            <div class="bezel">
-              <div class="screen">
-                <img src="/images/zetachain-docs-universal-app-2025-09.png" alt="ZetaChain docs: Build a universal app in minutes">
+          <div class="laptop-scene">
+            <div class="laptop-body">
+              <div class="hinge-assembly" aria-hidden="true">
+                <span class="hinge-mount left"></span>
+                <span class="hinge-mount right"></span>
+                <span class="hinge-barrel"></span>
               </div>
-              <div class="notch"></div>
-              <div class="camera"></div>
-              <div class="chin"></div>
+              <div class="lid" id="laptop-lid">
+                <div class="lid-back" aria-hidden="true"></div>
+                <div class="lid-front">
+                  <div class="bezel">
+                    <div class="screen">
+                      <img src="/images/zetachain-docs-universal-app-2025-09.png" alt="ZetaChain docs: Build a universal app in minutes">
+                    </div>
+                    <div class="notch"></div>
+                    <div class="camera"></div>
+                    <div class="chin"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <canvas class="lid-rim" aria-hidden="true"></canvas>
+            <div class="base">
+              <span class="base-seam" aria-hidden="true"></span>
+              <div class="recess"></div>
+              <div class="foot left"></div>
+              <div class="foot right"></div>
             </div>
           </div>
-          <div class="base">
-            <div class="recess"></div>
-            <div class="foot left"></div>
-            <div class="foot right"></div>
-          </div>
+          <button class="lid-toggle" type="button" aria-label="Close laptop lid" aria-controls="laptop-lid" aria-expanded="true"></button>
           <div class="terminal localnet" aria-hidden="true">
             <div class="titlebar">
               <div class="lights">
@@ -549,6 +564,7 @@
     <p></p>
   </dialog>
 
+<script src="/laptop-rim.js"></script>
 <script src="/site.js"></script>
 </body>
 </html>

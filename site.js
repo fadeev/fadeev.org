@@ -283,6 +283,100 @@ new IntersectionObserver((entries, observer) => {
   play();
 }, { threshold: 0.95 }).observe(document.querySelector(".laptop .lid"));
 
+// The top edge closes the laptop; the same edge opens it again once shut.
+const laptop = document.querySelector(".laptop");
+const lid = laptop.querySelector(".lid");
+const lidToggle = laptop.querySelector(".lid-toggle");
+
+// Rounded perimeter shared by the solid rim and its perspective calibration.
+const lidWidth = Number.parseFloat(getComputedStyle(laptop).getPropertyValue("--lid-width"));
+const outline = [[14, 0, 0, -1], [lidWidth - 14, 0, 0, -1]];
+function corner(x, y, radius, from, steps) {
+  for (let step = 1; step <= steps; step++) {
+    const angle = (from + step * 90 / steps) * Math.PI / 180;
+    const nx = Math.cos(angle), ny = Math.sin(angle);
+    outline.push([x + nx * radius, y + ny * radius, nx, ny]);
+  }
+}
+corner(lidWidth - 14, 14, 14, 270, 32);
+outline.push([lidWidth, 270, 1, 0]);
+corner(lidWidth - 3, 270, 3, 0, 12);
+outline.push([3, 273, 0, 1]);
+corner(3, 270, 3, 90, 12);
+outline.push([0, 14, -1, 0]);
+corner(14, 14, 14, 180, 32);
+
+const depth = Number.parseFloat(getComputedStyle(laptop).getPropertyValue("--lid-depth"));
+const frontDepth = 273 - depth;
+// Match the painted, rounded silhouette to the chassis, rather than matching
+// the bounding rectangle (whose square corners aren't actually painted).
+let near = frontDepth + 1, far = 10000;
+for (let iteration = 0; iteration < 40; iteration++) {
+  const distance = (near + far) / 2;
+  const width = 2 * Math.max(...outline.map(([x, y]) => Math.abs(x - lidWidth / 2) * distance / (distance - frontDepth + y)));
+  if (width > 486) near = distance;
+  else far = distance;
+}
+const distance = (near + far) / 2;
+laptop.style.setProperty("--lid-perspective", `${distance}em`);
+laptop.style.setProperty("--base-perspective-scale", 1 - frontDepth / distance);
+
+const renderLidRim = createLaptopRim(laptop.querySelector(".lid-rim"), outline, depth, distance, lidWidth);
+
+// Follow the actual projected rim, rather than animating an unrelated hit area.
+let lidHandleFrame = 0;
+let lidAngle = 0;
+lid.style.transform = "rotateX(0rad)";
+function placeLidHandle() {
+  renderLidRim(getComputedStyle(lid).transform);
+  const box = laptop.getBoundingClientRect();
+  const front = lid.querySelector(".lid-front").getBoundingClientRect();
+  const back = lid.querySelector(".lid-back").getBoundingClientRect();
+  const left = Math.min(front.left, back.left);
+  lidToggle.style.left = `${left - box.left}px`;
+  lidToggle.style.width = `${Math.max(front.right, back.right) - left}px`;
+  lidToggle.style.top = `${(front.top + back.top) / 2 - box.top}px`;
+}
+function lidEase(progress, closing) {
+  const [x1, y1, x2, y2] = closing ? [0.45, 0, 0.8, 0.7] : [0.4, 0, 0.2, 1];
+  const cubic = (t, a, b) => 3 * (1 - t) ** 2 * t * a + 3 * (1 - t) * t ** 2 * b + t ** 3;
+  let low = 0, high = 1;
+  for (let step = 0; step < 18; step++) {
+    const t = (low + high) / 2;
+    if (cubic(t, x1, x2) < progress) low = t;
+    else high = t;
+  }
+  return cubic((low + high) / 2, y1, y2);
+}
+lidToggle.addEventListener("click", () => {
+  const closed = laptop.classList.toggle("lid-closed");
+  lidToggle.setAttribute("aria-expanded", String(!closed));
+  lidToggle.setAttribute("aria-label", `${closed ? "Open" : "Close"} laptop lid`);
+  cancelAnimationFrame(lidHandleFrame);
+  const from = lidAngle, target = closed ? -Math.PI / 2 : 0;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const duration = reduced ? 0 : (closed ? 650 : 850) * Math.abs(target - from) / (Math.PI / 2);
+  const start = performance.now() + (closed && !reduced ? 200 : 0);
+  // Drive the CSS display and rendered rim from one clock. An independent
+  // compositor transition can put their surfaces a frame apart while folding.
+  function fold(now) {
+    const progress = duration ? Math.max(0, Math.min(1, (now - start) / duration)) : 1;
+    lidAngle = progress === 1 ? target : from + (target - from) * lidEase(progress, closed);
+    lid.style.transform = `rotateX(${lidAngle}rad)`;
+    lid.classList.toggle("shut", lidAngle <= -Math.PI / 2 + 1e-7);
+    placeLidHandle();
+    if (progress < 1) lidHandleFrame = requestAnimationFrame(fold);
+    else {
+      lidHandleFrame = 0;
+      dispatchEvent(new Event("lidchange"));
+    }
+  }
+  fold(performance.now());
+});
+addEventListener("resize", placeLidHandle);
+addEventListener("route", placeLidHandle);
+placeLidHandle();
+
 /*
  * Ignite's chapter has the wallet from Ignite's Vue template beside a
  * Terminal running Ignite CLI v0.26.1 from January 2023: scaffolding a chain
@@ -536,6 +630,7 @@ if (row) {
 
   addEventListener("pointerdown", (event) => {
     if (event.pointerType !== "mouse" || event.button !== 0 || !fine.matches) return;
+    if (event.target.closest(".lid-toggle")) return;
     if (document.body.classList.contains("reading")) return;
     stop();
     page = shelfScroller();
@@ -660,10 +755,12 @@ function point() {
     const link = under?.closest(snaps);
     const info = under?.closest(".info");
     const play = under?.closest(plays);
+    const handle = under?.closest(".lid-toggle");
     const opens = !document.body.classList.contains("reading") && under?.closest(".device[data-case]");
     // the ⓘ says in words what it opens, or that it closes
     const about = document.getElementById("about").hidden ? "About" : "Close";
-    if (link) aim("snap", link);
+    if (handle) aim("free", null);
+    else if (link) aim("snap", link);
     else if (info || play || opens) {
       pointer.dataset.label = info ? about : play ? "Play" : "Case study";
       aim("label", info || play || opens);
@@ -691,6 +788,7 @@ function point() {
   addEventListener("popstate", () => setTimeout(() => update(), 700));
   // the moment a case study or About opens or closes, so the ⓘ's word switches with it
   addEventListener("route", () => update());
+  addEventListener("lidchange", () => update());
   addEventListener("scroll", () => update(), { passive: true });
   document.querySelector(".player").addEventListener("close", () => update());
 
@@ -850,9 +948,12 @@ addEventListener("popstate", () => {
 });
 
 for (const device of document.querySelectorAll(".device[data-case]")) {
-  device.addEventListener("click", () => open(device.dataset.case));
+  device.addEventListener("click", (event) => {
+    if (event.target.closest(".lid-toggle")) return;
+    open(device.dataset.case);
+  });
   device.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") open(device.dataset.case);
+    if (event.key === "Enter" && event.target === device) open(device.dataset.case);
   });
 }
 
