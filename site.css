@@ -1040,10 +1040,6 @@ body.reading {
   html.pointing:not(:has(dialog[open])) * {
     cursor: none;
   }
-
-  html.pointing:not(:has(dialog[open])) .lid-toggle {
-    cursor: pointer;
-  }
 }
 
 /*
@@ -1051,11 +1047,6 @@ body.reading {
  * while it's open the ordinary cursor comes back and the circle goes
  */
 html:has(dialog[open]) .pointer {
-  visibility: hidden;
-}
-
-/* follow hover directly, so a moving lid restores the circle without a mouse move */
-html:has(.lid-toggle:hover) .pointer {
   visibility: hidden;
 }
 
@@ -1136,6 +1127,28 @@ html:has(.lid-toggle:hover) .pointer {
 .pointer.shown.labelled::after {
   opacity: 1;
   transition-delay: 0.1s;
+}
+
+/* Follow the moving edge, including when it passes under a stationary mouse. */
+html:has(.lid-toggle:hover) .pointer::before {
+  top: -15px;
+  left: -15px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+html:has(.lid-toggle:hover) .pointer.shown::after {
+  content: "";
+  width: 22px;
+  height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 14 C6 4.6 18.8 4.6 19.4 17.4 M15.5 14.1 L19.4 17.4 L22.4 13.4' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 1;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.4));
+}
+
+html:has(.lid-toggle[aria-expanded="false"]:hover) .pointer.shown::after {
+  transform: scaleX(-1);
 }
 
 /* moving onto or off a link, the shape glides rather than jumps */
