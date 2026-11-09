@@ -1,4 +1,3 @@
-import {articleTilt} from '../devices/article-tilt.js';
 import * as T from 'three';
 import {createMacBook, closedAngle} from './macbook.js';
 
@@ -109,8 +108,4 @@ export async function mount(laptop) {
   button.addEventListener('click', toggle, {signal:events.signal});
   resize.observe(canvas);
   paint();
-  if (!events.signal.aborted) articleTilt(laptop,events.signal,yaw=>{
-    scene.rotation.y=yaw;
-    paint();
-  });
 }

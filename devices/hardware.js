@@ -1,4 +1,3 @@
-import {articleTilt} from './article-tilt.js';
 import {afterNavigation} from './after-navigation.js';
 import * as T from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -44,9 +43,7 @@ export async function mount(host) {
   pmrem.dispose();
   const key = new T.DirectionalLight(0xffffff,1.3);
   key.position.set(-3,4,5);scene.add(key);
-  const pivot = new T.Group();
-  scene.add(pivot);
-  pivot.add(model);
+  scene.add(model);
   const bounds = new T.Box3().setFromObject(model,true);
   const center = bounds.getCenter(new T.Vector3());
   const size = bounds.getSize(new T.Vector3());
@@ -75,7 +72,7 @@ export async function mount(host) {
   const contentHeight = kind === 'iphone' ? 874 : 891;
   const corner = new T.Vector3();
   function project(x,y) {
-    corner.set(x,y,panel.max.z).applyMatrix4(pivot.matrixWorld).project(camera);
+    corner.set(x,y,panel.max.z).project(camera);
     return {x:(corner.x+1)*width/2,y:(1-corner.y)*height/2};
   }
   function render() {
@@ -102,8 +99,4 @@ export async function mount(host) {
   canvas.addEventListener('webglcontextlost',fallback,listeners);
   addEventListener('route',()=>afterNavigation().then(()=>{ if (!events.signal.aborted) syncView(); }),listeners);
   syncView();
-  if (!events.signal.aborted) articleTilt(host,events.signal,yaw=>{
-    pivot.rotation.y=yaw;
-    syncView();
-  });
 }
