@@ -9,6 +9,18 @@
  */
 const { readFileSync, writeFileSync } = require("fs");
 
+// Bundle the browser modules into the published site; node_modules isn't a public asset.
+require("esbuild").buildSync({
+  entryPoints: { hardware: "devices/hardware.js", portfolio: "laptop-3d/portfolio.js", viewer: "laptop-3d/model.js" },
+  outdir: "assets/laptop",
+  bundle: true,
+  splitting: true,
+  format: "esm",
+  target: "es2022",
+  minify: true,
+  legalComments: "eof",
+});
+
 const site = "https://fadeev.org";
 const name = "Denis Fadeev";
 

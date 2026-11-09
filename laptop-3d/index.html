@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Laptop prototype · Denis Fadeev</title>
+<style>
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at 50% 53%,#dddddf 0%,#d5d5d6 48%,#acacad 100%);color:#242426;font:15px system-ui,sans-serif} main{height:100svh;min-height:360px;display:grid;grid-template-rows:auto 1fr auto;padding:clamp(16px,4vw,56px)} header,footer,.controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap} h1{font-size:20px;font-weight:550;letter-spacing:-.04em;margin:0} a{color:inherit} #stage{position:relative;min-height:0} canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab} canvas:active{cursor:grabbing} button{border:1px solid #d3d3d6;border-radius:20px;padding:9px 16px;background:white;color:inherit;font:inherit;cursor:pointer} button:disabled{opacity:.5} footer span{color:#66666c;font-size:14px}
+</style>
+<main><header><h1>Laptop prototype</h1><div class="controls"><small>Model by <a href="https://sketchfab.com/3d-models/macbook-pro-m3-16-inch-2024-8e34fc2b303144f78490007d91ff57c4">jackbaeten</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · Lid animated here</small><a href="/">Portfolio</a></div></header><div id="stage"><canvas tabindex="0" aria-label="Interactive laptop. Drag or use arrow keys to rotate."></canvas></div><footer><span id="hint" role="status">Loading MacBook Pro…</span><div class="controls"><button id="lid" disabled>Close lid</button><button id="reset" disabled>Reset view</button></div></footer></main>
+<script type="module">
+import('/assets/laptop/viewer.js').catch(error => {
+  document.getElementById('hint').textContent = 'The 3D preview could not start. Check that WebGL is available.';
+  console.error(error);
+});
+</script></html>

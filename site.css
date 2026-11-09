@@ -169,8 +169,8 @@ body {
   --tallest: clamp(0.62, 0.62 + (var(--aspect) - 1.6) * 0.6, 0.7);
   /* the column the laptop's base and the display's body are as wide as */
   --scol: min(
-    var(--screen) * var(--tallest) * 1654 / 1230,
-    (var(--screen) - 3rem - var(--dcap) - var(--name) - var(--above)) * 1654 / 1230,
+    var(--screen) * var(--tallest) * 1654 / 1359,
+    (var(--screen) - 3rem - var(--dcap) - var(--name) - var(--above)) * 1654 / 1359,
     (100vw - 2 * var(--side)) * 1654 / 1854,
     100vw * 0.58
   );
@@ -180,7 +180,7 @@ body {
    * display's, stand and all, far bigger than life.
    */
   --laptop-h: calc(var(--scol) * 294 / 486);
-  --phone-h: calc(var(--scol) * (294 / 486 + 1230 / 1654) / 2);
+  --phone-h: calc(var(--scol) * (294 / 486 + 1359 / 1654) / 2);
   /*
    * The same space between every pair of products, from the edge of one
    * to the edge of the next, terminals included. At first the phone has
@@ -191,7 +191,7 @@ body {
   /* the phone stands in from the edge, with room for at least twice the laptop's terminals */
   --phone-left: max(var(--scol) * 100 / 486, 17vw);
   /* how much taller than the laptop the tallest product stands */
-  --taller: calc(max(var(--scol) * 1230 / 1654, var(--phone-h)) - var(--laptop-h));
+  --taller: calc(max(var(--scol) * 1359 / 1654, var(--phone-h)) - var(--laptop-h));
   /* above the laptop's top: the name, and the tallest product's extra height */
   --lead: calc(var(--name) + var(--above) + var(--taller));
   /* everything, top to bottom, which is centred in the window */
@@ -436,107 +436,35 @@ figcaption {
  */
 .device.windows.xdr {
   --cw: 1854px;
-  --ch: 1230px;
+  --ch: 1359px;
   --k: tan(atan2(var(--col), 1654px));
 }
 
-.xdr-body {
+.xdr-model {
   position: absolute;
   top: 0;
   left: 100px;
   width: 1654px;
-  height: 962px;
-  box-sizing: border-box;
-  padding: 35px 32px;
-  border-radius: 18px;
-  background: #0c0c0c;
-  box-shadow:
-    inset 0 0 0 1.5px #2a2a2a,
-    0 30px 70px rgb(0 0 0 / 0.14);
+  height: 1359px;
+  background: url("/devices/xdr.webp") center / contain no-repeat;
 }
 
-.xdr-camera {
+.hardware-frame {
   position: absolute;
-  top: 13px;
-  left: 821px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #3a3d46, #121316 60%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  pointer-events: none;
 }
-
-.xdr-screen {
-  position: relative;
-  width: 1590px;
-  height: 891px;
-  overflow: hidden;
-  background: #fff;
-}
-
-/*
- * The stand, as wide as a quarter of the display, comes out from behind
- * it. The display sits low enough to hide the stand's cable cut-out.
- */
-.xdr-stand {
-  position: absolute;
-  top: 900px;
-  left: 725px;
-  width: 404px;
-  height: 306px;
-  background:
-    /* the display's faint shadow, below the 62px hidden behind it */
-    linear-gradient(transparent 62px, rgb(0 0 0 / 0.1) 62px, rgb(0 0 0 / 0.04) 92px, transparent 150px),
-    /* where the stand bends forward into the foot */
-    linear-gradient(transparent calc(100% - 26px), rgb(0 0 0 / 0.07) calc(100% - 10px), rgb(0 0 0 / 0.13) calc(100% - 3px), rgb(255 255 255 / 0.7)),
-    linear-gradient(90deg, rgb(0 0 0 / 0.07), transparent 5%, transparent 95%, rgb(0 0 0 / 0.08)),
-    linear-gradient(#dededf, #d2d2d4 55%, #cbcbce);
-}
-
-/*
- * The foot: a plate along the bottom of the stand, its rounded ends
- * catching the light, on two dark pads.
- */
-.xdr-foot {
-  position: absolute;
-  top: 1204px;
-  left: 723px;
-  width: 408px;
-  height: 22px;
-  border-radius: 3px 3px 7px 7px;
-  background:
-    linear-gradient(rgb(255 255 255 / 0.5), transparent 35%, rgb(0 0 0 / 0.07)),
-    linear-gradient(90deg, #f6f6f8, #d3d3d6 2.5%, #e3e3e6 9%, #dadadd 50%, #e3e3e6 91%, #d3d3d6 97.5%, #f6f6f8);
-  box-shadow: 0 10px 14px -6px rgb(0 0 0 / 0.12);
-}
-
-.xdr-foot::before,
-.xdr-foot::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  width: 70px;
-  height: 5px;
-  border-radius: 0 0 2px 2px;
-  background: linear-gradient(#2a2a2c, #48484b);
-}
-
-.xdr-foot::before {
-  left: 10px;
-}
-
-.xdr-foot::after {
-  right: 10px;
-}
+.hardware-live { background-image: none !important; }
+.hardware-live .hardware-frame { visibility: visible; }
+.hardware-content { position: absolute; top: 0; left: 0; transform-origin: top left; overflow: hidden; }
+.xdr-screen { transform: matrix(1.00388, 0, 0, .995954, 28.9176, 28.4153); width: 1590px; height: 891px; background: #fff; }
 
 /* ---------- Phone ---------- */
 
-/*
- * Anuma runs on an iPhone 16 Pro, drawn in points like the display: a
- * 402 by 874 point screen with rounded corners, a thin black border and a
- * dark titanium band, 428 by 900 points in all, with its buttons on the
- * sides. It stands --phone-h tall: as tall as the display, and taller
- * still on a phone's screen.
- */
+/* Both phones share one model render and retain their own video playback. */
 .device.phone {
   --k: tan(atan2(var(--phone-h), 900px));
 }
@@ -554,60 +482,9 @@ figcaption {
   transform-origin: 0 0;
 }
 
-.iphone-body {
-  position: absolute;
-  inset: 0;
-  border-radius: 71px;
-  background: #0b0b0c;
-  box-shadow:
-    /* the titanium band, catching the light on its outer edge */
-    inset 0 0 0 1.5px #6b6b6e,
-    inset 0 0 0 4px #2c2c2e,
-    /* the same soft shadow as the display's */
-    0 30px 70px rgb(0 0 0 / 0.14);
-}
-
-/*
- * The recording comes from the simulator, whose sheets stand a hair in
- * from the screen's edges, with the map behind showing around them. So
- * the video is drawn 2 points bigger all round and trimmed back to the
- * screen, with corners a little rounder than the sheets'.
- */
-.iphone-screen {
-  position: absolute;
-  top: 11px;
-  left: 11px;
-  width: 406px;
-  height: 878px;
-  clip-path: inset(2px round 61px);
-  object-fit: cover;
-  background: #fff;
-}
-
-/* the buttons stand a little proud of the band, behind it */
-.iphone-button {
-  position: absolute;
-  width: 6px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, #4a4a4d, #2a2a2c);
-}
-
-.iphone-button.action,
-.iphone-button.volume-up,
-.iphone-button.volume-down {
-  left: -2.5px;
-}
-
-.iphone-button.power,
-.iphone-button.camera-control {
-  right: -2.5px;
-}
-
-.iphone-button.action { top: 180px; height: 42px; }
-.iphone-button.volume-up { top: 265px; height: 66px; }
-.iphone-button.volume-down { top: 361px; height: 66px; }
-.iphone-button.power { top: 283px; height: 120px; }
-.iphone-button.camera-control { top: 638px; height: 78px; }
+.iphone-inner { background: url("/devices/iphone.webp") center / contain no-repeat; }
+.iphone-inner .hardware-content { transform: matrix(.981478, 0, 0, .979743, 16.6421, 21.9601); width: 402px; height: 874px; border-radius: 59px; }
+.iphone-screen { display: block; width: 100%; height: 100%; object-fit: cover; background: #fff; }
 
 /*
  * the caption runs on past the phone, which is narrower than the others,
@@ -756,7 +633,7 @@ body.reading {
 
 /* the display is taller for its width than the laptop, and hangs to the right */
 #ignite .case-device {
-  --hero: min(var(--screen) * 0.4 * 1654 / 1230, (100vw - 2 * var(--side)) * 1654 / 1854);
+  --hero: min(var(--screen) * 0.4 * 1654 / 1359, (100vw - 2 * var(--side)) * 1654 / 1854);
 }
 
 .case .device {
@@ -809,10 +686,18 @@ body.reading {
   stroke-linejoin: round;
 }
 
-/* on a phone the name starts at the edge, so Back goes to the other end */
-@media (max-width: 700px) {
+/* When the gutter beside the 680px article is too narrow for Back,
+   move it across the header and leave room for the About button. */
+@media (max-width: 880px) {
   .case-back {
     left: auto;
+    right: 3rem;
+  }
+}
+
+/* On phones About is hidden, so Back can use the full right corner. */
+@media (max-width: 700px) {
+  .case-back {
     right: 0;
   }
 }
@@ -853,6 +738,18 @@ body.reading {
 
 .case p a:hover {
   text-decoration-color: currentColor;
+}
+
+.model-credits {
+  margin-top: 3rem;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.case .model-credits h2 {
+  margin-top: 0;
+  color: var(--text);
+  font-size: 16px;
 }
 
 .case .lede {
@@ -1352,148 +1249,29 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
  * Change font-size to scale the whole laptop.
  */
 .laptop {
-  --lid-width: 413.1em; /* 85% of the 486em base */
-  --lid-depth: 5em;
-  --lid-front-roll: 1.6em;
-  --lid-front-inset: 0.35em;
-  --lid-front-trim: 0.45em;
-  --lid-back-roll: 2.2em;
-  --lid-perspective: 1440em;
-  --base-perspective-scale: 0.813888889;
   position: relative;
   font-size: calc(var(--h) / 294);
   width: 486em;
-  margin: 0 48.5em; /* room for the terminals hanging off both sides */
-  padding-bottom: 3em; /* room for the feet */
+  margin: 0 48.5em;
 }
 
-/* isolate the solid assembly so its depth cannot cover the terminal overlays */
-.laptop-scene {
-  position: relative;
-  isolation: isolate;
-  perspective: var(--lid-perspective);
-  perspective-origin: 50% 273em;
-}
-
-.laptop *,
-.laptop *::before,
-.laptop *::after {
-  box-sizing: border-box;
-}
-
-/* one 3D assembly; the terminals and hit area remain in front of the scene */
-.laptop-body {
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-/* ---------- Lid ---------- */
-
-.lid {
-  position: relative;
-  z-index: 1;
-  width: var(--lid-width);
-  height: 273em;
-  margin: 0 auto;
-  border-radius: 14em 14em 3em 3em;
-  transform-style: preserve-3d;
-  /* pivot through the shell's thickness, inside the fixed hinge barrel */
-  transform-origin: 50% calc(100% - var(--lid-depth) / 2) calc(var(--lid-depth) / -2);
-  transform: rotateX(0deg);
-}
-
-/* the terminals fade first, then the lid folds forward around its bottom edge */
-.laptop.lid-closed .lid {
-  transform: rotateX(-90deg);
-}
-
-/* a closed aluminium shell: two faces joined around the rounded perimeter */
-.lid-front,
-.lid-back {
+.laptop-scene { position: relative; aspect-ratio: 486 / 294; }
+.laptop .macbook-poster, .macbook-canvas {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-}
-
-.lid-front {
-  inset: var(--lid-front-inset);
-  border-radius: calc(14em - var(--lid-front-inset)) calc(14em - var(--lid-front-inset)) calc(3em - var(--lid-front-inset)) calc(3em - var(--lid-front-inset));
-  padding: var(--lid-front-trim) var(--lid-front-trim) 0;
-  overflow: hidden;
-  background: linear-gradient(#929395, #626365 1.5%, #4b4c4e);
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* A plane seen exactly edge-on can leave a stray rasterized line at the seam. */
-.lid.shut .lid-front {
-  visibility: hidden;
-}
-
-.lid-back {
-  inset: var(--lid-back-roll);
-  border-radius: calc(14em - var(--lid-back-roll)) calc(14em - var(--lid-back-roll)) calc(3em - var(--lid-back-roll)) calc(3em - var(--lid-back-roll));
-  background: linear-gradient(110deg, #9fa0a2, #7a7b7d 38%, #68696b 78%, #929395);
-  box-shadow: inset 0 0.8em 1.5em rgb(255 255 255 / 0.2);
-  transform: translateZ(calc(-1 * var(--lid-depth))) rotateY(180deg);
-  backface-visibility: hidden;
-}
-
-/* A single antialiased surface avoids seams between separate CSS layers. */
-.lid-rim {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 486em;
-  height: 291em;
+  display: block;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
+.macbook-canvas, .model-ready .macbook-poster { visibility: hidden; }
+.model-ready .macbook-canvas { visibility: visible; }
+.laptop *, .laptop *::before, .laptop *::after { box-sizing: border-box; }
 
-/* Recess the hinge behind the display, centred on the lid's rotation axis. */
-.hinge-assembly {
-  position: absolute;
-  z-index: 0;
-  top: calc(273em - var(--lid-depth) / 2 - 7em);
-  left: calc((486em - var(--lid-width)) / 2);
-  width: var(--lid-width);
-  height: 14em;
-  transform: translateZ(calc(var(--lid-depth) / -2));
-  pointer-events: none;
-}
-
-.hinge-mount {
-  position: absolute;
-  top: 4em;
-  width: 32em;
-  height: 10em;
-  border: 0.7em solid #404247;
-  border-radius: 3em 3em 0 0;
-  background: linear-gradient(90deg, #18191b, #2d2e30 24%, #242527 65%, #17181a);
-}
-
-.hinge-mount.left { left: 15em; }
-.hinge-mount.right { right: 15em; }
-
-.hinge-barrel {
-  position: absolute;
-  top: 4.5em;
-  left: 24em;
-  right: 24em;
-  height: 5em;
-  border-radius: 2.5em;
-  background:
-    linear-gradient(90deg, #121315, transparent 3%, transparent 97%, #121315),
-    linear-gradient(#17181a, #292a2c 20%, #202123 48%, #151618 80%, #101113);
-}
-
-/* a separate hit area stays usable once the lid has folded down to the base */
 .lid-toggle {
   position: absolute;
   z-index: 4;
   top: 0;
-  left: calc((486em - var(--lid-width)) / 2);
-  width: var(--lid-width);
   height: max(20em, 24px);
   padding: 0;
   border: 0;
@@ -1509,225 +1287,6 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   outline: 2px solid var(--muted);
   outline-offset: 3px;
 }
-
-.laptop.lid-closed .lid-toggle {
-  top: 270em;
-  left: 0.5em;
-  width: 485em;
-}
-
-.bezel {
-  position: relative;
-  height: 100%;
-  background: #000;
-  border-radius: calc(14em - var(--lid-front-inset) - var(--lid-front-trim)) calc(14em - var(--lid-front-inset) - var(--lid-front-trim)) 0 0;
-  box-shadow:
-    inset 0 1em #1a1a1a,
-    inset 1em 0 #141414,
-    inset -1em 0 #141414;
-}
-
-.screen {
-  position: absolute;
-  top: 6em;
-  left: 5em;
-  width: calc(100% - 10em);
-  height: 250em;
-  overflow: hidden;
-  border-radius: 3em 3em 0 0;
-  background: #000;
-}
-
-/*
- * The screenshot is 16:10, a little wider than the screen, so it fits the
- * full width and leaves a black strip at the top for the notch, like the
- * menu bar area of a full-screen app.
- */
-.screen img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: bottom;
-  transition: filter 0.25s 0.55s;
-}
-
-/* the display sleeps as the lid folds; its black bezel stays attached */
-.laptop.lid-closed .screen img {
-  filter: brightness(0);
-  transition-delay: 0.15s;
-}
-
-.notch {
-  position: absolute;
-  top: 6em;
-  left: 50%;
-  width: 47em;
-  height: 7em;
-  margin-left: -23.5em;
-  background: #000;
-  border-radius: 0 0 1.5em 1.5em;
-}
-
-.camera {
-  position: absolute;
-  top: 6.25em;
-  left: 50%;
-  width: 2.5em;
-  height: 2.5em;
-  margin-left: -1.25em;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #3a3d46, #17181c 55%, #0a0a0a);
-}
-
-/* dark strip along the bottom of the display */
-.chin {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 10em;
-  background: linear-gradient(#0a0a0a, #171717 1.5em, #121212 3em, #0d0d0d 6em, #070707);
-}
-
-/* ---------- Base ---------- */
-
-.base {
-  position: relative;
-  z-index: 2;
-  /* place the front fascia at the closed lid's front, preserving its drawn size */
-  transform-origin: 50% 0;
-  transform: translateZ(calc(273em - var(--lid-depth))) scale(var(--base-perspective-scale));
-  height: 18em;
-  border-radius: 2em 2em 12em 12em / 1em 1em 9em 9em;
-  background: linear-gradient(
-    #484a4a 0.5em,
-    #77787a 1.5em,
-    #747577 10.5em,
-    #6d6e70 12.5em,
-    #626365 14.5em,
-    #6e6f71 15.5em,
-    #7a7b7d 16.5em,
-    #4e4f51 17.5em
-  );
-}
-
-/* The broad upper face catches soft light above the darker curved underside. */
-.base::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    #4e4e50 0.5em,
-    #afb0b2 1.5em,
-    #a3a4a6 2.5em,
-    #9fa0a2 5.5em,
-    #98999b 7.5em,
-    #919294 8.5em,
-    #838486 9.5em,
-    #6d6e70 10.5em,
-    #5e5f61 11.5em,
-    #555658 12.5em,
-    #505153 13.5em,
-    #535456 14.5em,
-    #606163 15.5em,
-    #6a6b6d 16.5em,
-    #484a4a 17.5em
-  );
-  --fade: linear-gradient(
-    90deg,
-    transparent 13em,
-    rgb(0 0 0 / 0.18) 23em,
-    rgb(0 0 0 / 0.33) 38em,
-    rgb(0 0 0 / 0.7) 68em,
-    rgb(0 0 0 / 0.85) 98em,
-    #000 140em,
-    #000 calc(100% - 140em),
-    rgb(0 0 0 / 0.85) calc(100% - 98em),
-    rgb(0 0 0 / 0.7) calc(100% - 68em),
-    rgb(0 0 0 / 0.33) calc(100% - 38em),
-    rgb(0 0 0 / 0.18) calc(100% - 23em),
-    transparent calc(100% - 13em)
-  );
-  -webkit-mask-image: var(--fade);
-  mask-image: var(--fade);
-}
-
-/* One contact line, shared across the front and seated in the chassis. */
-.base-seam {
-  position: absolute;
-  z-index: 2;
-  top: -0.25em;
-  left: 0.5em;
-  right: 0.5em;
-  height: 0.6em;
-  border-radius: 1em;
-  background: #484a4a;
-  pointer-events: none;
-}
-
-/* specular highlights where the rounded ends catch the light */
-.base::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  /* Tilt the reflection inward as the front face rolls under the chassis. */
-  --corner-tilt: 12deg;
-  --reflection: rgb(255 255 255 / 0.06) 1em,
-    rgb(255 255 255 / 0.16) 3em, rgb(255 255 255 / 0.36) 5.5em,
-    rgb(255 255 255 / 0.31) 7em, rgb(255 255 255 / 0.12) 10em,
-    transparent 15em;
-  background:
-    linear-gradient(calc(90deg - var(--corner-tilt)), var(--reflection)) left / 50% 100% no-repeat,
-    linear-gradient(calc(270deg + var(--corner-tilt)), var(--reflection)) right / 50% 100% no-repeat;
-  --fade: linear-gradient(#000 2em, rgb(0 0 0 / 0.86) 8em, rgb(0 0 0 / 0.58) 11em,
-    rgb(0 0 0 / 0.25) 14em, transparent 17em);
-  -webkit-mask-image: var(--fade);
-  mask-image: var(--fade);
-}
-
-/* the thumb recess for opening the lid */
-.recess {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 50%;
-  width: 85em;
-  height: 7em;
-  margin-left: -42.5em;
-  border: solid #3a3b3d;
-  border-width: 0 1.5em;
-  border-radius: 0 0 5em 5em / 0 0 7em 7em;
-  background:
-    linear-gradient(#4f5052 1em, #bbbcbe 1em, #b9babc 3em, #c1c2c4 5.5em, #b4b5b7 7em)
-    padding-box;
-}
-
-.foot {
-  position: absolute;
-  z-index: 1;
-  top: 17em;
-  width: 26em;
-  height: 3em;
-  border-radius: 0 0 4em 4em / 0 0 3em 3em;
-  background:
-    linear-gradient(transparent 1em, rgb(0 0 0 / 0.35) 2.5em, rgb(0 0 0 / 0.7)),
-    linear-gradient(
-      90deg,
-      #262628,
-      #5e5e60 7%,
-      #343436 18%,
-      #5e5e60 48%,
-      #343436 80%,
-      #5c5c5e 92%,
-      #232325
-    );
-}
-
-.foot.left { left: 23em; }
-.foot.right { right: 23em; }
 
 /* ---------- Terminal windows ---------- */
 
@@ -1806,9 +1365,7 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   .terminal.open,
   .laptop .terminal.open,
   .laptop.lid-closed .terminal,
-  .lid,
-  .lid-toggle,
-  .screen img {
+  .lid-toggle {
     transition: none;
   }
 }

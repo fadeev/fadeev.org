@@ -281,7 +281,7 @@ new IntersectionObserver((entries, observer) => {
   observer.disconnect();
   localnet.element.classList.add("open");
   play();
-}, { threshold: 0.95 }).observe(document.querySelector(".laptop .lid"));
+}, { threshold: 0.95 }).observe(document.querySelector(".laptop-scene"));
 
 /*
  * Ignite's chapter has the wallet from Ignite's Vue template beside a
@@ -666,7 +666,9 @@ function point() {
     const opens = !document.body.classList.contains("reading") && under?.closest(".device[data-case]");
     // the ⓘ says in words what it opens, or that it closes
     const about = document.getElementById("about").hidden ? "About" : "Close";
-    if (handle) aim("free", null);
+    const laptop = under?.closest(".laptop.model-ready");
+    const aboveLid = laptop && y < laptop.querySelector(".lid-toggle").getBoundingClientRect().top;
+    if (handle || aboveLid) aim("free", null);
     else if (link) aim("snap", link);
     else if (info || play || opens) {
       pointer.dataset.label = info ? about : play ? "Play" : "Case study";
@@ -809,6 +811,7 @@ function nameDevice(id) {
   }
 }
 
+let routeFinished = Promise.resolve();
 function route(animate) {
   let id = pageOf(location.pathname);
   // an address that names no page shows the shelf, at the shelf's address
@@ -823,8 +826,9 @@ function route(animate) {
     dispatchEvent(new Event("route")); // for the pointer, which shows what's under it
   };
   if (animate && document.startViewTransition && !reduceMotion.matches) {
-    document.startViewTransition(change);
+    routeFinished = document.startViewTransition(change).finished;
   } else {
+    routeFinished = Promise.resolve();
     change();
   }
 }

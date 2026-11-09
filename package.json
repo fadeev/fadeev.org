@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx live-server --entry-file=index.html"
+    "dev": "npx live-server --entry-file=index.html",
+    "predev": "node build.js"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/fadeev/fadeev.org/issues"
   },
-  "homepage": "https://github.com/fadeev/fadeev.org#readme"
+  "homepage": "https://github.com/fadeev/fadeev.org#readme",
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
 }

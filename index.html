@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <link rel="preload" as="image" href="/devices/iphone.webp">
+  <link rel="preload" as="image" href="/devices/xdr.webp">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Denis Fadeev</title>
@@ -60,16 +62,9 @@
     <section class="chapter" aria-label="Anuma">
       <figure class="device phone" data-case="anuma" tabindex="0" role="link" aria-label="Anuma case study">
         <div class="iphone">
-          <div class="iphone-inner" aria-hidden="true">
-            <span class="iphone-button action"></span>
-            <span class="iphone-button volume-up"></span>
-            <span class="iphone-button volume-down"></span>
-            <span class="iphone-button power"></span>
-            <span class="iphone-button camera-control"></span>
-            <div class="iphone-body">
-              <!-- a recording of the app, Dynamic Island and all -->
-              <video class="iphone-screen" src="/images/anuma-demo.mp4" poster="/images/anuma-demo.jpg" muted autoplay loop playsinline preload="auto"></video>
-            </div>
+          <div class="iphone-inner" data-hardware="iphone" aria-hidden="true">
+            <canvas class="hardware-frame" aria-hidden="true"></canvas>
+            <div class="hardware-content"><video class="iphone-screen" src="/images/anuma-demo.mp4" poster="/images/anuma-demo.jpg" muted autoplay loop playsinline preload="auto"></video></div>
           </div>
         </div>
         <figcaption><strong>Anuma</strong>Product Engineer, 2025–present<span class="case-link">Case study →</span></figcaption>
@@ -79,34 +74,9 @@
     <section class="chapter" aria-label="ZetaChain">
       <figure class="device" data-case="zetachain" tabindex="0" role="link" aria-label="ZetaChain case study">
         <div class="laptop">
-          <div class="laptop-scene">
-            <div class="laptop-body">
-              <div class="hinge-assembly" aria-hidden="true">
-                <span class="hinge-mount left"></span>
-                <span class="hinge-mount right"></span>
-                <span class="hinge-barrel"></span>
-              </div>
-              <div class="lid" id="laptop-lid">
-                <div class="lid-back" aria-hidden="true"></div>
-                <div class="lid-front">
-                  <div class="bezel">
-                    <div class="screen">
-                      <img src="/images/zetachain-docs-universal-app-2025-09.png" alt="ZetaChain docs: Build a universal app in minutes">
-                    </div>
-                    <div class="notch"></div>
-                    <div class="camera"></div>
-                    <div class="chin"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <canvas class="lid-rim" aria-hidden="true"></canvas>
-            <div class="base">
-              <span class="base-seam" aria-hidden="true"></span>
-              <div class="recess"></div>
-              <div class="foot left"></div>
-              <div class="foot right"></div>
-            </div>
+          <div class="laptop-scene" id="laptop-lid">
+            <img class="macbook-poster" src="/images/macbook-zetachain.webp" alt="MacBook Pro displaying the ZetaChain documentation">
+            <canvas class="macbook-canvas" aria-hidden="true"></canvas>
           </div>
           <button hidden class="lid-toggle" type="button" aria-label="Close laptop lid" aria-controls="laptop-lid" aria-expanded="true"></button>
           <div class="terminal localnet" aria-hidden="true">
@@ -141,11 +111,9 @@
       <figure class="device windows xdr" data-case="ignite" tabindex="0" role="link" aria-label="Tendermint case study">
         <div class="desktop">
           <div class="desktop-inner" aria-hidden="true">
-            <div class="xdr-stand"></div>
-            <div class="xdr-foot"></div>
-            <div class="xdr-body">
-              <span class="xdr-camera"></span>
-              <div class="xdr-screen">
+            <div class="xdr-model" data-hardware="xdr">
+              <canvas class="hardware-frame" aria-hidden="true"></canvas>
+              <div class="xdr-screen hardware-content">
                 <!-- the wallet that Ignite's Vue template came with in 2023 -->
                 <div class="wallet">
                   <div class="w-nav">
@@ -239,15 +207,9 @@
       <!-- the app in dark mode, beside the phone from the shelf once it arrives -->
       <div class="device phone companion" aria-hidden="true">
         <div class="iphone">
-          <div class="iphone-inner">
-            <span class="iphone-button action"></span>
-            <span class="iphone-button volume-up"></span>
-            <span class="iphone-button volume-down"></span>
-            <span class="iphone-button power"></span>
-            <span class="iphone-button camera-control"></span>
-            <div class="iphone-body">
-              <video class="iphone-screen" src="/images/anuma-chat-flow.mp4" data-poster="/images/anuma-chat-flow.jpg" muted playsinline preload="none"></video>
-            </div>
+          <div class="iphone-inner" data-hardware="iphone">
+            <canvas class="hardware-frame" aria-hidden="true"></canvas>
+            <div class="hardware-content"><video class="iphone-screen" src="/images/anuma-chat-flow.mp4" data-poster="/images/anuma-chat-flow.jpg" muted playsinline preload="none"></video></div>
           </div>
         </div>
       </div>
@@ -556,6 +518,14 @@
       <li><span>X</span><a href="https://x.com/fadeev">@fadeev</a></li>
       <li><span>Telegram</span><a href="https://t.me/dfadeev">@dfadeev</a></li>
     </ul>
+
+    <footer class="model-credits" aria-labelledby="model-credits-title">
+      <h2 id="model-credits-title">Model credits</h2>
+      <p><a href="https://sketchfab.com/3d-models/apple-iphone-18-pro-max-black-2026-8fd804a9b0ea49249de3f1e0450fbc9c">Apple iPhone 18 Pro Max Black 2026</a> by extraakash, under the <a href="https://sketchfab.com/licenses">Sketchfab Standard License</a>.</p>
+      <p><a href="https://sketchfab.com/3d-models/macbook-pro-m3-16-inch-2024-8e34fc2b303144f78490007d91ff57c4">MacBook Pro M3 16 inch 2024</a> by jackbaeten, under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+      <p><a href="https://sketchfab.com/3d-models/apple-pro-display-xdr-7e92cfb7c84d41f886c7748be6c567da">Apple Pro Display XDR</a> by polyman Studio, under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+      <p>The iPhone and XDR models are optimized for the web. All three show custom screen content; the MacBook adds a lid animation.</p>
+    </footer>
   </article>
 
   <dialog class="player" aria-label="Talk">
@@ -565,6 +535,7 @@
   </dialog>
 
 <script src="/site.js"></script>
-<script type="module" src="/laptop-rim.js"></script>
+<script type="module" src="/laptop-3d/start.js"></script>
+<script type="module" src="/devices/start.js"></script>
 </body>
 </html>
