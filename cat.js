@@ -17,7 +17,7 @@
 // start ends on and stop begins with (and how far that pose sits from the walk
 // sheet's drawing of it), and which idle exposure each standing clip leaves from
 // or arrives on.
-const version = 19;
+const version = 20;
 const cell = { width: 256, height: 160, ground: 150 };
 const clips = {
   tapjump: { src: '/images/cat-tapjump.png', frames: 200, fps: 24, columns: 16, rows: 13, every: 6, length: 10, skip: [1, 17, 19] },
@@ -126,7 +126,9 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 let direction = -1;                    // -1 walks left, as drawn; 1 walks right, mirrored
 let mode = 'walk';
-let x = Math.min(160, innerWidth / 3) - row.getBoundingClientRect().left; // walking: where a steady walker would be
+// walking: where a steady walker would be; on load, just past the window's right edge
+// (or the shelf's end, if that comes first), walking in from there
+let x = Math.min(innerWidth, row.getBoundingClientRect().right) - row.getBoundingClientRect().left;
 let cycle = 0;                         // walking: phase of the stride
 let base = 0;                          // other clips: cell position where the clip started
 let time = 0;                          // other clips: seconds into the clip
