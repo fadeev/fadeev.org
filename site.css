@@ -1885,3 +1885,14 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   .w-tx, .w-month { transition: none; }
   .w-new { animation: none; }
 }
+
+.shelf-cat {
+  position: fixed;
+  left: 0;
+  z-index: 3;
+  width: 112px;
+  height: calc(112px * 2 / 3);
+  background: url("/images/cat-walk.png?v=10") 0 0 / 1600% 800% no-repeat;
+  pointer-events: none;
+}
+.shelf-cat[hidden] { display: none; }
