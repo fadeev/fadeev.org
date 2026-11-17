@@ -9,15 +9,16 @@
 //   jump     a hop on the spot, from standing back to standing
 //   turn     standing, turning round to face the other way
 //   petin    standing to arching into a stroke; petloop: leaning in, looped; petout: relaxing
-//   tapjump, tapstand  bridges for a tap: from every `every`th standing or sitting
-//            exposure, an eased morph of `length` exposures into the jump or standing up; `skip` lists the
+//   tapjump, tapstand  bridges for petting: from every `every`th standing or sitting
+//            exposure, an eased morph of `length` exposures into the pose petting starts
+//            from (the jump's first) or into standing up; `skip` lists the
 //            few bridges where the morph came apart, which the cat waits past
 // `travel` is how far a moving clip carries the cat, in sheet pixels per exposure;
 // the walk's is a fraction of its stride instead. `joins` say which walk exposure
 // start ends on and stop begins with (and how far that pose sits from the walk
 // sheet's drawing of it), and which idle exposure each standing clip leaves from
 // or arrives on.
-const version = 20;
+const version = 21;
 const cell = { width: 256, height: 160, ground: 150 };
 const clips = {
   tapjump: { src: '/images/cat-tapjump.png', frames: 200, fps: 24, columns: 16, rows: 13, every: 6, length: 10, skip: [1, 17, 19] },
@@ -135,11 +136,10 @@ let time = 0;                          // other clips: seconds into the clip
 let until = random(6, 12);             // seconds left in the current behaviour
 let wantStop = false;
 let pending = null;                    // standing: the clip to play at its idle exposure
-let bridge = null;                     // a tap while standing or sitting: the bridge clip to take
+let bridge = null;                     // petted while standing or sitting: the bridge clip to take
 let segment = 0;                       // which of the bridge clip's segments is playing
-let queued = false;                    // a tap during a one-way clip, answered when it ends
 let bridgeNext = null;                 // what the bridge leads into
-let wantPet = false;                   // stroked mid-move: lean into it once standing
+let wantPet = false;                   // petted mid-move: lean into it once standing
 let lastStroke = -1e9;                 // seconds, when the cat was last stroked
 const stroked = within => performance.now() / 1000 - lastStroke < within;
 let shown = '';
@@ -172,21 +172,10 @@ function decide() {
   return 'start';
 }
 
-// A tap makes the cat change what it's doing, always through a pose it can reach smoothly:
-// walking, it slows to a stop; standing, it eases into a crouch and jumps; sitting, it
-// stands up. A tap in the middle of a move is answered once the move is done.
-function tap() {
-  if (mode === 'walk') {
-    if (clips.stop.ready && clips.idle.ready) { wantStop = true; until = 0; }
-  } else if (mode === 'idle') {
-    if (clips.tapjump.ready && clips.jump.ready) { bridge = 'tapjump'; bridgeNext = 'jump'; pending = null; }
-  } else if (mode === 'sitloop') {
-    if (clips.tapstand.ready && clips.standup.ready) { bridge = 'tapstand'; bridgeNext = 'standup'; }
-  } else queued = true;
-}
-
-// Stroking the cat: standing, it eases into arching its back and leans in for as long as
-// the strokes keep coming, then relaxes; walking, it stops first; sitting, it stands up first.
+// Tapping or stroking the cat pets it: standing, it eases into arching its back and leans
+// in for as long as the taps or strokes keep coming, then relaxes; walking, it stops first;
+// sitting, it stands up first; in the middle of a move, it leans in once the move is done.
+// (It still jumps, sits and turns of its own accord.)
 const petReady = () => clips.petin.ready && clips.petloop.ready && clips.petout.ready && clips.tapjump.ready;
 function stroke() {
   lastStroke = performance.now() / 1000;
@@ -199,9 +188,9 @@ function stroke() {
     if (!bridge && clips.tapstand.ready && clips.standup.ready) { bridge = 'tapstand'; bridgeNext = 'standup'; wantPet = true; }
   } else if (mode !== 'petin' && mode !== 'petloop') wantPet = true;
 }
+const tap = stroke;
 
 function step(elapsed) {
-  if (queued && (mode === 'walk' || mode === 'idle' || mode === 'sitloop')) { queued = false; tap(); }
   if (mode === 'walk') {
     const before = Math.floor(cycle * walk.frames);
     const progress = elapsed / cycleDuration;
@@ -216,7 +205,7 @@ function step(elapsed) {
       direction *= -1;
     }
     until -= elapsed;
-    if (wantPet && stroked(3)) { wantStop = true; until = 0; }   // stroked while setting off
+    if (wantPet) { wantStop = true; until = 0; }   // petted while setting off
     if (until <= 0 && clips.stop.ready && clips.idle.ready && clips.start.ready && x > 0 && x < shelfWidth() - cellWidth) wantStop = true;
     // leave the walk on the exposure the stop clip begins with
     const n = walk.frames, j = joins.walkToStop.frame;
@@ -240,7 +229,7 @@ function step(elapsed) {
   }
   if (mode === 'idle' && wantPet && !bridge) {
     wantPet = false;
-    if (stroked(3) && petReady()) { bridge = 'tapjump'; bridgeNext = 'petin'; pending = null; }
+    if (petReady()) { bridge = 'tapjump'; bridgeNext = 'petin'; pending = null; }
   }
   if (mode === 'petloop') {
     // lean in while the strokes keep coming; a second after the last, relax at the loop's end
