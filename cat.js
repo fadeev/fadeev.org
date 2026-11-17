@@ -18,11 +18,9 @@
 // start ends on and stop begins with (and how far that pose sits from the walk
 // sheet's drawing of it), and which idle exposure each standing clip leaves from
 // or arrives on.
-const version = 21;
+const version = 23;
 const cell = { width: 256, height: 160, ground: 150 };
 const clips = {
-  tapjump: { src: '/images/cat-tapjump.png', frames: 200, fps: 24, columns: 16, rows: 13, every: 6, length: 10, skip: [1, 17, 19] },
-  tapstand: { src: '/images/cat-tapstand.png', frames: 170, fps: 24, columns: 16, rows: 11, every: 6, length: 10 },
   walk: { src: '/images/cat-walk.png', frames: 91, fps: 96, columns: 16, rows: 6, loop: true, stride: 50.04, travel: [
     0.0000, 0.0106, 0.0194, 0.0284, 0.0377, 0.0478, 0.0584, 0.0690, 0.0784, 0.0889, 0.0988, 0.1073, 0.1144, 0.1241, 0.1339, 0.1440,
     0.1537, 0.1645, 0.1748, 0.1837, 0.1935, 0.2030, 0.2135, 0.2239, 0.2344, 0.2432, 0.2529, 0.2604, 0.2704, 0.2804, 0.2915, 0.3004,
@@ -48,7 +46,7 @@ const clips = {
     21.4, 22.0, 22.7, 23.3, 23.9, 24.6, 25.3, 26.0, 26.7, 27.2, 27.8, 28.3, 28.8, 29.3, 29.8, 30.4,
     30.9, 31.4, 31.9, 32.4, 33.0,
   ] },
-  stop: { src: '/images/cat-stop.png', frames: 140, fps: 96, columns: 16, rows: 9, travel: [
+  stop: { src: '/images/cat-stop.png', frames: 139, fps: 96, columns: 16, rows: 9, travel: [
     0.0, 0.6, 1.1, 1.6, 2.1, 2.6, 3.1, 3.6, 4.1, 4.6, 5.2, 5.7, 6.2, 6.8, 7.3, 7.9,
     8.5, 9.1, 9.8, 10.4, 11.1, 11.7, 12.4, 12.8, 13.2, 13.8, 14.4, 15.1, 15.5, 15.9, 16.4, 16.8,
     17.4, 17.8, 18.4, 18.8, 19.3, 19.7, 20.1, 20.6, 20.9, 21.1, 21.3, 21.3, 21.3, 21.4, 21.6, 21.8,
@@ -56,8 +54,8 @@ const clips = {
     25.4, 25.8, 26.6, 27.4, 27.9, 28.4, 28.9, 29.5, 30.0, 30.6, 31.1, 31.7, 32.0, 32.4, 32.6, 32.9,
     33.1, 33.4, 33.8, 34.3, 34.6, 34.7, 34.9, 35.3, 35.6, 35.9, 36.3, 36.5, 36.6, 36.7, 36.9, 37.1,
     37.3, 37.4, 37.5, 37.6, 37.6, 37.7, 37.9, 38.1, 38.3, 38.4, 38.6, 38.8, 38.9, 39.0, 39.3, 39.6,
-    39.9, 40.1, 40.3, 40.3, 40.3, 40.4, 40.6, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8,
-    40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8, 40.8,
+    39.9, 40.1, 40.3, 40.3, 40.3, 40.4, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5,
+    40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5, 40.5,
   ] },
   sitdown: { src: '/images/cat-sitdown.png', frames: 84, fps: 48, columns: 16, rows: 6 },
   sitloop: { src: '/images/cat-sitloop.png', frames: 102, fps: 24, columns: 16, rows: 7, loop: true },
@@ -80,6 +78,8 @@ const clips = {
   petin: { src: '/images/cat-petin.png', frames: 25, fps: 24, columns: 16, rows: 2 },
   petloop: { src: '/images/cat-petloop.png', frames: 24, fps: 24, columns: 16, rows: 2, loop: true },
   petout: { src: '/images/cat-petout.png', frames: 24, fps: 24, columns: 16, rows: 2 },
+  tapjump: { src: '/images/cat-tapjump.png', frames: 200, fps: 24, columns: 16, rows: 13, every: 6, length: 10, skip: [1, 17, 19] },
+  tapstand: { src: '/images/cat-tapstand.png', frames: 170, fps: 24, columns: 16, rows: 11, every: 6, length: 10 },
 };
 const joins = {
   startToWalk: { frame: 8, dx: -14 },
@@ -118,18 +118,47 @@ cat.setAttribute('aria-hidden', 'true');
 cat.style.width = `${cellWidth}px`;
 cat.style.height = `${cell.height * scale}px`;
 const context = cat.getContext('2d');
-// The cat lives on the shelf itself: it scrolls with the products and walks the row's
-// whole length, from before the first product to past the last.
+// The cat lives on the shelf itself: it walks on the line the products stand on, behind
+// them (it's the row's first child, so the products paint over it), scrolls with them,
+// and roams the row's whole length, from before the first product to past the last.
 const row = document.querySelector('.chapters');
-row.append(cat);
+row.prepend(cat);
 const shelfWidth = () => row.scrollWidth;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
+// On load the cat walks out from behind a product in view, either way, or in from either edge
+// of the window, picked at random. Only the phone and the laptop hide it completely (under the
+// display it would show), and only across part of their width at the cat's height: the
+// laptop's screen is narrower than its base, and the phone's corners round off.
+const covers = { iphone: [0.09, 0.91], laptop: [0.08, 0.92] };
+function entrance() {
+  // where the cat's nose and tail end are in the walk's first exposure, facing left
+  const probe = document.createElement('canvas');
+  probe.width = cell.width; probe.height = cell.height;
+  const pen = probe.getContext('2d');
+  pen.drawImage(walk.image, 0, 0, cell.width, cell.height, 0, 0, cell.width, cell.height);
+  const alpha = pen.getImageData(0, 0, cell.width, cell.height).data;
+  let nose = cell.width, tail = 0;
+  for (let i = 3; i < alpha.length; i += 4) if (alpha[i] > 64) { const px = (i >> 2) % cell.width; nose = Math.min(nose, px); tail = Math.max(tail, px); }
+  nose *= scale; tail *= scale;
+  const rowLeft = row.getBoundingClientRect().left, inset = 4;
+  const starts = [
+    { direction: -1, x: Math.min(innerWidth, row.getBoundingClientRect().right) - rowLeft },   // past the right edge
+    { direction: 1, x: -(cellWidth - nose) - rowLeft },                                          // past the left edge, mirrored
+  ];
+  for (const [name, [from, to]] of Object.entries(covers)) for (const product of row.querySelectorAll(`.${name}`)) {
+    const box = product.getBoundingClientRect(), left = box.left + from * box.width, right = box.left + to * box.width;
+    if (right - left < tail - nose + 2 * inset) continue;
+    // out of its left side walking left, the nose just inside; out of its right side walking right, mirrored
+    if (left > inset && left < innerWidth - inset) starts.push({ direction: -1, x: left + inset - nose - rowLeft });
+    if (right > inset && right < innerWidth - inset) starts.push({ direction: 1, x: right - inset - (cellWidth - nose) - rowLeft });
+  }
+  return starts[Math.floor(Math.random() * starts.length)];
+}
+
 let direction = -1;                    // -1 walks left, as drawn; 1 walks right, mirrored
 let mode = 'walk';
-// walking: where a steady walker would be; on load, just past the window's right edge
-// (or the shelf's end, if that comes first), walking in from there
-let x = Math.min(innerWidth, row.getBoundingClientRect().right) - row.getBoundingClientRect().left;
+let x = 0;                             // walking: where a steady walker would be
 let cycle = 0;                         // walking: phase of the stride
 let base = 0;                          // other clips: cell position where the clip started
 let time = 0;                          // other clips: seconds into the clip
@@ -145,6 +174,8 @@ const stroked = within => performance.now() / 1000 - lastStroke < within;
 let shown = '';
 let previous = 0;
 let frame = 0;
+
+({ direction, x } = entrance());
 
 const walkLeft = () => x + direction * (walk.travel[Math.floor(cycle * walk.frames)] - cycle) * strideLength;
 // A pose drawn `dx` sheet pixels further right in one sheet than in another
@@ -332,13 +363,17 @@ function tick(now) {
 function sync() {
   cancelAnimationFrame(frame);
   frame = 0;
+  // The cat walks just behind the line the products stand on (the top of their captions):
+  // a little higher on the screen, as something further back would be, and enough that its
+  // paws stay hidden behind a product's base, which ends a few pixels above that line.
   const captions = [...document.querySelectorAll('.chapters figcaption')];
-  const bottom = Math.max(0, ...captions.map(caption => caption.getBoundingClientRect().bottom));
-  const room = innerHeight - bottom;
-  cat.hidden = document.body.classList.contains('reading') || document.hidden || room < 78;
-  // the paws sit on the same line as before the cell grew to fit sitting and jumping
-  const ground = bottom + Math.max(0, (room - 76) / 2) + 121 * scale;
-  cat.style.top = `${ground - cell.ground * scale - row.getBoundingClientRect().top}px`;
+  cat.hidden = document.body.classList.contains('reading') || document.hidden || !captions.length;
+  if (captions.length) {
+    const products = [...document.querySelectorAll('.chapters .device > div')].map(product => product.getBoundingClientRect().height);
+    const behind = Math.max(3, 0.012 * Math.max(0, ...products));
+    const ground = Math.min(...captions.map(caption => caption.getBoundingClientRect().top)) - behind;
+    cat.style.top = `${ground - cell.ground * scale - row.getBoundingClientRect().top}px`;
+  }
   // draw at the screen's pixel density, no finer than the sheet itself
   const density = Math.min(devicePixelRatio || 1, 1 / scale);
   cat.width = Math.round(cellWidth * density);
@@ -359,6 +394,8 @@ function overCat(event) {
   const box = cat.getBoundingClientRect();
   let u = (event.clientX - box.left) / box.width, v = (event.clientY - box.top) / box.height;
   if (u < 0 || u > 1 || v < 0 || v > 1) return false;
+  // behind a product it can't be reached
+  if (document.elementsFromPoint(event.clientX, event.clientY).some(element => element.closest('.chapters .device'))) return false;
   if (direction === 1) u = 1 - u;      // drawn mirrored
   const r = Math.round(8 * cat.width / box.width), px = Math.round(u * cat.width), py = Math.round(v * cat.height);
   const data = context.getImageData(Math.max(0, px - r), Math.max(0, py - r), 2 * r + 1, 2 * r + 1).data;
@@ -366,8 +403,9 @@ function overCat(event) {
   return false;
 }
 // A stroke is the pointer travelling 40 CSS pixels across the cat: a mouse just moving over
-// it, or a finger or pen dragged along it. A mouse click is a tap at once; a touch is a tap
-// when it lifts without having moved.
+// it, or a finger or pen dragged along it (though on a touch screen a drag mostly scrolls the
+// shelf, so there a tap is the way to pet it). A mouse click is a tap at once; a touch is a
+// tap when it lifts without having moved.
 let trail = 0, last = null, press = null;
 addEventListener('pointermove', event => {
   const over = overCat(event);
@@ -393,6 +431,8 @@ addEventListener('pointerup', event => {
   press = null;
 });
 addEventListener('pointercancel', () => { press = null; });
+// a click on the cat is for the cat, not for whatever is under it
+addEventListener('click', event => { if (overCat(event)) { event.preventDefault(); event.stopPropagation(); } }, true);
 
 addEventListener('route', sync);
 addEventListener('resize', sync);

@@ -1891,19 +1891,11 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   position: relative;
 }
 
+/* behind the products: cat.js puts it first in the row, so they paint over it */
 .shelf-cat {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 3;
   pointer-events: none;
-}
-
-/* on touch screens the cat takes its own touches, so a finger can stroke it */
-@media (pointer: coarse) {
-  .shelf-cat {
-    pointer-events: auto;
-    touch-action: none;
-  }
 }
 .shelf-cat[hidden] { display: none; }
