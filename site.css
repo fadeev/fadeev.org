@@ -1886,13 +1886,24 @@ html.pointing .talks ol:has(> li:first-child > a:hover) {
   .w-new { animation: none; }
 }
 
+/* a canvas on the shelf row, scrolling with it; cat.js sizes it and draws each frame */
+.chapters {
+  position: relative;
+}
+
 .shelf-cat {
-  position: fixed;
+  position: absolute;
+  top: 0;
   left: 0;
   z-index: 3;
-  width: 112px;
-  height: calc(112px * 2 / 3);
-  background: url("/images/cat-walk.png?v=10") 0 0 / 1600% 800% no-repeat;
   pointer-events: none;
+}
+
+/* on touch screens the cat takes its own touches, so a finger can stroke it */
+@media (pointer: coarse) {
+  .shelf-cat {
+    pointer-events: auto;
+    touch-action: none;
+  }
 }
 .shelf-cat[hidden] { display: none; }
